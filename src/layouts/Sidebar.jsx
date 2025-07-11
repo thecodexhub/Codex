@@ -11,22 +11,20 @@ import {
   LogOut,
   X
 } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 
-const Sidebar = ({ activeTab, setActiveTab, isOpen, onClose }) => {
+const Sidebar = ({ isOpen, onClose }) => {
+  const location = useLocation();
+
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'dsa', label: 'DSA', icon: Code2 },
-    { id: 'specialization', label: 'Specialization Path', icon: Target },
-    { id: 'placement', label: 'Placement Prep', icon: Briefcase },
-    { id: 'leaderboard', label: 'Leaderboard', icon: Trophy },
-    { id: 'feedback', label: 'Feedback', icon: MessageSquare },
-    { id: 'pricing', label: 'Pricing', icon: CreditCard },
+    { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { path: '/dsa', label: 'DSA', icon: Code2 },
+    { path: '/specialization', label: 'Specialization Path', icon: Target },
+    { path: '/placement', label: 'Placement Preparation', icon: Briefcase },
+    { path: '/leaderboard', label: 'Leaderboard', icon: Trophy },
+    { path: '/feedback', label: 'Feedback', icon: MessageSquare },
+    { path: '/pricing', label: 'Pricing', icon: CreditCard },
   ];
-
-  const handleItemClick = (itemId) => {
-    setActiveTab(itemId);
-    onClose(); // Close sidebar on mobile after selection
-  };
 
   return (
     <div className={`
@@ -37,12 +35,9 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, onClose }) => {
       {/* Logo Section */}
       <div className="px-6 py-4 border-b border-gray-800">
         <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
-              CODEX
-            </h1>
-          </div>
-          {/* Close button for mobile */}
+          <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
+            CODEX
+          </h1>
           <button
             onClick={onClose}
             className="lg:hidden p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-lg transition-colors"
@@ -54,14 +49,14 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, onClose }) => {
 
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeTab === item.id;
-          
+        {menuItems.map(({ path, label, icon: Icon }) => {
+          const isActive = location.pathname === path;
+
           return (
-            <button
-              key={item.id}
-              onClick={() => handleItemClick(item.id)}
+            <Link
+              to={path}
+              key={path}
+              onClick={onClose}
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                 isActive
                   ? 'bg-purple-600 text-white shadow-lg'
@@ -69,26 +64,25 @@ const Sidebar = ({ activeTab, setActiveTab, isOpen, onClose }) => {
               }`}
             >
               <Icon className="w-5 h-5 flex-shrink-0" />
-              <span className="font-medium truncate flex-1 text-left">{item.label}</span>
+              <span className="font-medium truncate flex-1 text-left">{label}</span>
               {isActive && <ChevronRight className="w-4 h-4 flex-shrink-0" />}
-            </button>
+            </Link>
           );
         })}
       </nav>
 
-      {/* User Profile Section */}
+      {/* Profile and Logout */}
       <div className="p-4 border-t border-gray-800 space-y-3">
         <div className="flex items-center space-x-3 p-3 rounded-lg bg-gray-800">
           <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
             <Code2 className="w-4 h-4 text-white" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-white text-sm font-medium truncate">User</p>
+            <p className="text-white text-sm font-medium truncate">Sobiya</p>
             <p className="text-gray-400 text-xs truncate">Premium Member</p>
           </div>
         </div>
 
-        {/* Logout Button */}
         <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-colors">
           <LogOut className="w-5 h-5 flex-shrink-0" />
           <span className="font-medium truncate">Logout</span>

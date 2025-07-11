@@ -66,7 +66,7 @@ const Pricing = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-6 text-white">
+      <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl p-4 sm:p-6 text-white">
         <h1 className="text-3xl font-bold mb-2">Choose Your Plan</h1>
         <p className="text-purple-100 text-lg">Unlock your coding potential with the right plan</p>
       </div>

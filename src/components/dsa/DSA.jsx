@@ -10,21 +10,38 @@ const DSA = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl p-4 sm:p-6 text-white">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Data Structures & Algorithms</h1>
-        <p className="text-purple-100 text-base sm:text-lg">Master the fundamentals of programming</p>
-      </div>
+    <div className="min-h-screen bg-gray-950 p-4 sm:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl p-4 sm:p-6 text-white">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">Data Structures & Algorithms</h1>
+          <p className="text-purple-100 text-base sm:text-lg">Master the fundamentals of programming</p>
+        </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
-        {dsaTopics.map((topic) => (
-          <TopicItem
-            key={topic.id}
-            topic={topic}
-            isExpanded={expandedTopic === topic.id}
-            onToggle={() => toggleTopic(topic.id)}
-          />
-        ))}
+        <div className="flex flex-col xl:flex-row gap-4 sm:gap-6">
+          {/* Left Column */}
+          <div className="flex-1 space-y-4 sm:space-y-6">
+            {dsaTopics.slice(0, Math.ceil(dsaTopics.length / 2)).map((topic) => (
+              <TopicItem
+                key={topic.id}
+                topic={topic}
+                isExpanded={expandedTopic === topic.id}
+                onToggle={() => toggleTopic(topic.id)}
+              />
+            ))}
+          </div>
+          
+          {/* Right Column */}
+          <div className="flex-1 space-y-4 sm:space-y-6">
+            {dsaTopics.slice(Math.ceil(dsaTopics.length / 2)).map((topic) => (
+              <TopicItem
+                key={topic.id}
+                topic={topic}
+                isExpanded={expandedTopic === topic.id}
+                onToggle={() => toggleTopic(topic.id)}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

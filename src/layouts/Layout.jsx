@@ -1,15 +1,14 @@
+// Layout.jsx
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 
-const Layout = ({ children, activeTab, setActiveTab }) => {
+const Layout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="flex h-screen bg-black">
       <Sidebar 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab}
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
@@ -21,10 +20,10 @@ const Layout = ({ children, activeTab, setActiveTab }) => {
           </div>
         </main>
       </div>
-      
-      {/* Mobile */}
+
+      {/* Mobile overlay */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
