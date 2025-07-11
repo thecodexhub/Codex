@@ -120,7 +120,7 @@ const Navbar = ({ onMenuClick }) => {
               <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
                 <User className="w-4 h-4 text-white" />
               </div>
-              <span className="hidden sm:block text-gray-200 text-sm">User</span>
+              <span className="hidden sm:block text-gray-200 text-sm">Sobiya</span>
             </button>
 
             {/* Profile Modal */}

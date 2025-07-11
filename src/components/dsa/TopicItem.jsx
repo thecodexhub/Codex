@@ -15,7 +15,7 @@ const TopicItem = ({ topic, isExpanded, onToggle }) => {
   const progressPercent = (completedCount / topic.subtopics.length) * 100;
 
   return (
-    <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
+    <div className="flex flex-col bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
       <div
         className="p-4 sm:p-6 cursor-pointer hover:bg-gray-800"
         onClick={onToggle}
@@ -39,7 +39,7 @@ const TopicItem = ({ topic, isExpanded, onToggle }) => {
             )}
           </div>
         </div>
-        
+
         <div className="mt-4">
           <div className="flex justify-between items-center mb-2">
             <span className="text-xs sm:text-sm text-gray-400">Progress</span>
@@ -87,6 +87,4 @@ const TopicItem = ({ topic, isExpanded, onToggle }) => {
     </div>
   );
 };
-
-
-export default TopicItem
+export default TopicItem;
