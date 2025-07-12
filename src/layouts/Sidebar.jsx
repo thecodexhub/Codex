@@ -11,11 +11,16 @@ import {
   LogOut,
   X
 } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Sidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
+  const navigate = useNavigate();
 
+  const handleLogout = () => {
+    localStorage.removeItem("Auth");
+    navigate("/login"); 
+  };
   const menuItems = [
     { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { path: '/dsa', label: 'DSA', icon: Code2 },
@@ -84,8 +89,11 @@ const Sidebar = ({ isOpen, onClose }) => {
         </div>
 
         <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-colors">
-          <LogOut className="w-5 h-5 flex-shrink-0" />
-          <span className="font-medium truncate">Logout</span>
+          <LogOut
+            className="w-5 h-5 flex-shrink-0"
+            />
+          <span className="font-medium truncate"
+          onClick={handleLogout} >Logout</span>
         </button>
       </div>
     </div>

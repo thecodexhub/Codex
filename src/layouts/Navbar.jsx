@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, Bell, User, Settings, LogOut, Flame, Menu } from 'lucide-react';
 
 const Navbar = ({ onMenuClick }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
-
+  const navigate = useNavigate();
   const notifications = [
     { id: 1, message: 'New DSA problem added to Arrays section', time: '2 hours ago', unread: true },
     { id: 2, message: 'Your weekly progress report is ready', time: '1 day ago', unread: true },
@@ -13,6 +14,11 @@ const Navbar = ({ onMenuClick }) => {
   ];
 
   const unreadCount = notifications.filter(n => n.unread).length;
+  
+  const handleLogout = () => {
+    localStorage.removeItem("Auth");
+    navigate("/login");
+  };
 
   // Close modals when clicking outside
   React.useEffect(() => {
@@ -59,7 +65,7 @@ const Navbar = ({ onMenuClick }) => {
             <Flame className="w-4 h-4 text-orange-500" />
             <span className="text-white text-sm font-medium">12</span>
           </div>
-          
+
           {/* Mobile Streak */}
           <div className="sm:hidden flex items-center space-x-1 px-2 py-1 bg-gray-800 rounded-lg">
             <Flame className="w-4 h-4 text-orange-500" />
@@ -90,9 +96,8 @@ const Navbar = ({ onMenuClick }) => {
                   {notifications.map((notification) => (
                     <div
                       key={notification.id}
-                      className={`p-4 border-b border-gray-700 hover:bg-gray-800 ${
-                        notification.unread ? 'bg-gray-800' : ''
-                      }`}
+                      className={`p-4 border-b border-gray-700 hover:bg-gray-800 ${notification.unread ? 'bg-gray-800' : ''
+                        }`}
                     >
                       <p className="text-gray-200 text-sm">{notification.message}</p>
                       <p className="text-gray-400 text-xs mt-1">{notification.time}</p>
@@ -137,8 +142,10 @@ const Navbar = ({ onMenuClick }) => {
                   </button>
                   <hr className="my-2 border-gray-700" />
                   <button className="w-full flex items-center space-x-2 p-2 text-red-400 hover:bg-gray-800 rounded-lg">
-                    <LogOut className="w-4 h-4" />
-                    <span>Logout</span>
+                    <LogOut
+                      className="w-4 h-4"
+                       />
+                    <span onClick={handleLogout}>Logout</span>
                   </button>
                 </div>
               </div>

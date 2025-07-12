@@ -1,9 +1,10 @@
-// Layout.jsx
+// src/layouts/Layout.jsx
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
+import { Outlet } from 'react-router-dom';
 
-const Layout = ({ children }) => {
+const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -16,7 +17,7 @@ const Layout = ({ children }) => {
         <Navbar onMenuClick={() => setSidebarOpen(true)} />
         <main className="flex-1 overflow-y-auto bg-black">
           <div className="p-4 sm:p-6">
-            {children}
+            <Outlet /> {/* This is where nested routes like /dashboard will render */}
           </div>
         </main>
       </div>
