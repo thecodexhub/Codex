@@ -27,7 +27,7 @@ const SpecializationPath = () => {
       name: 'Mobile Development',
       icon: Smartphone,
       description: 'Cross-platform mobile app development',
-      progress: 30,
+      progress: 0,
       duration: '8 months',
       difficulty: 'Intermediate',
       topics: [
