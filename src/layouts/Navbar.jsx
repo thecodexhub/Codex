@@ -102,13 +102,13 @@ const Navbar = ({ onMenuClick }) => {
                       <p className="text-gray-200 text-sm">{notification.message}</p>
                       <p className="text-gray-400 text-xs mt-1">{notification.time}</p>
                       {notification.unread && (
-                        <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
+                        <div className="w-2 h-2 bg-purple-800 rounded-full mt-2"></div>
                       )}
                     </div>
                   ))}
                 </div>
                 <div className="p-3 border-t border-gray-700">
-                  <button className="text-purple-400 text-sm hover:text-purple-300">
+                  <button className="text-purple-700 text-sm hover:text-purple-300">
                     Mark all as read
                   </button>
                 </div>
@@ -122,10 +122,10 @@ const Navbar = ({ onMenuClick }) => {
               className="profile-button flex items-center space-x-1 sm:space-x-2 p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-lg transition-colors"
               onClick={() => setShowProfile(!showProfile)}
             >
-              <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-purple-800 rounded-full flex items-center justify-center">
                 <User className="w-4 h-4 text-white" />
               </div>
-              <span className="hidden sm:block text-gray-200 text-sm">Sobiya</span>
+              {/* <span className="hidden sm:block text-gray-200 text-sm">Sobiya</span> */}
             </button>
 
             {/* Profile Modal */}

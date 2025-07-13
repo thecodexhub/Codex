@@ -64,7 +64,7 @@ const Sidebar = ({ isOpen, onClose }) => {
               onClick={onClose}
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                 isActive
-                  ? 'bg-purple-600 text-white shadow-lg'
+                  ? 'bg-purple-800 text-white shadow-lg'
                   : 'text-gray-300 hover:bg-gray-800 hover:text-white'
               }`}
             >
@@ -79,7 +79,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       {/* Profile and Logout */}
       <div className="p-4 border-t border-gray-800 space-y-3">
         <div className="flex items-center space-x-3 p-3 rounded-lg bg-gray-800">
-          <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+          <div className="w-8 h-8 bg-purple-800 rounded-full flex items-center justify-center">
             <Code2 className="w-4 h-4 text-white" />
           </div>
           <div className="flex-1 min-w-0">

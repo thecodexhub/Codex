@@ -66,7 +66,7 @@ const Pricing = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl p-4 sm:p-6 text-white">
+      <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:p-6 text-white">
         <h1 className="text-3xl font-bold mb-2">Choose Your Plan</h1>
         <p className="text-purple-100 text-lg">Unlock your coding potential with the right plan</p>
       </div>
@@ -77,7 +77,7 @@ const Pricing = () => {
           return (
             <div
               key={index}
-              className={`bg-gray-800 rounded-xl p-6 border border-gray-700 relative ${
+              className={`bg-gray-900 rounded-xl p-6 border border-gray-800 relative ${
                 plan.popular ? 'border-purple-500 shadow-lg shadow-purple-500/20' : ''
               }`}
             >
@@ -133,7 +133,7 @@ const Pricing = () => {
         })}
       </div>
 
-      <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+      <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
         <h2 className="text-xl font-semibold text-white mb-4">Frequently Asked Questions</h2>
         <div className="space-y-4">
           <div className="border-b border-gray-700 pb-4">

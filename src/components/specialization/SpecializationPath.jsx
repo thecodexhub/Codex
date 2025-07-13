@@ -118,7 +118,7 @@ const SpecializationPath = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl p-4 sm:p-6 text-white">
+      <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:p-6 text-white">
         <h1 className="text-2xl sm:text-3xl font-bold mb-2">Specialization Paths</h1>
         <p className="text-purple-100 text-base sm:text-lg">Choose your career path and master the skills</p>
       </div>
@@ -143,11 +143,11 @@ const SpecializationPath = () => {
             <div className="space-y-2 mb-4">
               <div className="flex justify-between items-center">
                 <span className="text-xs sm:text-sm text-gray-400">Overall Progress</span>
-                <span className="text-sm text-purple-400">{currentPath.progress}%</span>
+                <span className="text-sm text-purple-700">{currentPath.progress}%</span>
               </div>
               <div className="w-full bg-gray-800 rounded-full h-2">
                 <div
-                  className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full"
+                  className="bg-gradient-to-r from-purple-600 to-purple-700 h-2 rounded-full"
                   style={{ width: `${currentPath.progress}%` }}
                 ></div>
               </div>
@@ -175,7 +175,7 @@ const SpecializationPath = () => {
                   </div>
                   <div className="w-full bg-gray-700 rounded-full h-1.5">
                     <div
-                      className="bg-gradient-to-r from-purple-500 to-purple-600 h-1.5 rounded-full"
+                      className="bg-gradient-to-r from-purple-600 to-purple-700 h-1.5 rounded-full"
                       style={{ width: `${topic.progress}%` }}
                     ></div>
                   </div>
@@ -217,18 +217,18 @@ const SpecializationPath = () => {
                       <div className="space-y-2 mb-4">
                         <div className="flex justify-between items-center">
                           <span className="text-xs sm:text-sm text-gray-400">Progress</span>
-                          <span className="text-sm text-purple-400">{spec.progress}%</span>
+                          <span className="text-sm text-purple-700">{spec.progress}%</span>
                         </div>
                         <div className="w-full bg-gray-800 rounded-full h-2">
                           <div
-                            className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full"
+                            className="bg-gradient-to-r from-purple-600 to-purple-700 h-2 rounded-full"
                             style={{ width: `${spec.progress}%` }}
                           ></div>
                         </div>
                       </div>
                     )}
 
-                    <button className="w-full mt-4 px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:opacity-90 text-sm sm:text-base">
+                    <button className="w-full mt-4 px-4 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:opacity-90 text-sm sm:text-base">
                       {spec.progress > 0 ? 'Continue Learning' : 'Start Path'}
                     </button>
                   </div>

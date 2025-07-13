@@ -25,7 +25,7 @@ const Dashboard = () => {
   return (
     <div className="space-y-6">
       {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl p-4 sm:p-6 text-white">
+      <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:p-6 text-white">
         <h1 className="text-2xl sm:text-3xl font-bold mb-2">Hi Sobiya, Welcome back!</h1>
         <p className="text-purple-100 text-base sm:text-lg">
           Ready to continue your coding journey?
@@ -38,7 +38,7 @@ const Dashboard = () => {
           <div
             key={index}
             onClick={card.onClick}
-            className="bg-gray-800 rounded-xl p-4 sm:p-5 shadow-sm border border-gray-800 transition hover:bg-gray-900 "
+            className="bg-gray-900 rounded-xl p-4 sm:p-5 shadow-sm border border-gray-900 transition hover:bg-gray-800 "
             role="region"
             aria-labelledby={`progress-title-${index}`}
           >
@@ -60,7 +60,7 @@ const Dashboard = () => {
             <div className="mt-2">
               <div className="relative w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className="absolute top-0 left-0 h-2 bg-purple-500 rounded-full"
+                  className="absolute top-0 left-0 h-2 bg-purple-700 rounded-full"
                   style={{ width: `${card.progress}%` }}
                 />
               </div>

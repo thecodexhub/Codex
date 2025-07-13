@@ -55,12 +55,12 @@ const TopicItem = ({ topic, isExpanded, onToggle }) => {
       </div>
 
       {isExpanded && (
-        <div className="border-t border-gray-800 bg-gray-800">
+        <div className="border-t border-gray-800 bg-gray-900">
           <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
             {topic.subtopics.map((subtopic, index) => (
               <div
                 key={index}
-                className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-lg bg-gray-700 hover:bg-gray-600 cursor-pointer"
+                className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-lg bg-gray-800 hover:bg-gray-700 cursor-pointer"
                 onClick={(e) => {
                   e.stopPropagation();
                   console.log(`Clicked on ${subtopic.name}`);
