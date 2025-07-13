@@ -41,14 +41,14 @@ const Feedback = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl p-4 sm:p-6 text-white">
+      <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:p-6 text-white">
         <h1 className="text-3xl font-bold mb-2">Feedback</h1>
         <p className="text-purple-100 text-lg">Help us improve your learning experience</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Feedback Form */}
-        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+        <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
           <h2 className="text-xl font-semibold text-white mb-4">Share Your Feedback</h2>
           
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -91,7 +91,7 @@ const Feedback = () => {
         </div>
 
         {/* Recent Feedback */}
-        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+        <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
           <div className="flex items-center space-x-2 mb-4">
             <MessageCircle className="w-5 h-5 text-purple-400" />
             <h2 className="text-xl font-semibold text-white">Recent Feedback</h2>
@@ -99,7 +99,7 @@ const Feedback = () => {
 
           <div className="space-y-4">
             {recentFeedback.map((item) => (
-              <div key={item.id} className="p-4 bg-gray-700 rounded-lg">
+              <div key={item.id} className="p-4 bg-gray-800 rounded-lg">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-white font-medium">{item.user}</span>
                   <div className="flex items-center space-x-1">

@@ -72,7 +72,7 @@ const Leaderboard = () => {
         };
       default:
         return {
-          bg: 'bg-gray-700 hover:bg-gray-600',
+          bg: 'bg-gray-800 hover:bg-gray-700',
           name: 'text-white',
           avatar: 'bg-gray-600'
         };
@@ -81,7 +81,7 @@ const Leaderboard = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl p-4 sm:p-6 text-white">
+      <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:p-6 text-white">
         <h1 className="text-3xl font-bold mb-2">Leaderboard</h1>
         <p className="text-purple-100 text-lg">Compete with the best coders worldwide</p>
       </div>
@@ -94,7 +94,7 @@ const Leaderboard = () => {
             onClick={() => setActiveTab(tab)}
             className={`flex-1 py-2 px-4 rounded-md transition-all duration-200 ${
               activeTab === tab
-                ? 'bg-purple-500 text-white'
+                ? 'bg-purple-700 text-white'
                 : 'text-gray-400 hover:text-white'
             }`}
           >
@@ -104,7 +104,7 @@ const Leaderboard = () => {
       </div>
 
       {/* Leaderboard Table */}
-      <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+      <div className="bg-gray-900 rounded-xl border border-gray-700 overflow-hidden">
         <div className="p-6">
           <div className="flex items-center space-x-2 mb-4">
             <TrendingUp className="w-5 h-5 text-purple-400" />

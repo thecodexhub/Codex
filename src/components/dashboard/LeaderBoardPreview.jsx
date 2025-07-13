@@ -33,7 +33,7 @@ const LeaderboardPreview = () => {
       </div>
 
       {/* User List */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         {topUsers.map((user, index) => (
           <div
             key={index}
@@ -66,7 +66,7 @@ const LeaderboardPreview = () => {
           e.stopPropagation(); 
           navigate('/leaderboard');
         }}
-        className="w-full mt-4 px-4 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 text-sm sm:text-base"
+        className="w-full mt-4 px-4 py-2 bg-gradient-to-r from-purple-800 to-purple-900 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 text-sm sm:text-base"
       >
         View Full Leaderboard
       </button>
