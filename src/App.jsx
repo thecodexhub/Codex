@@ -1,14 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
+import Layout from './layouts/Layout';
+import Dashboard from './components/dashboard/Dashboard';
+import DSA from './components/dsa/DSA';
+import SpecializationPath from './components/specialization/SpecializationPath';
+import PlacementPrep from './components/placement/PlacementPrep';
+import Leaderboard from './components/leaderboard/Leaderboard';
+import Feedback from './components/feedback/Feedback';
+import Pricing from './components/pricing/Pricing';
+import LoginPage from './components/auth/LoginPage';
+import AuthWrapper from './components/auth/AuthWrapper';
+
+// Wrap the Layout itself
+const ProtectedLayout = AuthWrapper(Layout);
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className='text-4xl'>Hello world</div>
-  )
-}
+    <Router>
+      <Routes>
+        {/* Public route */}
+        <Route path="/login" element={<LoginPage />} />
 
-export default App
+        {/* Protected layout and nested routes */}
+        <Route path="/" element={<ProtectedLayout />}>
+          <Route index element={<Navigate to="/dashboard" />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="dsa" element={<DSA />} />
+          <Route path="specialization" element={<SpecializationPath />} />
+          <Route path="placement" element={<PlacementPrep />} />
+          <Route path="leaderboard" element={<Leaderboard />} />
+          <Route path="feedback" element={<Feedback />} />
+          <Route path="pricing" element={<Pricing />} />
+        </Route>
+      </Routes>
+    </Router>
+  );
+}
+export default App;
