@@ -18,7 +18,6 @@ const AttentionIcon = () => (
     />
   </svg>
 )
-
 // Google Icon Component
 const GoogleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24">
@@ -109,7 +108,6 @@ export default function LoginPage() {
           <p className="text-neutral-300 text-center text-lg mb-8">
             Enter your credentials to access your account
           </p>
-
           {message && (
             <div className="mb-6 p-4 bg-green-900/30 border border-green-800/40 rounded-lg">
               <p className="text-green-200 text-sm">{message}</p>

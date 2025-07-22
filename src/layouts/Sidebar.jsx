@@ -16,7 +16,6 @@ import { logout } from '../config';
 const Sidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
   const navigate = useNavigate();
-
   const handleLogout = async() => {
     // localStorage.removeItem("Auth");
     await logout();

@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-
 import Layout from './layouts/Layout';
 import Dashboard from './components/dashboard/Dashboard';
 import DSA from './components/dsa/DSA';
@@ -17,8 +16,6 @@ import AuthWrapper from './components/auth/AuthWrapper';
 const ProtectedLayout = AuthWrapper(Layout);
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <Router>
       <Routes>
@@ -41,5 +38,6 @@ function App() {
     </Router>
   );
 }
+
 
 export default App;

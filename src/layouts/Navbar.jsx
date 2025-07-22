@@ -14,7 +14,6 @@ const Navbar = ({ onMenuClick }) => {
   ];
 
   const unreadCount = notifications.filter(n => n.unread).length;
-  
   const handleLogout = async() => {
     // localStorage.removeItem("Auth");
     await logout();
