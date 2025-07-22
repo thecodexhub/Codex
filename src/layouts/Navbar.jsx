@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Bell, User, Settings, LogOut, Flame, Menu } from 'lucide-react';
-
+import { logout } from '../config';
 const Navbar = ({ onMenuClick }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -15,8 +15,9 @@ const Navbar = ({ onMenuClick }) => {
 
   const unreadCount = notifications.filter(n => n.unread).length;
   
-  const handleLogout = () => {
-    localStorage.removeItem("Auth");
+  const handleLogout = async() => {
+    // localStorage.removeItem("Auth");
+    await logout();
     navigate("/login");
   };
 

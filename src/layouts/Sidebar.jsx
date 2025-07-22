@@ -12,13 +12,14 @@ import {
   X
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-
+import { logout } from '../config';
 const Sidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem("Auth");
+  const handleLogout = async() => {
+    // localStorage.removeItem("Auth");
+    await logout();
     navigate("/login"); 
   };
   const menuItems = [
