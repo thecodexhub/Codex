@@ -3,10 +3,12 @@ import ProgressChart from './ProgressChart';
 import LeaderboardPreview from './LeaderBoardPreview';
 import { ChevronRight, Layers, Star } from 'lucide-react'; // Optional icons
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-
+  const { user } = useAuth();
+  
   const cardData = [
     {
       title: 'DSA Progress',
@@ -26,7 +28,7 @@ const Dashboard = () => {
     <div className="space-y-6">
       {/* Welcome Section */}
       <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:p-6 text-white">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Hi Sobiya, Welcome back!</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Hi {user?.firstName}, Welcome back!</h1>
         <p className="text-purple-100 text-base sm:text-lg">
           Ready to continue your coding journey?
         </p>

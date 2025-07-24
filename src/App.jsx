@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-
 import Layout from './layouts/Layout';
 import Dashboard from './components/dashboard/Dashboard';
 import DSA from './components/dsa/DSA';
@@ -10,6 +9,7 @@ import Leaderboard from './components/leaderboard/Leaderboard';
 import Feedback from './components/feedback/Feedback';
 import Pricing from './components/pricing/Pricing';
 import LoginPage from './components/auth/LoginPage';
+import SignupPage from './components/auth/SignupPage';
 import AuthWrapper from './components/auth/AuthWrapper';
 
 // Wrap the Layout itself
@@ -19,9 +19,10 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Public route */}
+        {/* Public routes */}
         <Route path="/login" element={<LoginPage />} />
-
+        <Route path="/signup" element={<SignupPage />} />
+        
         {/* Protected layout and nested routes */}
         <Route path="/" element={<ProtectedLayout />}>
           <Route index element={<Navigate to="/dashboard" />} />
@@ -37,4 +38,6 @@ function App() {
     </Router>
   );
 }
+
+
 export default App;
