@@ -44,22 +44,22 @@ export default function SignupPage() {
   };
 
   const addUsertoDB = async (user, firstName, lastName) => {
-    await axios.post(
-      "http://localhost:5000/addUser",
-      {
-        firstName,
-        lastName,
-        department: "COMPUTER",
-        year: "FY",
-        codingSoFar: "COMPLETELY_NEW",
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${await user.getIdToken()}`,
-        },
-      }
-    );
+    // await axios.post(
+    //   "http://localhost:5000/addUser",
+    //   {
+    //     firstName,
+    //     lastName,
+    //     department: "COMPUTER",
+    //     year: "FY",
+    //     codingSoFar: "COMPLETELY_NEW",
+    //   },
+    //   {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: `Bearer ${await user.getIdToken()}`,
+    //     },
+    //   }
+    // );
   };
 
   const handleSubmit = async () => {
