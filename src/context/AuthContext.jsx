@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../config';
-import axios from 'axios'; // Ensure axios is installed and imported
+import { auth } from '../config/firebase';
+import axios from 'axios';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
 
           // send token to backend
           const res = await axios.post(
-            'http://localhost:5000/verify',
+            'https://codex-test-server.onrender.com/api/auth/verify',
             {},
             {
               headers: {
@@ -24,13 +24,18 @@ export const AuthProvider = ({ children }) => {
               },
             }
           );
+          if (res.data?.user) {
             setUser(res.data.user);
-            if (res.data.user) {
-                console.log(res.data.user.firstName)  //user data from backend
-            }else console.log('No user')
-          
+          } else {
+            setUser(null);
+          }
+
         } catch (err) {
-          console.error('Error verifying user with backend:', err);
+          console.error(
+            'Error verifying user with backend:',
+            err.response?.status,
+            err.response?.data || err.message
+          );
           setUser(null);
         }
       } else {
