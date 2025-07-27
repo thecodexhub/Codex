@@ -12,11 +12,7 @@ import {
   X
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
-import { logout } from '../config';
-=======
 import { logout } from '../config/firebase';
->>>>>>> main
 const Sidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
   const navigate = useNavigate();
