@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import Aurora from "../utils/Background"
-import { signin, signinWithGoogle } from "../../config"
+import { signin, signInWithGoogle } from "../../config/firebase"
 
 // Attention Icon Component
 const AttentionIcon = () => (
@@ -32,75 +32,60 @@ const GoogleIcon = () => (
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const [isSigninLoading, setIsSigninLoading] = useState(false)
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
   const [error, setError] = useState("")
   const [message, setMessage] = useState("")
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Fallback for demo credentials
-    // if (email === "s@gmail.com" && password === "s@123") {
-    //   localStorage.setItem("Auth", "true");
-    //   navigate("/dashboard"); 
-    //   return;
-    // }
-
     if (!email || !password) {
       setError("Please fill in all fields.");
       return;
     }
 
-    setIsLoading(true);
+    setIsSigninLoading(true);
     setError("");
     setMessage("");
 
     try {
       const userCredential = await signin(email, password);
-      const user = userCredential.user;
-      console.log("Signed in:", user);
-      // localStorage.setItem("Auth", "true");
+      console.log("Signed in:", userCredential.user);
       navigate("/dashboard");
     } catch (err) {
       console.error("Login error:", err.message);
       setError("Invalid email or password.");
     } finally {
-      setIsLoading(false);
+      setIsSigninLoading(false);
     }
   }
 
   const handleGoogleSignin = async () => {
-    setIsLoading(true);
+    setIsGoogleLoading(true);
     setError("");
     setMessage("");
-    
+
     try {
-      const result = await signinWithGoogle();
-      const user = result.user;
-      console.log("Google signin success:", user);
-      // localStorage.setItem("Auth", "true");
+      const result = await signInWithGoogle('login');
+      console.log("Google signin success:", result.user);
       navigate("/dashboard");
     } catch (err) {
       console.error("Google signin error:", err.message);
       setError(err.message);
     } finally {
-      setIsLoading(false);
+      setIsGoogleLoading(false);
     }
   }
 
-  const handleCreateAccount = () => {
-    navigate("/signup");
-  }
+  const handleCreateAccount = () => navigate("/signup");
 
   return (
     <div className="min-h-screen bg-black relative flex flex-col items-center justify-center antialiased overflow-hidden">
-      {/* Aurora Background */}
       <div className="absolute inset-0 z-0">
         <Aurora />
       </div>
 
-      {/* Login Modal */}
       <div className="relative z-10 w-full max-w-2xl mx-auto p-4">
         <div className="bg-black/50 backdrop-blur-md rounded-2xl border border-neutral-800/50 shadow-2xl p-8">
           <h1 className="text-5xl md:text-6xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 mb-2">
@@ -133,10 +118,11 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 autoComplete="email"
-                className="w-full bg-neutral-800/70 backdrop-blur-sm border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
+                className="w-full bg-neutral-800/70 border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
                 required
               />
             </div>
+
             <div>
               <label htmlFor="password" className="text-white text-base font-medium mb-2 block">
                 Password
@@ -145,19 +131,21 @@ export default function LoginPage() {
                 id="password"
                 type="password"
                 value={password}
-                autoComplete="current-password"
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
-                className="w-full bg-neutral-800/70 backdrop-blur-sm border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
+                autoComplete="current-password"
+                className="w-full bg-neutral-800/70 border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
                 required
               />
             </div>
+
+            {/* Email/Password Sign In Button */}
             <button
               type="submit"
-              disabled={isLoading}
-              className="w-full bg-gradient-to-r from-violet-600 to-purple-700 text-white font-semibold text-lg py-3 px-4 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(147,51,234,0.3)] transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+              disabled={isSigninLoading}
+              className="w-full bg-gradient-to-r from-violet-600 to-purple-700 text-white font-semibold text-lg py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
             >
-              {isLoading ? "Signing In..." : "Sign In"}
+              {isSigninLoading ? "Signing In..." : "Sign In"}
             </button>
 
             <div className="relative">
@@ -169,14 +157,15 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {/* Google Sign In Button */}
             <button
               type="button"
               onClick={handleGoogleSignin}
-              disabled={isLoading}
+              disabled={isGoogleLoading}
               className="w-full bg-white text-gray-900 font-semibold text-lg py-3 rounded-lg transition-all duration-300 hover:bg-gray-100 flex items-center justify-center gap-3 disabled:opacity-50"
             >
               <GoogleIcon />
-              {isLoading ? "Signing in..." : "Sign in with Google"}
+              {isGoogleLoading ? "Signing in..." : "Sign in with Google"}
             </button>
 
             <div className="text-center">
