@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../config/firebase';
-import axios from 'axios';
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -10,37 +10,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        try {
-          const token = await firebaseUser.getIdToken();
-
-          // send token to backend
-          const res = await axios.post(
-            'https://codex-test-server.onrender.com/api/auth/verify',
-            {},
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          if (res.data?.user) {
-            setUser(res.data.user);
-          } else {
-            setUser(null);
-          }
-
-        } catch (err) {
-          console.error(
-            'Error verifying user with backend:',
-            err.response?.status,
-            err.response?.data || err.message
-          );
-          setUser(null);
-        }
-      } else {
-        setUser(null);
-      }
+      setUser(firebaseUser || null);
       setLoading(false);
     });
 
@@ -54,5 +24,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Custom hook
 export const useAuth = () => useContext(AuthContext);

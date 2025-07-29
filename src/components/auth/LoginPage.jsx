@@ -2,6 +2,9 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import Aurora from "../utils/Background"
 import { signin, signInWithGoogle } from "../../config/firebase"
+import { BASE_URL, USER_VERIFY, ADD_USERSTORY } from "../../config";
+import axios from "axios";
+import UserOnboarding from "./onboarding/UserOnboarding"; // Import the onboarding component
 
 // Attention Icon Component
 const AttentionIcon = () => (
@@ -30,13 +33,160 @@ const GoogleIcon = () => (
 )
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [isSigninLoading, setIsSigninLoading] = useState(false)
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [message, setMessage] = useState("")
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSigninLoading, setIsSigninLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  
+  // New state for onboarding
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [userData, setUserData] = useState(null);
+  
   const navigate = useNavigate();
+
+  // Helper functions to map form data to API format
+  const mapCodingExperience = (experience) => {
+    const mappings = {
+      "I've built projects and solved complex problems": "EXPERT",
+      "I've worked on some projects and basic DSA": "INTERMEDIATE", 
+      "I know the basics and syntax of programming": "BEGINNER",
+      "I'm just starting my coding journey": "STARTED",
+      "I have no coding experience yet": "COMPLETELY_NEW"
+    };
+    return mappings[experience] || "COMPLETELY_NEW";
+  };
+
+  const mapDepartment = (dept) => {
+    const mappings = {
+      "comp": "COMPUTER",
+      "csd": "COMPUTER_SCIENCE_DESIGN", 
+      "it": "INFORMATION_TECHNOLOGY",
+      "entc": "ELECTRONICS_TELECOM",
+      "aids": "AI_DATA_SCIENCE"
+    };
+    return mappings[dept] || "COMPUTER";
+  };
+
+  const handleOnboardingComplete = async (onboardingData) => {
+    try {
+      // Get fresh token
+      const token = await userData.firebaseUser.getIdToken();
+      
+      // Prepare patch data
+      const patchData = {
+        uid: userData.firebaseUser.uid,
+        firstName: onboardingData.firstName,
+        lastName: onboardingData.lastName,
+        department: mapDepartment(onboardingData.department),
+        year: onboardingData.year,
+        codingSoFar: mapCodingExperience(onboardingData.codingExperience)
+      };
+
+      console.log("Patching user data:", patchData);
+      console.log("User ID:", userData._id);
+
+      // Make PATCH request to update user story
+      const response = await axios.patch(
+        `${BASE_URL}/api/userStory/${userData._id}`,
+        patchData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      console.log("Patch response:", response.data);
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Error updating user details:", err);
+      console.error("Error response:", err.response?.data);
+      setError("Failed to save user details. Please try again.");
+      setShowOnboarding(false);
+    }
+  };
+
+  const verifyTokenWithBackend = async (firebaseUser) => {
+    try {
+      const token = await firebaseUser.getIdToken();
+
+      const res = await axios.post(
+        BASE_URL + USER_VERIFY,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return res.data?.user;
+    } catch (err) {
+      console.error("Backend verification error:", err);
+      throw err;
+    }
+  };
+
+  const addUserStory = async (firebaseUser) => {
+    try {
+      const token = await firebaseUser.getIdToken();
+      
+      const response = await axios.post(
+        BASE_URL + ADD_USERSTORY,
+        {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      console.log("Add user story response:", response.data);
+      return response.data;
+    } catch (err) {
+      console.error("Add user story error:", err);
+      throw err;
+    }
+  };
+
+  const handleAuthSuccess = async (firebaseUser) => {
+    try {
+      // Verify user with backend
+      const verificationResult = await verifyTokenWithBackend(firebaseUser);
+
+      if (!verificationResult) {
+        throw new Error("Failed to verify user with backend.");
+      }
+
+      // Add user story - this will tell us if user is new
+      const userStoryResponse = await addUserStory(firebaseUser);
+
+      // Check if user is new
+      if (userStoryResponse?.success && userStoryResponse?.isNewUser) {
+        // Store user data for onboarding including the MongoDB _id
+        setUserData({
+          _id: userStoryResponse._id, // This is the MongoDB ID we need for PATCH
+          firebaseUser: firebaseUser,
+          ...userStoryResponse
+        });
+
+        setShowOnboarding(true);
+      } else {
+        // Navigate directly to dashboard for existing users
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      console.error("Auth success handler error:", err);
+      throw err;
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,15 +201,14 @@ export default function LoginPage() {
 
     try {
       const userCredential = await signin(email, password);
-      console.log("Signed in:", userCredential.user);
-      navigate("/dashboard");
+      await handleAuthSuccess(userCredential.user);
     } catch (err) {
-      console.error("Login error:", err.message);
-      setError("Invalid email or password.");
+      console.error("Login error:", err);
+      setError(err.message || "Invalid email or password.");
     } finally {
       setIsSigninLoading(false);
     }
-  }
+  };
 
   const handleGoogleSignin = async () => {
     setIsGoogleLoading(true);
@@ -68,17 +217,21 @@ export default function LoginPage() {
 
     try {
       const result = await signInWithGoogle('login');
-      console.log("Google signin success:", result.user);
-      navigate("/dashboard");
+      await handleAuthSuccess(result.user);
     } catch (err) {
-      console.error("Google signin error:", err.message);
-      setError(err.message);
+      console.error("Google signin error:", err);
+      setError(err.message || "Failed to sign in with Google.");
     } finally {
       setIsGoogleLoading(false);
     }
-  }
+  };
 
   const handleCreateAccount = () => navigate("/signup");
+
+  // Show onboarding if user is new
+  if (showOnboarding) {
+    return <UserOnboarding onComplete={handleOnboardingComplete} />;
+  }
 
   return (
     <div className="min-h-screen bg-black relative flex flex-col items-center justify-center antialiased overflow-hidden">
