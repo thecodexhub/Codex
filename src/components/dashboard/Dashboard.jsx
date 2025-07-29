@@ -8,7 +8,6 @@ import { useAuth } from '../../context/AuthContext';
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  
   const cardData = [
     {
       title: 'DSA Progress',

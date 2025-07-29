@@ -1,7 +1,11 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import Aurora from "../utils/Background"
-import { signin, signinWithGoogle } from "../../config"
+import { signin, signInWithGoogle } from "../../config/firebase"
+import { BASE_URL, USER_VERIFY, ADD_USERSTORY } from "../../config";
+import axios from "axios";
+import UserOnboarding from "./onboarding/UserOnboarding"; // Import the onboarding component
+
 
 // Attention Icon Component
 const AttentionIcon = () => (
@@ -29,77 +33,212 @@ const GoogleIcon = () => (
 )
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [message, setMessage] = useState("")
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSigninLoading, setIsSigninLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  
+  // New state for onboarding
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [userData, setUserData] = useState(null);
+  
   const navigate = useNavigate();
+
+  // Helper functions to map form data to API format
+  const mapCodingExperience = (experience) => {
+    const mappings = {
+      "I've built projects and solved complex problems": "EXPERT",
+      "I've worked on some projects and basic DSA": "INTERMEDIATE", 
+      "I know the basics and syntax of programming": "BEGINNER",
+      "I'm just starting my coding journey": "STARTED",
+      "I have no coding experience yet": "COMPLETELY_NEW"
+    };
+    return mappings[experience] || "COMPLETELY_NEW";
+  };
+
+  const mapDepartment = (dept) => {
+    const mappings = {
+      "comp": "COMPUTER",
+      "csd": "COMPUTER_SCIENCE_DESIGN", 
+      "it": "INFORMATION_TECHNOLOGY",
+      "entc": "ELECTRONICS_TELECOM",
+      "aids": "AI_DATA_SCIENCE"
+    };
+    return mappings[dept] || "COMPUTER";
+  };
+
+  const handleOnboardingComplete = async (onboardingData) => {
+    try {
+      // Get fresh token
+      const token = await userData.firebaseUser.getIdToken();
+      
+      // Prepare patch data
+      const patchData = {
+        uid: userData.firebaseUser.uid,
+        firstName: onboardingData.firstName,
+        lastName: onboardingData.lastName,
+        department: mapDepartment(onboardingData.department),
+        year: onboardingData.year,
+        codingSoFar: mapCodingExperience(onboardingData.codingExperience)
+      };
+
+      console.log("Patching user data:", patchData);
+      console.log("User ID:", userData._id);
+
+      // Make PATCH request to update user story
+      const response = await axios.patch(
+        `${BASE_URL}/api/userStory/${userData._id}`,
+        patchData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      console.log("Patch response:", response.data);
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Error updating user details:", err);
+      console.error("Error response:", err.response?.data);
+      setError("Failed to save user details. Please try again.");
+      setShowOnboarding(false);
+    }
+  };
+
+  const verifyTokenWithBackend = async (firebaseUser) => {
+    try {
+      const token = await firebaseUser.getIdToken();
+
+      const res = await axios.post(
+        BASE_URL + USER_VERIFY,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return res.data?.user;
+    } catch (err) {
+      console.error("Backend verification error:", err);
+      throw err;
+    }
+  };
+
+  const addUserStory = async (firebaseUser) => {
+    try {
+      const token = await firebaseUser.getIdToken();
+      
+      const response = await axios.post(
+        BASE_URL + ADD_USERSTORY,
+        {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      console.log("Add user story response:", response.data);
+      return response.data;
+    } catch (err) {
+      console.error("Add user story error:", err);
+      throw err;
+    }
+  };
+
+  const handleAuthSuccess = async (firebaseUser) => {
+    try {
+      // Verify user with backend
+      const verificationResult = await verifyTokenWithBackend(firebaseUser);
+
+      if (!verificationResult) {
+        throw new Error("Failed to verify user with backend.");
+      }
+
+      // Add user story - this will tell us if user is new
+      const userStoryResponse = await addUserStory(firebaseUser);
+
+      // Check if user is new
+      if (userStoryResponse?.success && userStoryResponse?.isNewUser) {
+        // Store user data for onboarding including the MongoDB _id
+        setUserData({
+          _id: userStoryResponse._id, // This is the MongoDB ID we need for PATCH
+          firebaseUser: firebaseUser,
+          ...userStoryResponse
+        });
+
+        setShowOnboarding(true);
+      } else {
+        // Navigate directly to dashboard for existing users
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      console.error("Auth success handler error:", err);
+      throw err;
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Fallback for demo credentials
-    // if (email === "s@gmail.com" && password === "s@123") {
-    //   localStorage.setItem("Auth", "true");
-    //   navigate("/dashboard"); 
-    //   return;
-    // }
-
     if (!email || !password) {
       setError("Please fill in all fields.");
       return;
     }
 
-    setIsLoading(true);
+    setIsSigninLoading(true);
     setError("");
     setMessage("");
 
     try {
       const userCredential = await signin(email, password);
-      const user = userCredential.user;
-      console.log("Signed in:", user);
-      // localStorage.setItem("Auth", "true");
-      navigate("/dashboard");
+      await handleAuthSuccess(userCredential.user);
     } catch (err) {
-      console.error("Login error:", err.message);
-      setError("Invalid email or password.");
+      console.error("Login error:", err);
+      setError(err.message || "Invalid email or password.");
     } finally {
-      setIsLoading(false);
+      setIsSigninLoading(false);
     }
-  }
+  };
 
   const handleGoogleSignin = async () => {
-    setIsLoading(true);
+    setIsGoogleLoading(true);
     setError("");
     setMessage("");
-    
-    try {
-      const result = await signinWithGoogle();
-      const user = result.user;
-      console.log("Google signin success:", user);
-      // localStorage.setItem("Auth", "true");
-      navigate("/dashboard");
-    } catch (err) {
-      console.error("Google signin error:", err.message);
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
-  const handleCreateAccount = () => {
-    navigate("/signup");
+    try {
+      const result = await signInWithGoogle('login');
+      await handleAuthSuccess(result.user);
+    } catch (err) {
+      console.error("Google signin error:", err);
+      setError(err.message || "Failed to sign in with Google.");
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  };
+
+  const handleCreateAccount = () => navigate("/signup");
+
+  // Show onboarding if user is new
+  if (showOnboarding) {
+    return <UserOnboarding onComplete={handleOnboardingComplete} />;
   }
 
   return (
     <div className="min-h-screen bg-black relative flex flex-col items-center justify-center antialiased overflow-hidden">
-      {/* Aurora Background */}
       <div className="absolute inset-0 z-0">
         <Aurora />
       </div>
 
-      {/* Login Modal */}
       <div className="relative z-10 w-full max-w-2xl mx-auto p-4">
         <div className="bg-black/50 backdrop-blur-md rounded-2xl border border-neutral-800/50 shadow-2xl p-8">
           <h1 className="text-5xl md:text-6xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 mb-2">
@@ -131,10 +270,11 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 autoComplete="email"
-                className="w-full bg-neutral-800/70 backdrop-blur-sm border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
+                className="w-full bg-neutral-800/70 border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
                 required
               />
             </div>
+
             <div>
               <label htmlFor="password" className="text-white text-base font-medium mb-2 block">
                 Password
@@ -143,19 +283,21 @@ export default function LoginPage() {
                 id="password"
                 type="password"
                 value={password}
-                autoComplete="current-password"
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
-                className="w-full bg-neutral-800/70 backdrop-blur-sm border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
+                autoComplete="current-password"
+                className="w-full bg-neutral-800/70 border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
                 required
               />
             </div>
+
+            {/* Email/Password Sign In Button */}
             <button
               type="submit"
-              disabled={isLoading}
-              className="w-full bg-gradient-to-r from-violet-600 to-purple-700 text-white font-semibold text-lg py-3 px-4 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(147,51,234,0.3)] transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+              disabled={isSigninLoading}
+              className="w-full bg-gradient-to-r from-violet-600 to-purple-700 text-white font-semibold text-lg py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
             >
-              {isLoading ? "Signing In..." : "Sign In"}
+              {isSigninLoading ? "Signing In..." : "Sign In"}
             </button>
 
             <div className="relative">
@@ -167,14 +309,15 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {/* Google Sign In Button */}
             <button
               type="button"
               onClick={handleGoogleSignin}
-              disabled={isLoading}
+              disabled={isGoogleLoading}
               className="w-full bg-white text-gray-900 font-semibold text-lg py-3 rounded-lg transition-all duration-300 hover:bg-gray-100 flex items-center justify-center gap-3 disabled:opacity-50"
             >
               <GoogleIcon />
-              {isLoading ? "Signing in..." : "Sign in with Google"}
+              {isGoogleLoading ? "Signing in..." : "Sign in with Google"}
             </button>
 
             <div className="text-center">

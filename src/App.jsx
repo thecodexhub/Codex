@@ -13,6 +13,7 @@ import SignupPage from './components/auth/SignupPage';
 import AuthWrapper from './components/auth/AuthWrapper';
 import Queries from './components/feedback/Queries';
 
+import CompanyExperiences from './components/placement/Experiencelist';
 // Wrap the Layout itself
 const ProtectedLayout = AuthWrapper(Layout);
 
@@ -35,11 +36,12 @@ function App() {
           <Route path="feedback" element={<Feedback />} />
           <Route path="pricing" element={<Pricing />} />
           <Route path="queries" element={<Queries />} />
+          <Route path="/company/:id" element={<CompanyExperiences />} />
+          {/* <Route path="/" element={<></>}></Route> */}
         </Route>
       </Routes>
     </Router>
   );
 }
-
 
 export default App;
