@@ -29,6 +29,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     { path: '/leaderboard', label: 'Leaderboard', icon: Trophy },
     { path: '/feedback', label: 'Feedback', icon: MessageSquare },
     { path: '/pricing', label: 'Pricing', icon: CreditCard },
+    { path: '/queries', label: 'Queries', icon: MessageSquare },
   ];
 
   return (

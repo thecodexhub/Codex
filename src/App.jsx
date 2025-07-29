@@ -11,6 +11,7 @@ import Pricing from './components/pricing/Pricing';
 import LoginPage from './components/auth/LoginPage';
 import SignupPage from './components/auth/SignupPage';
 import AuthWrapper from './components/auth/AuthWrapper';
+import Queries from './components/feedback/Queries';
 
 // Wrap the Layout itself
 const ProtectedLayout = AuthWrapper(Layout);
@@ -33,6 +34,7 @@ function App() {
           <Route path="leaderboard" element={<Leaderboard />} />
           <Route path="feedback" element={<Feedback />} />
           <Route path="pricing" element={<Pricing />} />
+          <Route path="queries" element={<Queries />} />
         </Route>
       </Routes>
     </Router>
