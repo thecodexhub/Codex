@@ -43,25 +43,6 @@ export default function SignupPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const addUsertoDB = async (user, firstName, lastName) => {
-    // await axios.post(
-    //   "http://localhost:5000/addUser",
-    //   {
-    //     firstName,
-    //     lastName,
-    //     department: "COMPUTER",
-    //     year: "FY",
-    //     codingSoFar: "COMPLETELY_NEW",
-    //   },
-    //   {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${await user.getIdToken()}`,
-    //     },
-    //   }
-    // );
-  };
-
   const handleSubmit = async () => {
     const { firstName, lastName, email, password } = formData;
     if (!firstName || !lastName || !email || !password) {
@@ -80,7 +61,6 @@ export default function SignupPage() {
       // await sendVerificationEmail(user);
       // setMessage(`Verification email sent to ${user.email}. Please verify before logging in.`);
 
-      // await addUsertoDB(user, firstName, lastName);
       // await signOut(auth);
       navigate("/login");
     } catch (err) {
@@ -101,8 +81,6 @@ export default function SignupPage() {
 
       const [firstName, ...lastNameParts] = (user.displayName || "").split(" ");
       const lastName = lastNameParts.join(" ");
-
-      await addUsertoDB(user, firstName || "Google", lastName || "User");
       navigate("/login");
     } catch (err) {
       console.error("Google signup error:", err.message);
