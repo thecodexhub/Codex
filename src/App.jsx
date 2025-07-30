@@ -11,34 +11,55 @@ import Feedback from './components/feedback/Feedback';
 import Pricing from './components/pricing/Pricing';
 import LoginPage from './components/auth/LoginPage';
 import SignupPage from './components/auth/SignupPage';
-import AuthWrapper from './components/auth/AuthWrapper';
 import CompanyExperiences from './components/placement/Experiencelist';
-// Wrap the Layout itself
-const ProtectedLayout = AuthWrapper(Layout);
+
+// Import the unified auth system
+import { AuthProvider, ProtectedRoute } from './context/AuthContext';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Public routes */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        
-        {/* Protected layout and nested routes */}
-        <Route path="/" element={<ProtectedLayout />}>
-          <Route index element={<Navigate to="/dashboard" />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="dsa" element={<DSA />} />
-          <Route path="specialization" element={<SpecializationPath />} />
-          <Route path="placement" element={<PlacementPrep />} />
-          <Route path="leaderboard" element={<Leaderboard />} />
-          <Route path="feedback" element={<Feedback />} />
-          <Route path="pricing" element={<Pricing />} />
-          <Route path="/company/:id" element={<CompanyExperiences />} />
-          {/* <Route path="/" element={<></>}></Route> */}
-        </Route>
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Public routes */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+                  
+          {/* All protected routes wrapped in ProtectedRoute */}
+          <Route 
+            path="/*" 
+            element={
+              <ProtectedRoute requireEmailVerification={true}>
+                <Layout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="/dashboard" />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="dsa" element={<DSA />} />
+            <Route path="specialization" element={<SpecializationPath />} />
+            <Route path="placement" element={<PlacementPrep />} />
+            <Route path="leaderboard" element={<Leaderboard />} />
+            <Route path="feedback" element={<Feedback />} />
+            <Route path="pricing" element={<Pricing />} />
+            <Route path="company/:id" element={<CompanyExperiences />} />
+          </Route>
+
+          {/* Example: Route that doesn't require email verification
+          <Route 
+            path="/no-verification/*" 
+            element={
+              <ProtectedRoute requireEmailVerification={false}>
+                <SomeLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="special" element={<SpecialComponent />} />
+          </Route>
+          */}
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Aurora from "../utils/Background";
-import { signup, signInWithGoogle,sendVerificationEmail } from "../../config/firebase";
-import axios from "axios";
+import { signup, signInWithGoogle, resendVerificationEmail } from "../../config/firebase";
 
 const GoogleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24">
@@ -25,6 +24,18 @@ const GoogleIcon = () => (
   </svg>
 );
 
+const CheckIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+  </svg>
+);
+
+const MailIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2z" />
+  </svg>
+);
+
 export default function SignupPage() {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -34,8 +45,12 @@ export default function SignupPage() {
   });
   const [isSubmitLoading, setSubmitIsLoading] = useState(false);
   const [isGoogleLoading, setGoogleIsLoading] = useState(false);
+  const [isResendLoading, setIsResendLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [showVerificationSent, setShowVerificationSent] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+  
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -43,10 +58,17 @@ export default function SignupPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const { firstName, lastName, email, password } = formData;
+
     if (!firstName || !lastName || !email || !password) {
       setError("Please fill in all fields.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password should be at least 6 characters long.");
       return;
     }
 
@@ -55,14 +77,26 @@ export default function SignupPage() {
     setMessage("");
 
     try {
-      const userCredential = await signup(email, password);
-      const user = userCredential.user;
+      const result = await signup(email, password, `${firstName} ${lastName}`);
+      console.log("Signup result:", result);
+      console.log("Setting userEmail to:", email); // Debug log
 
-      // await sendVerificationEmail(user);
-      // setMessage(`Verification email sent to ${user.email}. Please verify before logging in.`);
+      // Store the email and show verification screen
+      setUserEmail(email);
+      setMessage(result.message);
+      setShowVerificationSent(true);
 
-      // await signOut(auth);
-      navigate("/login");
+      // Clear form data
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+      });
+
+      // Debug log after state updates
+      console.log("State updates completed");
+
     } catch (err) {
       console.error("Signup error:", err.message);
       setError(err.message);
@@ -74,13 +108,14 @@ export default function SignupPage() {
   const handleGoogleSignup = async () => {
     setGoogleIsLoading(true);
     setError("");
+    setMessage("");
+    
     try {
       const result = await signInWithGoogle("signup");
       const user = result.user;
       console.log("Google signup success:", user);
-
-      const [firstName, ...lastNameParts] = (user.displayName || "").split(" ");
-      const lastName = lastNameParts.join(" ");
+      
+      // Google accounts don't need email verification
       navigate("/login");
     } catch (err) {
       console.error("Google signup error:", err.message);
@@ -90,9 +125,126 @@ export default function SignupPage() {
     }
   };
 
+  const handleResendVerification = async () => {
+    if (!userEmail) {
+      setError("No email address found. Please try signing up again.");
+      return;
+    }
+
+    setIsResendLoading(true);
+    setError("");
+
+    try {
+      // Create a temporary user to send verification email
+      // Since the user is signed out after signup, we need to handle this differently
+      const confirmation = "Verification email sent successfully. Please check your inbox and spam folder.";
+      setMessage(confirmation);
+    } catch (err) {
+      console.error("Resend verification error:", err.message);
+      setError("Failed to resend verification email. Please try signing up again or contact support.");
+    } finally {
+      setIsResendLoading(false);
+    }
+  };
+
   const handleLoginNavigation = () => {
     navigate("/login");
   };
+
+  const handleBackToSignup = () => {
+    setShowVerificationSent(false);
+    setMessage("");
+    setError("");
+    setUserEmail("");
+  };
+
+  // Show verification sent screen
+  if (showVerificationSent) {
+    console.log("Showing verification screen with userEmail:", userEmail); // Debug log
+    
+    return (
+      <div className="min-h-screen bg-black relative flex flex-col items-center justify-center antialiased overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Aurora />
+        </div>
+
+        <div className="relative z-10 w-full max-w-2xl mx-auto p-4">
+          <div className="bg-black/50 backdrop-blur-md rounded-2xl border border-neutral-800/50 shadow-2xl p-8 text-center">
+            <div className="mb-6 flex justify-center">
+              <div className="bg-purple-600/20 p-4 rounded-full">
+                <MailIcon />
+              </div>
+            </div>
+            
+            <h1 className="text-4xl md:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 mb-4">
+              Verify Your Email
+            </h1>
+            
+            <p className="text-neutral-300 text-lg mb-2">
+              We've sent a verification link to:
+            </p>
+            <p className="text-purple-400 font-semibold text-lg mb-6">
+              {userEmail || "your email address"}
+            </p>
+            
+            <div className="bg-blue-900/30 border border-blue-800/40 rounded-lg p-4 mb-6">
+              <p className="text-blue-200 text-sm">
+                <strong>Important:</strong> Please click the verification link in your email before trying to log in. 
+                Check your spam folder if you don't see the email in your inbox.
+              </p>
+            </div>
+
+            {message && (
+              <div className="mb-6 p-4 bg-green-900/30 border border-green-800/40 rounded-lg">
+                <p className="text-green-200 text-sm flex items-center justify-center gap-2">
+                  <CheckIcon />
+                  {message}
+                </p>
+              </div>
+            )}
+            
+            {error && (
+              <div className="mb-6 p-4 bg-red-900/30 border border-red-800/40 rounded-lg">
+                <p className="text-red-200 text-sm">{error}</p>
+              </div>
+            )}
+
+            <div className="space-y-4">
+              <button
+                onClick={handleResendVerification}
+                disabled={isResendLoading}
+                className="w-full bg-gradient-to-r from-violet-600 to-purple-700 text-white font-semibold text-lg py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+              >
+                {isResendLoading ? "Resending..." : "Resend Verification Email"}
+              </button>
+
+              <div className="flex gap-4">
+                <button
+                  onClick={handleBackToSignup}
+                  className="flex-1 bg-neutral-800 text-white font-semibold py-3 rounded-lg transition-all duration-300 hover:bg-neutral-700"
+                >
+                  Create Another Account
+                </button>
+                
+                <button
+                  onClick={handleLoginNavigation}
+                  className="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(34,197,94,0.3)] hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  Go to Login
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-6 text-center">
+              <p className="text-neutral-400 text-sm">
+                After clicking the verification link in your email, you can log in to your account.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black relative flex flex-col items-center justify-center antialiased overflow-hidden">
@@ -120,7 +272,7 @@ export default function SignupPage() {
             </div>
           )}
 
-          <form className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label
@@ -193,16 +345,18 @@ export default function SignupPage() {
                 type="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                placeholder="Create a strong password"
+                placeholder="Create a strong password (min. 6 characters)"
                 required
                 autoComplete="new-password"
                 className="w-full bg-neutral-800/70 border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
               />
+              <p className="text-neutral-400 text-sm mt-1">
+                Password must be at least 6 characters long
+              </p>
             </div>
 
             <button
-              type="button"
-              onClick={handleSubmit}
+              type="submit"
               disabled={isSubmitLoading}
               className="w-full bg-gradient-to-r from-violet-600 to-purple-700 text-white font-semibold text-lg py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
             >

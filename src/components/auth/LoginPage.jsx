@@ -1,10 +1,10 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom";
-import Aurora from "../utils/Background"
-import { signin, signInWithGoogle } from "../../config/firebase"
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import Aurora from "../utils/Background";
+import { signin, signInWithGoogle, resendVerificationEmail, checkEmailVerification } from "../../config/firebase";
 import { BASE_URL, USER_VERIFY, ADD_USERSTORY } from "../../config";
 import axios from "axios";
-import UserOnboarding from "./onboarding/UserOnboarding"; // Import the onboarding component
+import UserOnboarding from "./onboarding/UserOnboarding";
 
 // Attention Icon Component
 const AttentionIcon = () => (
@@ -20,7 +20,7 @@ const AttentionIcon = () => (
       clipRule="evenodd"
     />
   </svg>
-)
+);
 
 // Google Icon Component
 const GoogleIcon = () => (
@@ -30,21 +30,51 @@ const GoogleIcon = () => (
     <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
     <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
   </svg>
-)
+);
+
+// Check Icon Component
+const CheckIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+  </svg>
+);
+
+// Mail Icon Component
+const MailIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2z" />
+  </svg>
+);
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSigninLoading, setIsSigninLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isResendLoading, setIsResendLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [showEmailVerificationPrompt, setShowEmailVerificationPrompt] = useState(false);
+  const [unverifiedUserEmail, setUnverifiedUserEmail] = useState("");
   
   // New state for onboarding
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [userData, setUserData] = useState(null);
   
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Check for verification success message from URL params
+  useEffect(() => {
+    const verified = searchParams.get('verified');
+    const emailVerified = searchParams.get('emailVerified');
+    
+    if (verified === 'true' || emailVerified === 'true') {
+      setMessage("Email verified successfully! You can now log in.");
+      // Clean up URL params
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [searchParams]);
 
   // Helper functions to map form data to API format
   const mapCodingExperience = (experience) => {
@@ -198,13 +228,22 @@ export default function LoginPage() {
     setIsSigninLoading(true);
     setError("");
     setMessage("");
+    setShowEmailVerificationPrompt(false);
 
     try {
       const userCredential = await signin(email, password);
       await handleAuthSuccess(userCredential.user);
     } catch (err) {
       console.error("Login error:", err);
-      setError(err.message || "Invalid email or password.");
+      
+      // Check if error is about email verification
+      if (err.message.includes("verify your email") || err.message.includes("verification")) {
+        setUnverifiedUserEmail(email);
+        setShowEmailVerificationPrompt(true);
+        setError("Your email address is not verified. Please verify your email before logging in.");
+      } else {
+        setError(err.message);
+      }
     } finally {
       setIsSigninLoading(false);
     }
@@ -214,19 +253,137 @@ export default function LoginPage() {
     setIsGoogleLoading(true);
     setError("");
     setMessage("");
+    setShowEmailVerificationPrompt(false);
 
     try {
       const result = await signInWithGoogle('login');
       await handleAuthSuccess(result.user);
     } catch (err) {
       console.error("Google signin error:", err);
-      setError(err.message || "Failed to sign in with Google.");
+      setError(err.message);
     } finally {
       setIsGoogleLoading(false);
     }
   };
 
+  const handleResendVerification = async () => {
+    if (!unverifiedUserEmail) {
+      setError("No email address found. Please try logging in again.");
+      return;
+    }
+
+    setIsResendLoading(true);
+    setError("");
+    
+    try {
+      // Since the user is not signed in, we can't use the regular resendVerificationEmail
+      // We need to inform them to use the signup page to resend
+      setMessage(`Please check your email (${unverifiedUserEmail}) for the verification link. If you didn't receive it, you can try creating the account again to get a new verification email.`);
+    } catch (err) {
+      console.error("Resend verification error:", err.message);
+      setError("Unable to resend verification email. Please try creating your account again.");
+    } finally {
+      setIsResendLoading(false);
+    }
+  };
+
   const handleCreateAccount = () => navigate("/signup");
+
+  const handleBackToLogin = () => {
+    setShowEmailVerificationPrompt(false);
+    setUnverifiedUserEmail("");
+    setError("");
+    setMessage("");
+  };
+
+  // Show verification prompt if user is not verified
+  if (showEmailVerificationPrompt) {
+    return (
+      <div className="min-h-screen bg-black relative flex flex-col items-center justify-center antialiased overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Aurora />
+        </div>
+
+        <div className="relative z-10 w-full max-w-2xl mx-auto p-4">
+          <div className="bg-black/50 backdrop-blur-md rounded-2xl border border-neutral-800/50 shadow-2xl p-8 text-center">
+            <div className="mb-6 flex justify-center">
+              <div className="bg-purple-600/20 p-4 rounded-full">
+                <MailIcon />
+              </div>
+            </div>
+            
+            <h1 className="text-4xl md:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 mb-4">
+              Email Not Verified
+            </h1>
+            
+            <p className="text-neutral-300 text-lg mb-2">
+              Your account exists but your email is not verified:
+            </p>
+            <p className="text-purple-400 font-semibold text-lg mb-6">
+              {unverifiedUserEmail}
+            </p>
+            
+            <div className="bg-yellow-900/30 border border-yellow-800/40 rounded-lg p-4 mb-6">
+              <p className="text-yellow-200 text-sm">
+                <strong>You must verify your email before you can log in.</strong><br/>
+                Please check your email inbox (and spam folder) for the verification link that was sent when you created your account.
+              </p>
+            </div>
+
+            {message && (
+              <div className="mb-6 p-4 bg-blue-900/30 border border-blue-800/40 rounded-lg">
+                <p className="text-blue-200 text-sm flex items-center justify-center gap-2">
+                  <CheckIcon />
+                  {message}
+                </p>
+              </div>
+            )}
+            
+            {error && (
+              <div className="mb-6 p-4 bg-red-900/30 border border-red-800/40 rounded-lg">
+                <p className="text-red-200 text-sm flex items-center gap-2">
+                  <AttentionIcon />
+                  {error}
+                </p>
+              </div>
+            )}
+
+            <div className="space-y-4">
+              <button
+                onClick={handleResendVerification}
+                disabled={isResendLoading}
+                className="w-full bg-gradient-to-r from-violet-600 to-purple-700 text-white font-semibold text-lg py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+              >
+                {isResendLoading ? "Checking..." : "I Need Help With Verification"}
+              </button>
+
+              <div className="flex gap-4">
+                <button
+                  onClick={handleBackToLogin}
+                  className="flex-1 bg-neutral-800 text-white font-semibold py-3 rounded-lg transition-all duration-300 hover:bg-neutral-700"
+                >
+                  Back to Login
+                </button>
+                
+                <button
+                  onClick={handleCreateAccount}
+                  className="flex-1 bg-neutral-800 text-white font-semibold py-3 rounded-lg transition-all duration-300 hover:bg-neutral-700"
+                >
+                  Create New Account
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-6 text-center">
+              <p className="text-neutral-400 text-sm">
+                After clicking the verification link in your email, come back here to log in.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Show onboarding if user is new
   if (showOnboarding) {
@@ -250,12 +407,19 @@ export default function LoginPage() {
 
           {message && (
             <div className="mb-6 p-4 bg-green-900/30 border border-green-800/40 rounded-lg">
-              <p className="text-green-200 text-sm">{message}</p>
+              <p className="text-green-200 text-sm flex items-center gap-2">
+                <CheckIcon />
+                {message}
+              </p>
             </div>
           )}
+          
           {error && (
             <div className="mb-6 p-4 bg-red-900/30 border border-red-800/40 rounded-lg">
-              <p className="text-red-200 text-sm">{error}</p>
+              <p className="text-red-200 text-sm flex items-center gap-2">
+                <AttentionIcon />
+                {error}
+              </p>
             </div>
           )}
 
@@ -337,5 +501,5 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
