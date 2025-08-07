@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Aurora from "../utils/Background";
 import { signUp, signInWithGoogle, sendVerificationEmail } from "../../config/firebase";
-import axios from "axios";
+// import axios from "axios";
 
 const GoogleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24">
@@ -36,8 +36,35 @@ export default function SignupPage() {
   const [isGoogleLoading, setGoogleIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [user, setUser] = useState("");
   const navigate = useNavigate();
-  const [userEmail, setUserEmail] = useState("");
+  
+  const [resendCooldown, setResendCooldown] = useState(60); 
+  const [canResend, setCanResend] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+
+  useEffect(() => {
+    let interval;
+    if (resendCooldown > 0) {
+      interval = setInterval(() => {
+        setResendCooldown(prev => {
+          if (prev <= 1) {
+            setCanResend(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [resendCooldown]);
+
+  useEffect(() => {
+    if (message === "signupsuccess") {
+      setResendCooldown(60);
+      setCanResend(false);
+    }
+  }, [message]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -56,13 +83,12 @@ export default function SignupPage() {
     setMessage("");
 
     try {
-
       const result = await signUp(email, password, `${firstName} ${lastName}`);
-      setUserEmail(result.user.email);
-      console.log('email user: ', result.user.email)
-
+      setUser(result.user);
+      console.log('email user: ', result.user.email);
       setMessage(result.message);
-      // navigate("/login");
+      setResendCooldown(60);
+      setCanResend(false);
     } catch (err) {
       console.error("Signup error:", err.message);
       setError(err.message);
@@ -76,11 +102,9 @@ export default function SignupPage() {
     setError("");
     try {
       const result = await signInWithGoogle("signup");
-      const user = result.user;
+      // const user = result.user;
       console.log("Google signup success:", result);
-      setUserEmail(result.email);
       setMessage(result.message);
-
     } catch (err) {
       console.error("Google signup error:", err.message);
       setError(err.message);
@@ -92,9 +116,38 @@ export default function SignupPage() {
   const handleLoginNavigation = () => {
     navigate("/login");
   };
+
   const onResendEmail = async () => {
-    alert('Resend email clicked');
+    if (!canResend || isResending) return;
+
+    setIsResending(true);
+    setError("");
+    
+    try {
+      await sendVerificationEmail(user);
+      setMessage("A new verification email has been sent.");
+
+      setResendCooldown(60);
+      setCanResend(false);
+      
+      setTimeout(() => {
+        setMessage("signupsuccess");
+      }, 3000);
+      
+    } catch (error) {
+      console.error("Error resending verification email:", error.message);
+      setError("Failed to resend verification email. Please try again.");
+    } finally {
+      setIsResending(false);
+    }
   };
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div className="min-h-screen bg-black relative flex flex-col items-center justify-center antialiased overflow-hidden">
       <div className="absolute inset-0 z-0">
@@ -103,7 +156,6 @@ export default function SignupPage() {
 
       <div className="relative z-10 w-full max-w-2xl mx-auto p-4">
         {message ? (
-          // <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
           <div className="bg-black/50 backdrop-blur-md rounded-2xl border border-neutral-800/50 shadow-2xl p-8">
             <div className="text-center">
               <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-900/30 border border-green-800/40 mb-6">
@@ -123,24 +175,39 @@ export default function SignupPage() {
               </div>
 
               <h3 className="text-2xl font-bold text-white mb-4">
-                Account Created Successfully!
+                {message === "A new verification email has been sent." 
+                  ? "Email Sent!" 
+                  : "Account Created Successfully!"
+                }
               </h3>
 
               {message === "signupgoogle" ? (
                 <p className="text-neutral-300 mb-6 leading-relaxed">
                   Welcome aboard! Your Google account{" "}
-                  <span className="text-purple-400 font-medium">{userEmail}</span>{" "}
+                  <span className="text-purple-400 font-medium">{user.email}</span>{" "}
                   has been successfully linked to CodeX.
                   <br />
-                  You're now ready to dive into learning and coding  with CodeX!
+                  You're now ready to dive into learning and coding with CodeX!
                 </p>
               ) : (
                 <div>
                   <p className="text-neutral-300 mb-6 leading-relaxed">
-                    We've sent a verification email to{" "}
-                    <span className="text-purple-400 font-medium">{userEmail}</span>.
-                    <br />
-                    Please check your inbox and click the verification link to activate your account.
+                    {message === "A new verification email has been sent." 
+                      ? (
+                          <>
+                            A new verification email has been sent to{' '}
+                            <span className="text-purple-400 font-medium">{user.email}</span>.
+                            Please check your inbox.
+                          </>
+                        )
+                      : (
+                          <>
+                            We've sent a verification email to{' '}
+                            <span className="text-purple-400 font-medium">{user.email}</span>.
+                            Please check your inbox and click the verification link to activate your account.
+                          </>
+                        )
+                    }
                   </p>
 
                   <div className="bg-yellow-900/20 border border-yellow-800/40 rounded-lg p-4 mb-6">
@@ -148,18 +215,29 @@ export default function SignupPage() {
                       <strong>Can't find the email?</strong> Check your spam folder or promotions tab.
                     </p>
                   </div>
-                </div>)}
+                </div>
+              )}
 
               <div className="space-y-3">
-
-                {message === "signupsuccess" && (
+                {(message === "signupsuccess" || message === "A new verification email has been sent.") && (
                   <button
                     onClick={onResendEmail}
-                    className="w-full bg-gradient-to-r from-violet-600 to-purple-700 text-white font-semibold py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:scale-[1.02] active:scale-[0.98]"
+                    disabled={!canResend || isResending}
+                    className={`w-full font-semibold py-3 rounded-lg transition-all duration-300 ${
+                      canResend && !isResending
+                        ? "bg-gradient-to-r from-violet-600 to-purple-700 text-white hover:shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:scale-[1.02] active:scale-[0.98]"
+                        : "bg-neutral-700/50 text-neutral-400 cursor-not-allowed"
+                    }`}
                   >
-                    Resend Verification Email
+                    {isResending 
+                      ? "Sending..." 
+                      : canResend 
+                        ? "Resend Verification Email" 
+                        : `Resend Email (${formatTime(resendCooldown)})`
+                    }
                   </button>
                 )}
+                
                 <button
                   onClick={handleLoginNavigation}
                   className="w-full bg-neutral-800/70 border border-neutral-700 text-white font-semibold py-3 rounded-lg transition-all duration-300 hover:bg-neutral-700/70"
@@ -169,149 +247,146 @@ export default function SignupPage() {
               </div>
             </div>
           </div>
-          // </div>
-        )
-          : (
-            <div className="bg-black/50 backdrop-blur-md rounded-2xl border border-neutral-800/50 shadow-2xl p-8">
-              <h1 className="text-4xl md:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 mb-2">
-                Create Account
-              </h1>
-              <p className="text-neutral-300 text-center text-lg mb-8">
-                Join us and start your journey today
-              </p>
-              {error && (
-                <div className="mb-6 p-4 bg-red-900/30 border border-red-800/40 rounded-lg">
-                  <p className="text-red-200 text-sm">{error}</p>
-                </div>
-              )}
+        ) : (
+          <div className="bg-black/50 backdrop-blur-md rounded-2xl border border-neutral-800/50 shadow-2xl p-8">
+            <h1 className="text-4xl md:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 mb-2">
+              Create Account
+            </h1>
+            <p className="text-neutral-300 text-center text-lg mb-8">
+              Join us and start your journey today
+            </p>
+            {error && (
+              <div className="mb-6 p-4 bg-red-900/30 border border-red-800/40 rounded-lg">
+                <p className="text-red-200 text-sm">{error}</p>
+              </div>
+            )}
 
-              <form className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="firstName"
-                      className="text-white text-base font-medium mb-2 block"
-                    >
-                      First Name
-                    </label>
-                    <input
-                      id="firstName"
-                      name="firstName"
-                      type="text"
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      placeholder="Enter your first name"
-                      required
-                      className="w-full bg-neutral-800/70 border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="lastName"
-                      className="text-white text-base font-medium mb-2 block"
-                    >
-                      Last Name
-                    </label>
-                    <input
-                      id="lastName"
-                      name="lastName"
-                      type="text"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      placeholder="Enter your last name"
-                      required
-                      className="w-full bg-neutral-800/70 border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
-                    />
-                  </div>
-                </div>
-
+            <form className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label
-                    htmlFor="email"
+                    htmlFor="firstName"
                     className="text-white text-base font-medium mb-2 block"
                   >
-                    Email
+                    First Name
                   </label>
                   <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    value={formData.firstName}
                     onChange={handleInputChange}
-                    placeholder="Enter your email"
+                    placeholder="Enter your first name"
                     required
-                    autoComplete="email"
                     className="w-full bg-neutral-800/70 border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
                   />
                 </div>
-
                 <div>
                   <label
-                    htmlFor="password"
+                    htmlFor="lastName"
                     className="text-white text-base font-medium mb-2 block"
                   >
-                    Password
+                    Last Name
                   </label>
                   <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    value={formData.password}
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    value={formData.lastName}
                     onChange={handleInputChange}
-                    placeholder="Create a strong password"
+                    placeholder="Enter your last name"
                     required
-                    autoComplete="new-password"
                     className="w-full bg-neutral-800/70 border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
                   />
                 </div>
+              </div>
 
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  disabled={isSubmitLoading}
-                  className="w-full bg-gradient-to-r from-violet-600 to-purple-700 text-white font-semibold text-lg py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+              <div>
+                <label
+                  htmlFor="email"
+                  className="text-white text-base font-medium mb-2 block"
                 >
-                  {isSubmitLoading ? "Creating Account..." : "Create Account"}
-                </button>
+                  Email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="Enter your email"
+                  required
+                  autoComplete="email"
+                  className="w-full bg-neutral-800/70 border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
+                />
+              </div>
 
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-neutral-700"></div>
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-black text-neutral-400">
-                      Or continue with
-                    </span>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={handleGoogleSignup}
-                  disabled={isGoogleLoading}
-                  className="w-full bg-white text-gray-900 font-semibold text-lg py-3 rounded-lg transition-all duration-300 hover:bg-gray-100 flex items-center justify-center gap-3 disabled:opacity-50"
+              <div>
+                <label
+                  htmlFor="password"
+                  className="text-white text-base font-medium mb-2 block"
                 >
-                  <GoogleIcon />
-                  {isGoogleLoading ? "Signing up..." : "Sign up with Google"}
-                </button>
+                  Password
+                </label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="Create a strong password"
+                  required
+                  autoComplete="new-password"
+                  className="w-full bg-neutral-800/70 border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
+                />
+              </div>
 
-                <div className="text-center">
-                  <p className="text-neutral-400 text-sm">
-                    Already have an account?{" "}
-                    <button
-                      type="button"
-                      className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
-                      onClick={handleLoginNavigation}
-                    >
-                      Sign in here
-                    </button>
-                  </p>
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={isSubmitLoading}
+                className="w-full bg-gradient-to-r from-violet-600 to-purple-700 text-white font-semibold text-lg py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+              >
+                {isSubmitLoading ? "Creating Account..." : "Create Account"}
+              </button>
+
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-neutral-700"></div>
                 </div>
-              </form>
-            </div>
-          )}
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-black text-neutral-400">
+                    Or continue with
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleGoogleSignup}
+                disabled={isGoogleLoading}
+                className="w-full bg-white text-gray-900 font-semibold text-lg py-3 rounded-lg transition-all duration-300 hover:bg-gray-100 flex items-center justify-center gap-3 disabled:opacity-50"
+              >
+                <GoogleIcon />
+                {isGoogleLoading ? "Signing up..." : "Sign up with Google"}
+              </button>
+
+              <div className="text-center">
+                <p className="text-neutral-400 text-sm">
+                  Already have an account?{" "}
+                  <button
+                    type="button"
+                    className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
+                    onClick={handleLoginNavigation}
+                  >
+                    Sign in here
+                  </button>
+                </p>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
-
     </div>
   );
 }

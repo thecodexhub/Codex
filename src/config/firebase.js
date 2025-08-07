@@ -6,8 +6,8 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   sendEmailVerification,
+  sendPasswordResetEmail,
   signOut,
-  reload,
   onAuthStateChanged,
 } from "firebase/auth";
 
@@ -73,7 +73,7 @@ export const signin = async (email, password) => {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    await reload(user);
+    await user.reload();
     if (!user.emailVerified) {
       await signOut(auth);
       throw new Error("Please verify your email before logging in.");
@@ -132,6 +132,31 @@ export const signInWithGoogle = async (mode = "signup") => {
   // return result;
 };
 
+export const passwordResetMail = async (email) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    console.log("Password reset email sent successfully");
+  } catch (error) {
+    console.error("Password reset error:", error);
+    
+    let errorMessage = "Failed to send password reset email.";
+    switch (error.code) {
+      case 'auth/user-not-found':
+        errorMessage = "No account found with this email address. Please check the email and try again.";
+        break;
+      case 'auth/invalid-email':
+        errorMessage = "Please enter a valid email address.";
+        break;
+      case 'auth/too-many-requests':
+        errorMessage = "Too many password reset requests. Please try again later.";
+        break;
+      default:
+        errorMessage = error.message;
+    }
+    
+    throw new Error(errorMessage);
+  }
+};
 // Sign Out
 export const logout = () => signOut(auth);
 
@@ -139,10 +164,9 @@ export const logout = () => signOut(auth);
 export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);
 
 //email verify
-export const sendVerificationEmail = async () => {
-  const user = auth.currentUser;
+export const sendVerificationEmail = async (user) => {
+  // const user = auth.currentUser;
   if (user) {
     await sendEmailVerification(user);
-    alert("Verification email sent!");
   }
 };

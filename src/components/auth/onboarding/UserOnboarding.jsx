@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { CheckCircle, User, GraduationCap, Calendar, Code, ArrowRight, ArrowLeft, Send } from 'lucide-react';
 import { useAuth } from "../../../context/AuthContext";
 import axios from "axios";
-import { BASE_URL } from "../../../config";
+import { BASE_URL,USERPROFILE } from "../../../config";
 import { useNavigate } from 'react-router-dom';
 
 const UserOnboarding = () => {
@@ -24,27 +24,40 @@ const UserOnboarding = () => {
   const totalSteps = 4;
 
   const departmentOptions = [
-    { value: 'comp', label: 'Computer Engineering' },
-    { value: 'csd', label: 'Computer Science & Design' },
-    { value: 'it', label: 'Information Technology' },
-    { value: 'entc', label: 'Electronics & Telecommunication' },
-    { value: 'aids', label: 'Artificial Intelligence & Data Science' }
+    { value: 'COMP', label: 'Computer Engineering' },
+    { value: 'CSD', label: 'Computer Science & Design' },
+    { value: 'IT', label: 'Information Technology' },
+    { value: 'ENTC', label: 'Electronics & Telecommunication' },
+    { value: 'AIDS', label: 'Artificial Intelligence & Data Science' },
+    { value: 'ROBOSTICS', label: 'Robotics and Automation' },
+    { value: 'OTHER', label: 'Any Other' }
   ];
 
   const yearOptions = [
     { value: 'FY', label: 'First Year (FY)' },
     { value: 'SY', label: 'Second Year (SY)' },
     { value: 'TY', label: 'Third Year (TY)' },
-    { value: 'BE', label: 'Final Year (BE)' }
+    { value: 'LY', label: 'Final Year (BE)' }
   ];
 
-  const codingOptions = [
-    "I've built projects and solved complex problems",
-    "I've worked on some projects and basic DSA",
-    "I know the basics and syntax of programming",
-    "I'm just starting my coding journey",
-    "I have no coding experience yet"
-  ];
+const codingOptions = [
+  {
+    label: "I've worked on some projects and basic DSA",
+    value: "EXPERT"
+  },
+  {
+    label: "I know the basics and syntax of programming",
+    value: "BASIC_CODING"
+  },
+  {
+    label: "I'm just starting my coding journey",
+    value: "JUST_STARTING"
+  },
+  {
+    label: "I have no coding experience yet",
+    value: "COMPLETELY_NEW"
+  }
+];
 
   const handleInputChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
@@ -99,27 +112,6 @@ const UserOnboarding = () => {
       setCurrentStep(currentStep - 1);
     }
   };
-  const mapCodingExperience = (experience) => {
-    const mappings = {
-      "I've built projects and solved complex problems": "EXPERT",
-      "I've worked on some projects and basic DSA": "INTERMEDIATE",
-      "I know the basics and syntax of programming": "BEGINNER",
-      "I'm just starting my coding journey": "STARTED",
-      "I have no coding experience yet": "COMPLETELY_NEW"
-    };
-    return mappings[experience] || "COMPLETELY_NEW";
-  };
-
-  const mapDepartment = (dept) => {
-    const mappings = {
-      "comp": "COMPUTER",
-      "csd": "COMPUTER_SCIENCE_DESIGN",
-      "it": "INFORMATION_TECHNOLOGY",
-      "entc": "ELECTRONICS_TELECOM",
-      "aids": "AI_DATA_SCIENCE"
-    };
-    return mappings[dept] || "COMPUTER";
-  };
   const handleSubmit = async () => {
     if (!validateCurrentStep()) return;
 
@@ -139,13 +131,13 @@ const UserOnboarding = () => {
         uid: user.uid,
         firstName: formData.firstName,
         lastName: formData.lastName,
-        department: mapDepartment(formData.department),
+        department: formData.department,
         year: formData.year,
-        codingSoFar: mapCodingExperience(formData.codingExperience)
+        codingSoFar: formData.codingExperience
       };
 
       const response = await axios.patch(
-        `${BASE_URL}/api/userStory/${mongodbId}`,
+        `${BASE_URL}${USERPROFILE}/${mongodbId}`,
         patchData,
         {
           headers: {
@@ -156,7 +148,7 @@ const UserOnboarding = () => {
       );
 
       console.log("User story patched:", response.data);
-
+      console.log('Path data:', patchData);
       setIsSubmitted(true);
       setTimeout(() => {
         navigate('/dashboard')
@@ -315,13 +307,13 @@ const UserOnboarding = () => {
                 {codingOptions.map((option, index) => (
                   <button
                     key={index}
-                    onClick={() => handleInputChange('codingExperience', option)}
-                    className={`w-full p-4 rounded-xl text-left text-base font-medium transition-all duration-200 hover:scale-[1.02] ${formData.codingExperience === option
+                    onClick={() => handleInputChange('codingExperience', option.value)}
+                    className={`w-full p-4 rounded-xl text-left text-base font-medium transition-all duration-200 hover:scale-[1.02] ${formData.codingExperience === option.value
                         ? 'bg-gray-800 text-white border-2 border-purple-500 shadow-lg shadow-purple-500/20'
                         : 'bg-gray-900 text-gray-300 hover:text-white border-2 border-gray-700 hover:border-gray-600'
                       }`}
                   >
-                    {option}
+                    {option.label}
                   </button>
                 ))}
                 {errors.codingExperience && <p className="text-red-400 text-center text-lg mt-6">{errors.codingExperience}</p>}
