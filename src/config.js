@@ -10,5 +10,5 @@ export const COMPANY_LIST = "/api/company/all";
 //interview experience
 export const INTERVIEW_EXP_BY_COMPANYID = "/api/interviewExperience";
 
-//post user story
-export const ADD_USERSTORY = "/api/userStory"
+//user profile
+export const USERPROFILE = "/api/userProfile"

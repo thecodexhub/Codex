@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { CheckCircle, User, GraduationCap, Calendar, Code, ArrowRight, ArrowLeft, Send } from 'lucide-react';
+import { useAuth } from "../../../context/AuthContext";
+import axios from "axios";
+import { BASE_URL,USERPROFILE } from "../../../config";
+import { useNavigate } from 'react-router-dom';
 
-const UserOnboarding = ({ onComplete }) => {
+const UserOnboarding = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const { user, mongodbId } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -18,27 +24,40 @@ const UserOnboarding = ({ onComplete }) => {
   const totalSteps = 4;
 
   const departmentOptions = [
-    { value: 'comp', label: 'Computer Engineering' },
-    { value: 'csd', label: 'Computer Science & Design' },
-    { value: 'it', label: 'Information Technology' },
-    { value: 'entc', label: 'Electronics & Telecommunication' },
-    { value: 'aids', label: 'Artificial Intelligence & Data Science' }
+    { value: 'COMP', label: 'Computer Engineering' },
+    { value: 'CSD', label: 'Computer Science & Design' },
+    { value: 'IT', label: 'Information Technology' },
+    { value: 'ENTC', label: 'Electronics & Telecommunication' },
+    { value: 'AIDS', label: 'Artificial Intelligence & Data Science' },
+    { value: 'ROBOSTICS', label: 'Robotics and Automation' },
+    { value: 'OTHER', label: 'Any Other' }
   ];
 
   const yearOptions = [
     { value: 'FY', label: 'First Year (FY)' },
     { value: 'SY', label: 'Second Year (SY)' },
     { value: 'TY', label: 'Third Year (TY)' },
-    { value: 'BE', label: 'Final Year (BE)' }
+    { value: 'LY', label: 'Final Year (BE)' }
   ];
 
-  const codingOptions = [
-    "I've built projects and solved complex problems",
-    "I've worked on some projects and basic DSA",
-    "I know the basics and syntax of programming",
-    "I'm just starting my coding journey",
-    "I have no coding experience yet"
-  ];
+const codingOptions = [
+  {
+    label: "I've worked on some projects and basic DSA",
+    value: "EXPERT"
+  },
+  {
+    label: "I know the basics and syntax of programming",
+    value: "BASIC_CODING"
+  },
+  {
+    label: "I'm just starting my coding journey",
+    value: "JUST_STARTING"
+  },
+  {
+    label: "I have no coding experience yet",
+    value: "COMPLETELY_NEW"
+  }
+];
 
   const handleInputChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
@@ -93,27 +112,52 @@ const UserOnboarding = ({ onComplete }) => {
       setCurrentStep(currentStep - 1);
     }
   };
-
   const handleSubmit = async () => {
     if (!validateCurrentStep()) return;
 
     setIsSubmitting(true);
 
     try {
-      // Show the success screen immediately
-      setIsSubmitted(true);
+      console.log("MongoDB User ID:", mongodbId);
+      console.log("Firebase User ID:", user.uid);
+      if (!mongodbId || !user.uid) {
+        alert('No ID found! Please Login')
+        navigate('/login');
+      }
+      const token = await user.getIdToken?.();
+      if (!token) throw new Error("Failed to get token.");
 
-      // Wait a bit for the animation, then call the parent's completion handler
-      setTimeout(() => {
-        if (onComplete) {
-          onComplete(formData);
+      const patchData = {
+        uid: user.uid,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        department: formData.department,
+        year: formData.year,
+        codingSoFar: formData.codingExperience
+      };
+
+      const response = await axios.patch(
+        `${BASE_URL}${USERPROFILE}/${mongodbId}`,
+        patchData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
         }
+      );
+
+      console.log("User story patched:", response.data);
+      console.log('Path data:', patchData);
+      setIsSubmitted(true);
+      setTimeout(() => {
+        navigate('/dashboard')
       }, 2000);
+
     } catch (error) {
+      console.error('Error submitting form:', error);
       setIsSubmitting(false);
       setIsSubmitted(false);
-      console.error('Error submitting form:', error);
-      // You might want to show an error message here
     }
   };
 
@@ -142,7 +186,7 @@ const UserOnboarding = ({ onComplete }) => {
           </div>
           <h2 className="text-3xl font-bold text-white mb-4">Welcome to the Team!</h2>
           <p className="text-gray-300 text-lg">
-            Thanks for joining us, <span className="text-purple-400 font-semibold">{formData.firstName} {formData.lastName}</span>! 
+            Thanks for joining us, <span className="text-purple-400 font-semibold">{formData.firstName} {formData.lastName}</span>!
             We're setting up your personalized experience.
           </p>
           <div className="mt-8">
@@ -167,10 +211,10 @@ const UserOnboarding = ({ onComplete }) => {
             </h1>
             <p className='text-white text-xl sm:text-2xl font-bold mt-5 mb-5'>Let's get to know you better!</p>
           </div>
-          
+
           {/* Progress Bar */}
           <div className="w-full bg-gray-800 rounded-full h-2 mb-8">
-            <div 
+            <div
               className="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${((currentStep + 1) / totalSteps) * 100}%` }}
             ></div>
@@ -226,11 +270,10 @@ const UserOnboarding = ({ onComplete }) => {
                   <button
                     key={index}
                     onClick={() => handleInputChange('department', option.value)}
-                    className={`w-full p-4 rounded-xl text-left text-base font-medium transition-all duration-200 hover:scale-[1.02] ${
-                      formData.department === option.value
+                    className={`w-full p-4 rounded-xl text-left text-base font-medium transition-all duration-200 hover:scale-[1.02] ${formData.department === option.value
                         ? 'bg-gray-800 text-white border-2 border-purple-500 shadow-lg shadow-purple-500/20'
                         : 'bg-gray-900 text-gray-300 hover:text-white border-2 border-gray-700 hover:border-gray-600'
-                    }`}
+                      }`}
                   >
                     {option.label}
                   </button>
@@ -246,11 +289,10 @@ const UserOnboarding = ({ onComplete }) => {
                   <button
                     key={index}
                     onClick={() => handleInputChange('year', option.value)}
-                    className={`w-full p-4 rounded-xl text-left text-base font-medium transition-all duration-200 hover:scale-[1.02] ${
-                      formData.year === option.value
+                    className={`w-full p-4 rounded-xl text-left text-base font-medium transition-all duration-200 hover:scale-[1.02] ${formData.year === option.value
                         ? 'bg-gray-800 text-white border-2 border-purple-500 shadow-lg shadow-purple-500/20'
                         : 'bg-gray-900 text-gray-300 hover:text-white border-2 border-gray-700 hover:border-gray-600'
-                    }`}
+                      }`}
                   >
                     {option.label}
                   </button>
@@ -265,14 +307,13 @@ const UserOnboarding = ({ onComplete }) => {
                 {codingOptions.map((option, index) => (
                   <button
                     key={index}
-                    onClick={() => handleInputChange('codingExperience', option)}
-                    className={`w-full p-4 rounded-xl text-left text-base font-medium transition-all duration-200 hover:scale-[1.02] ${
-                      formData.codingExperience === option
+                    onClick={() => handleInputChange('codingExperience', option.value)}
+                    className={`w-full p-4 rounded-xl text-left text-base font-medium transition-all duration-200 hover:scale-[1.02] ${formData.codingExperience === option.value
                         ? 'bg-gray-800 text-white border-2 border-purple-500 shadow-lg shadow-purple-500/20'
                         : 'bg-gray-900 text-gray-300 hover:text-white border-2 border-gray-700 hover:border-gray-600'
-                    }`}
+                      }`}
                   >
-                    {option}
+                    {option.label}
                   </button>
                 ))}
                 {errors.codingExperience && <p className="text-red-400 text-center text-lg mt-6">{errors.codingExperience}</p>}

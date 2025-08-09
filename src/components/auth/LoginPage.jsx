@@ -1,11 +1,10 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import Aurora from "../utils/Background"
-import { signin, signInWithGoogle } from "../../config/firebase"
-import { BASE_URL, USER_VERIFY, ADD_USERSTORY } from "../../config";
+import { signin, signInWithGoogle, passwordResetMail } from "../../config/firebase"
+import { BASE_URL, USER_VERIFY, USERPROFILE } from "../../config";
 import axios from "axios";
-import UserOnboarding from "./onboarding/UserOnboarding"; // Import the onboarding component
-
+import { useAuth } from "../../context/AuthContext";
 
 // Attention Icon Component
 const AttentionIcon = () => (
@@ -37,81 +36,18 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [isSigninLoading, setIsSigninLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isPasswordResetLoading, setIsPasswordResetLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  
-  // New state for onboarding
-  const [showOnboarding, setShowOnboarding] = useState(false);
   const [userData, setUserData] = useState(null);
-  
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const { setMongodbId } = useAuth();
   const navigate = useNavigate();
 
-  // Helper functions to map form data to API format
-  const mapCodingExperience = (experience) => {
-    const mappings = {
-      "I've built projects and solved complex problems": "EXPERT",
-      "I've worked on some projects and basic DSA": "INTERMEDIATE", 
-      "I know the basics and syntax of programming": "BEGINNER",
-      "I'm just starting my coding journey": "STARTED",
-      "I have no coding experience yet": "COMPLETELY_NEW"
-    };
-    return mappings[experience] || "COMPLETELY_NEW";
-  };
-
-  const mapDepartment = (dept) => {
-    const mappings = {
-      "comp": "COMPUTER",
-      "csd": "COMPUTER_SCIENCE_DESIGN", 
-      "it": "INFORMATION_TECHNOLOGY",
-      "entc": "ELECTRONICS_TELECOM",
-      "aids": "AI_DATA_SCIENCE"
-    };
-    return mappings[dept] || "COMPUTER";
-  };
-
-  const handleOnboardingComplete = async (onboardingData) => {
+  const verifyTokenWithBackend = async (user) => {
     try {
-      // Get fresh token
-      const token = await userData.firebaseUser.getIdToken();
-      
-      // Prepare patch data
-      const patchData = {
-        uid: userData.firebaseUser.uid,
-        firstName: onboardingData.firstName,
-        lastName: onboardingData.lastName,
-        department: mapDepartment(onboardingData.department),
-        year: onboardingData.year,
-        codingSoFar: mapCodingExperience(onboardingData.codingExperience)
-      };
-
-      console.log("Patching user data:", patchData);
-      console.log("User ID:", userData._id);
-
-      // Make PATCH request to update user story
-      const response = await axios.patch(
-        `${BASE_URL}/api/userStory/${userData._id}`,
-        patchData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      console.log("Patch response:", response.data);
-      navigate("/dashboard");
-    } catch (err) {
-      console.error("Error updating user details:", err);
-      console.error("Error response:", err.response?.data);
-      setError("Failed to save user details. Please try again.");
-      setShowOnboarding(false);
-    }
-  };
-
-  const verifyTokenWithBackend = async (firebaseUser) => {
-    try {
-      const token = await firebaseUser.getIdToken();
+      const token = await user.getIdToken();
 
       const res = await axios.post(
         BASE_URL + USER_VERIFY,
@@ -130,15 +66,14 @@ export default function LoginPage() {
     }
   };
 
-  const addUserStory = async (firebaseUser) => {
+  const addUserStory = async (user) => {
     try {
-      const token = await firebaseUser.getIdToken();
-      
+      const token = await user.getIdToken();
       const response = await axios.post(
-        BASE_URL + ADD_USERSTORY,
+        BASE_URL + USERPROFILE,
         {
-          uid: firebaseUser.uid,
-          email: firebaseUser.email,
+          uid: user.uid,
+          email: user.email,
         },
         {
           headers: {
@@ -156,30 +91,21 @@ export default function LoginPage() {
     }
   };
 
-  const handleAuthSuccess = async (firebaseUser) => {
+  const handleAuthSuccess = async (user) => {
     try {
-      // Verify user with backend
-      const verificationResult = await verifyTokenWithBackend(firebaseUser);
-
+      const verificationResult = await verifyTokenWithBackend(user);
+      console.log("Verification result:", verificationResult);
       if (!verificationResult) {
         throw new Error("Failed to verify user with backend.");
       }
-
-      // Add user story - this will tell us if user is new
-      const userStoryResponse = await addUserStory(firebaseUser);
-
-      // Check if user is new
+      const userStoryResponse = await addUserStory(user);
+      setMongodbId(userStoryResponse._id);
+      setUserData({
+        _id: userStoryResponse._id,
+      });
       if (userStoryResponse?.success && userStoryResponse?.isNewUser) {
-        // Store user data for onboarding including the MongoDB _id
-        setUserData({
-          _id: userStoryResponse._id, // This is the MongoDB ID we need for PATCH
-          firebaseUser: firebaseUser,
-          ...userStoryResponse
-        });
-
-        setShowOnboarding(true);
+        navigate("/useronboarding");
       } else {
-        // Navigate directly to dashboard for existing users
         navigate("/dashboard");
       }
     } catch (err) {
@@ -200,11 +126,12 @@ export default function LoginPage() {
     setMessage("");
 
     try {
-      const userCredential = await signin(email, password);
-      await handleAuthSuccess(userCredential.user);
+      const user = await signin(email, password);
+      console.log("User signed in:", user);
+      await handleAuthSuccess(user);
     } catch (err) {
       console.error("Login error:", err);
-      setError(err.message || "Invalid email or password.");
+      setError(err.message);
     } finally {
       setIsSigninLoading(false);
     }
@@ -226,12 +153,39 @@ export default function LoginPage() {
     }
   };
 
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+
+    if (!resetEmail) {
+      setError("Please enter your email address.");
+      return;
+    }
+
+    setIsPasswordResetLoading(true);
+    setError("");
+    setMessage("");
+
+    try {
+      await passwordResetMail(resetEmail);
+      setMessage(`Password reset email sent to ${resetEmail}. Please check your inbox and follow the instructions to reset your password.`);
+      setShowForgotPassword(false);
+      setResetEmail("");
+    } catch (err) {
+      console.error("Password reset error:", err);
+      setError(err.message);
+    } finally {
+      setIsPasswordResetLoading(false);
+    }
+  };
+
   const handleCreateAccount = () => navigate("/signup");
 
-  // Show onboarding if user is new
-  if (showOnboarding) {
-    return <UserOnboarding onComplete={handleOnboardingComplete} />;
-  }
+  const handleBackToLogin = () => {
+    setShowForgotPassword(false);
+    setResetEmail("");
+    setError("");
+    setMessage("");
+  };
 
   return (
     <div className="min-h-screen bg-black relative flex flex-col items-center justify-center antialiased overflow-hidden">
@@ -241,98 +195,168 @@ export default function LoginPage() {
 
       <div className="relative z-10 w-full max-w-2xl mx-auto p-4">
         <div className="bg-black/50 backdrop-blur-md rounded-2xl border border-neutral-800/50 shadow-2xl p-8">
-          <h1 className="text-5xl md:text-6xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 mb-2">
-            Welcome Back
-          </h1>
-          <p className="text-neutral-300 text-center text-lg mb-8">
-            Enter your credentials to access your account
-          </p>
-          {message && (
-            <div className="mb-6 p-4 bg-green-900/30 border border-green-800/40 rounded-lg">
-              <p className="text-green-200 text-sm">{message}</p>
-            </div>
-          )}
-          {error && (
-            <div className="mb-6 p-4 bg-red-900/30 border border-red-800/40 rounded-lg">
-              <p className="text-red-200 text-sm">{error}</p>
-            </div>
-          )}
+          {!showForgotPassword ? (
+            <>
+              <h1 className="text-5xl md:text-6xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 mb-2">
+                Welcome Back
+              </h1>
+              <p className="text-neutral-300 text-center text-lg mb-8">
+                Enter your credentials to access your account
+              </p>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="email" className="text-white text-base font-medium mb-2 block">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                autoComplete="email"
-                className="w-full bg-neutral-800/70 border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
-                required
-              />
-            </div>
+              {message && (
+                <div className="mb-6 p-4 bg-green-900/30 border border-green-800/40 rounded-lg">
+                  <p className="text-green-200 text-sm">{message}</p>
+                </div>
+              )}
+              {error && (
+                <div className="mb-6 p-4 bg-red-900/30 border border-red-800/40 rounded-lg">
+                  <p className="text-red-200 text-sm">{error}</p>
+                </div>
+              )}
 
-            <div>
-              <label htmlFor="password" className="text-white text-base font-medium mb-2 block">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                autoComplete="current-password"
-                className="w-full bg-neutral-800/70 border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
-                required
-              />
-            </div>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="email" className="text-white text-base font-medium mb-2 block">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    autoComplete="email"
+                    className="w-full bg-neutral-800/70 border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
+                    required
+                  />
+                </div>
 
-            {/* Email/Password Sign In Button */}
-            <button
-              type="submit"
-              disabled={isSigninLoading}
-              className="w-full bg-gradient-to-r from-violet-600 to-purple-700 text-white font-semibold text-lg py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
-            >
-              {isSigninLoading ? "Signing In..." : "Sign In"}
-            </button>
+                <div>
+                  <label htmlFor="password" className="text-white text-base font-medium mb-2 block">
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    autoComplete="current-password"
+                    className="w-full bg-neutral-800/70 border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
+                    required
+                  />
+                </div>
 
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-neutral-700"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-black text-neutral-400">Or continue with</span>
-              </div>
-            </div>
+                {/* Email/Password Sign In Button */}
+                <button
+                  type="submit"
+                  disabled={isSigninLoading}
+                  className="w-full bg-gradient-to-r from-violet-600 to-purple-700 text-white font-semibold text-lg py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+                >
+                  {isSigninLoading ? "Signing In..." : "Sign In"}
+                </button>
 
-            {/* Google Sign In Button */}
-            <button
-              type="button"
-              onClick={handleGoogleSignin}
-              disabled={isGoogleLoading}
-              className="w-full bg-white text-gray-900 font-semibold text-lg py-3 rounded-lg transition-all duration-300 hover:bg-gray-100 flex items-center justify-center gap-3 disabled:opacity-50"
-            >
-              <GoogleIcon />
-              {isGoogleLoading ? "Signing in..." : "Sign in with Google"}
-            </button>
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-neutral-700"></div>
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-black text-neutral-400">Or continue with</span>
+                  </div>
+                </div>
 
-            <div className="text-center">
-              <p className="text-neutral-400 text-sm">
-                Don't have an account?{" "}
+                {/* Google Sign In Button */}
                 <button
                   type="button"
-                  className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
-                  onClick={handleCreateAccount}
+                  onClick={handleGoogleSignin}
+                  disabled={isGoogleLoading}
+                  className="w-full bg-white text-gray-900 font-semibold text-lg py-3 rounded-lg transition-all duration-300 hover:bg-gray-100 flex items-center justify-center gap-3 disabled:opacity-50"
                 >
-                  Create account here
+                  <GoogleIcon />
+                  {isGoogleLoading ? "Signing in..." : "Sign in with Google"}
                 </button>
+
+                <div className="text-center">
+                  <p className="text-neutral-400 text-sm">
+                    Don't have an account?{" "}
+                    <button
+                      type="button"
+                      className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
+                      onClick={handleCreateAccount}
+                    >
+                      Create account here
+                    </button>
+                    
+                  </p>
+                  <p className="text-neutral-400 text-sm mt-2">
+                    Forgot your password?{" "}
+                    <button
+                      type="button"
+                      className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
+                      onClick={() => setShowForgotPassword(true)}>
+                      Click here !
+                    </button>
+                    
+                  </p>
+                </div>
+              </form>
+            </>
+          ) : (
+            <>
+              <h1 className="text-4xl md:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-400 mb-2">
+                Reset Password
+              </h1>
+              <p className="text-neutral-300 text-center text-lg mb-8">
+                Enter your email address and we'll send you a link to reset your password
               </p>
-            </div>
-          </form>
+
+              {message && (
+                <div className="mb-6 p-4 bg-green-900/30 border border-green-800/40 rounded-lg">
+                  <p className="text-green-200 text-sm">{message}</p>
+                </div>
+              )}
+              {error && (
+                <div className="mb-6 p-4 bg-red-900/30 border border-red-800/40 rounded-lg">
+                  <p className="text-red-200 text-sm">{error}</p>
+                </div>
+              )}
+
+              <form onSubmit={handleForgotPassword} className="space-y-6">
+                <div>
+                  <label htmlFor="resetEmail" className="text-white text-base font-medium mb-2 block">
+                    Email Address
+                  </label>
+                  <input
+                    id="resetEmail"
+                    type="email"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    placeholder="Enter your email address"
+                    autoComplete="email"
+                    className="w-full bg-neutral-800/70 border border-neutral-700 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isPasswordResetLoading}
+                  className="w-full bg-gradient-to-r from-violet-600 to-purple-700 text-white font-semibold text-lg py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+                >
+                  {isPasswordResetLoading ? "Sending Reset Email..." : "Send Reset Email"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleBackToLogin}
+                  className="w-full text-purple-400 hover:text-purple-300 font-medium text-sm py-2 transition-colors"
+                >
+                  Back to Login
+                </button>
+              </form>
+            </>
+          )}
         </div>
       </div>
     </div>
