@@ -41,9 +41,9 @@ const Feedback = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:p-6 text-white">
-        <h1 className="text-3xl font-bold mb-2">Feedback</h1>
-        <p className="text-purple-100 text-lg">Help us improve your learning experience</p>
+      <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:px-6 sm:py-4 text-white">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Feedback</h1>
+        <p className="text-purple-100 text-base sm:text-lg">Help us improve your learning experience</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

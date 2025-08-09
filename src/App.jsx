@@ -12,6 +12,9 @@ import LoginPage from './components/auth/LoginPage';
 import SignupPage from './components/auth/SignupPage';
 import AuthWrapper from './components/auth/AuthWrapper';
 import Queries from './components/feedback/Queries';
+import FAQ from './components/FAQ/FAQ';
+import InterviewExperience from './components/placement/InterviewExperience';
+import ProfilePage from './components/profile/ProfilePage';
 
 import CompanyExperiences from './components/placement/Experiencelist';
 // Wrap the Layout itself
@@ -24,9 +27,9 @@ function App() {
         {/* Public routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
-        
+        <Route path="/profile" element={<ProfilePage />} />
         {/* Protected layout and nested routes */}
-        <Route path="/" element={<ProtectedLayout />}>
+        <Route path="/" element={<ProtectedLayout />}> 
           <Route index element={<Navigate to="/dashboard" />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="dsa" element={<DSA />} />
@@ -36,7 +39,9 @@ function App() {
           <Route path="feedback" element={<Feedback />} />
           <Route path="pricing" element={<Pricing />} />
           <Route path="queries" element={<Queries />} />
+          <Route path="faq" element={<FAQ />} />
           <Route path="/company/:id" element={<CompanyExperiences />} />
+          <Route path="/company/:id/interview-experience" element={<InterviewExperience />} />
           {/* <Route path="/" element={<></>}></Route> */}
         </Route>
       </Routes>

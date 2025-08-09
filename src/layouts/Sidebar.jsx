@@ -9,7 +9,8 @@ import {
   CreditCard,
   ChevronRight,
   LogOut,
-  X
+  X,
+  FileQuestionMark
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { logout } from '../config/firebase';
@@ -31,6 +32,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     { path: '/feedback', label: 'Feedback', icon: MessageSquare },
     { path: '/pricing', label: 'Pricing', icon: CreditCard },
     { path: '/queries', label: 'Queries', icon: MessageSquare },
+    { path: '/faq', label: 'FAQs', icon: FileQuestionMark },
   ];
 
   return (
@@ -57,7 +59,13 @@ const Sidebar = ({ isOpen, onClose }) => {
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
         {menuItems.map(({ path, label, icon: Icon }) => {
-          const isActive = location.pathname === path;
+          let isActive = location.pathname === path;
+
+          // Special case for Placement Preparation tab
+          if (path === '/placement') {
+            isActive = location.pathname.startsWith('/placement') || location.pathname.startsWith('/company');
+          }
+          
 
           return (
             <Link

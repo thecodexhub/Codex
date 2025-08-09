@@ -1,156 +1,96 @@
 import React from 'react';
-import { Check, Crown, Zap, Shield } from 'lucide-react';
+import { Cloud, Network, MessageCircle, Users, Globe, Share2 } from 'lucide-react';
+
+import { GraduationCap, Clock, Code, LayoutDashboard, Briefcase, Trophy } from 'lucide-react';
 
 const Pricing = () => {
-  const plans = [
+  const features = [
     {
-      name: 'Free',
-      price: '$0',
-      period: 'forever',
-      description: 'Perfect for beginners',
-      icon: Shield,
-      color: 'from-gray-500 to-gray-600',
-      features: [
-        'Access to basic DSA problems',
-        'Basic progress tracking',
-        'Community forums',
-        'Limited mock interviews',
-        'Basic code editor'
-      ],
-      limitations: [
-        'Limited to 5 problems per day',
-        'No detailed solutions',
-        'No personalized learning path'
-      ]
+      icon: GraduationCap,
+      title: "Expert Curriculum",
+      description: "Industry-focused, job-ready skills"
     },
     {
-      name: 'Pro',
-      price: '$29',
-      period: 'per month',
-      description: 'Most popular choice',
-      icon: Zap,
-      color: 'from-purple-500 to-pink-500',
-      popular: true,
-      features: [
-        'Unlimited DSA problems',
-        'Advanced progress analytics',
-        'Personalized learning paths',
-        'Unlimited mock interviews',
-        'Premium code editor',
-        'System design questions',
-        'Interview preparation guide',
-        'Email support'
-      ],
-      limitations: []
+      icon: Clock,
+      title: "Lifetime Access",
+      description: "Learn anytime, revisit forever"
     },
     {
-      name: 'Enterprise',
-      price: '$99',
-      period: 'per month',
-      description: 'For serious learners',
-      icon: Crown,
-      color: 'from-yellow-400 to-orange-500',
-      features: [
-        'Everything in Pro',
-        'One-on-one mentoring',
-        'Custom learning paths',
-        'Priority support',
-        'Advanced analytics',
-        'Certification programs',
-        'Company-specific prep',
-        'Referral assistance'
-      ],
-      limitations: []
+      icon: Code,
+      title: "DSA Practice",
+      description: "Topic-wise coding problems"
+    },
+    {
+      icon: LayoutDashboard,
+      title: "Career Tracks",
+      description: "Guided specialization learning paths"
+    },
+    {
+      icon: Briefcase,
+      title: "Placement Help",
+      description: "Real interview tips shared"
+    },
+    {
+      icon: Trophy,
+      title: "Gamified Learning",
+      description: "Leaderboard boosts your progress"
     }
   ];
 
+
+
+
   return (
-    <div className="space-y-6">
-      <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:p-6 text-white">
-        <h1 className="text-3xl font-bold mb-2">Choose Your Plan</h1>
-        <p className="text-purple-100 text-lg">Unlock your coding potential with the right plan</p>
-      </div>
+    <div className="relative h-fit text-white overflow-hidden">
+  {/* Glow Background */}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {plans.map((plan, index) => {
-          const Icon = plan.icon;
+  {/* Content */}
+  <div className="relative max-w-6xl mx-auto space-y-6">
+    
+    {/* Header Section */}
+    <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:px-6 text-white">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-2">Pricing</h1>
+      <p className="text-purple-100 text-base sm:text-lg">Make the best investment</p>
+    </div>
+
+    {/* Single Card Layout with Divider */}
+    <div className="bg-gray-900 rounded-xl p-8 border border-gray-800 flex flex-col lg:flex-row">
+      
+      {/* Left Side - Features */}
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 pr-0 lg:pr-8 pb-12 lg:pb-0 border-b border-gray-800 lg:border-r lg:border-gray-800 lg:border-b-0">
+        {features.map((feature, index) => {
+          const Icon = feature.icon;
           return (
-            <div
-              key={index}
-              className={`bg-gray-900 rounded-xl p-6 border border-gray-800 relative ${
-                plan.popular ? 'border-purple-500 shadow-lg shadow-purple-500/20' : ''
-              }`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                    Most Popular
-                  </span>
-                </div>
-              )}
-
-              <div className="text-center mb-6">
-                <div className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r ${plan.color} flex items-center justify-center`}>
-                  <Icon className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">{plan.name}</h3>
-                <p className="text-gray-400 text-sm mb-4">{plan.description}</p>
-                <div className="text-3xl font-bold text-white mb-1">{plan.price}</div>
-                <div className="text-gray-400 text-sm">{plan.period}</div>
+            <div key={index} className="flex items-start space-x-4">
+              <div className="w-12 h-12 rounded-full border border-gray-600 flex items-center justify-center flex-shrink-0">
+                <Icon className="w-6 h-6 text-white" />
               </div>
-
-              <div className="space-y-3 mb-6">
-                {plan.features.map((feature, featureIndex) => (
-                  <div key={featureIndex} className="flex items-center space-x-2">
-                    <Check className="w-4 h-4 text-green-400 flex-shrink-0" />
-                    <span className="text-gray-300 text-sm">{feature}</span>
-                  </div>
-                ))}
+              <div>
+                <h3 className="text-white font-semibold mb-1">{feature.title}</h3>
+                <p className="text-gray-400 text-sm">{feature.description}</p>
               </div>
-
-              <button className={`w-full px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                plan.name === 'Free'
-                  ? 'bg-gray-700 text-white hover:bg-gray-600'
-                  : `bg-gradient-to-r ${plan.color} text-white hover:opacity-90`
-              }`}>
-                {plan.name === 'Free' ? 'Current Plan' : `Choose ${plan.name}`}
-              </button>
-
-              {plan.limitations.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-gray-700">
-                  <p className="text-gray-400 text-xs mb-2">Limitations:</p>
-                  <ul className="space-y-1">
-                    {plan.limitations.map((limitation, limitIndex) => (
-                      <li key={limitIndex} className="text-gray-500 text-xs">
-                        • {limitation}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
             </div>
           );
         })}
       </div>
 
-      <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
-        <h2 className="text-xl font-semibold text-white mb-4">Frequently Asked Questions</h2>
-        <div className="space-y-4">
-          <div className="border-b border-gray-700 pb-4">
-            <h3 className="text-white font-medium mb-2">Can I change my plan anytime?</h3>
-            <p className="text-gray-400 text-sm">Yes, you can upgrade or downgrade your plan at any time. Changes will be reflected in your next billing cycle.</p>
-          </div>
-          <div className="border-b border-gray-700 pb-4">
-            <h3 className="text-white font-medium mb-2">Do you offer student discounts?</h3>
-            <p className="text-gray-400 text-sm">Yes, we offer 50% discount for students with valid student ID. Contact support for more information.</p>
-          </div>
-          <div>
-            <h3 className="text-white font-medium mb-2">What payment methods do you accept?</h3>
-            <p className="text-gray-400 text-sm">We accept all major credit cards, PayPal, and bank transfers for enterprise plans.</p>
-          </div>
+      {/* Right Side - Pricing */}
+      <div className="flex-1 flex flex-col items-center justify-center text-center mt-12 lg:mt-0 lg:pl-8">
+        <div className="text-5xl font-bold text-white mb-2">$99</div>
+        <div className="text-gray-400 text-lg mb-8">Lifetime Account</div>
+        
+        <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-4 px-8 rounded-lg text-lg uppercase tracking-wide hover:opacity-90 transition-opacity duration-200 mb-4">
+          Buy Now
+        </button>
+        
+        <div className="text-gray-400 text-sm">
+          30 Days Moneyback Guarantee
         </div>
       </div>
     </div>
+  </div>
+</div>
+
   );
 };
 

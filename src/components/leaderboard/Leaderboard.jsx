@@ -81,9 +81,9 @@ const Leaderboard = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:p-6 text-white">
-        <h1 className="text-3xl font-bold mb-2">Leaderboard</h1>
-        <p className="text-purple-100 text-lg">Compete with the best coders worldwide</p>
+      <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:px-6 text-white">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Leaderboard</h1>
+        <p className="text-purple-100 text-base sm:text-lg">Compete with the best coders worldwide</p>
       </div>
 
       {/* Tab Navigation */}

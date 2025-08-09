@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Bell, User, Settings, LogOut, Flame, Menu } from 'lucide-react';
 import { logout } from '../config/firebase';
+
 const Navbar = ({ onMenuClick }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -137,7 +138,7 @@ const Navbar = ({ onMenuClick }) => {
                     <Settings className="w-4 h-4" />
                     <span>Settings</span>
                   </button>
-                  <button className="w-full flex items-center space-x-2 p-2 text-gray-200 hover:bg-gray-800 rounded-lg">
+                  <button className="w-full flex items-center space-x-2 p-2 text-gray-200 hover:bg-gray-800 rounded-lg" onClick={() => navigate("/profile")}>
                     <User className="w-4 h-4" />
                     <span>Profile</span>
                   </button>
