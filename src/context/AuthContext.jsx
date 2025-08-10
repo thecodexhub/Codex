@@ -7,8 +7,9 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [mongodbId, setMongodbId] = useState(null);
-
+  const [mongodbId, setMongodbId] = useState(() => {
+    return localStorage.getItem('mongodbId') || null;
+  });
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser || null);
@@ -17,7 +18,13 @@ export const AuthProvider = ({ children }) => {
 
     return () => unsubscribe();
   }, []);
-
+  useEffect(() => {
+    if (mongodbId) {
+      localStorage.setItem('mongodbId', mongodbId);
+    } else {
+      localStorage.removeItem('mongodbId');
+    }
+  }, [mongodbId]);
   return (
     <AuthContext.Provider value={{ user, loading, mongodbId, setMongodbId }}>
       {children}

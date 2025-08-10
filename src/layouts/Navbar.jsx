@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Bell, User, Settings, LogOut, Flame, Menu } from 'lucide-react';
 import { logout } from '../config/firebase';
+import UserProfile from '../components/profile/UserProfile';
 const Navbar = ({ onMenuClick }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -14,7 +15,11 @@ const Navbar = ({ onMenuClick }) => {
   ];
 
   const unreadCount = notifications.filter(n => n.unread).length;
-  
+
+  const handleProfileClick = () => {
+    setShowProfile(false);
+    navigate("/profile");
+  };
   const handleLogout = async() => {
     // localStorage.removeItem("Auth");
     await logout();
@@ -139,7 +144,7 @@ const Navbar = ({ onMenuClick }) => {
                   </button>
                   <button className="w-full flex items-center space-x-2 p-2 text-gray-200 hover:bg-gray-800 rounded-lg">
                     <User className="w-4 h-4" />
-                    <span>Profile</span>
+                    <span onClick={handleProfileClick}>Profile</span>
                   </button>
                   <hr className="my-2 border-gray-700" />
                   <button className="w-full flex items-center space-x-2 p-2 text-red-400 hover:bg-gray-800 rounded-lg">
