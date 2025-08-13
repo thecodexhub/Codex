@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
-import { Crown, Trophy, Medal, TrendingUp } from 'lucide-react';
+import { Crown, Trophy, Medal, TrendingUp, Lock, Star, Sparkles } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext'; // Adjust import path
+import { useNavigate } from 'react-router-dom';
 
 const Leaderboard = () => {
   const [activeTab, setActiveTab] = useState('institute');
+  const { user, hasFeatureAccess } = useAuth();
+  const navigate = useNavigate();
+  
+  const hasSubscription = user?.subscription || false;
 
   const leaderboardData = {
     institute: [
@@ -79,10 +85,169 @@ const Leaderboard = () => {
     }
   };
 
+  const handleUpgradeClick = () => {
+    navigate('/pricing'); 
+  };
+
+  if (!hasSubscription) {
+    return (
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:p-6 text-white">
+          <h1 className="text-3xl font-bold mb-2">Leaderboard</h1>
+          <p className="text-purple-100 text-lg">Compete with the best coders worldwide</p>
+        </div>
+
+        {/* Locked Content Container */}
+        <div className="relative">
+          {/* Tab Navigation - Disabled */}
+          <div className="flex space-x-1 bg-gray-800 rounded-lg p-1 opacity-50 pointer-events-none">
+            {['institute', 'monthly', 'weekly'].map((tab) => (
+              <button
+                key={tab}
+                className={`flex-1 py-2 px-4 rounded-md transition-all duration-200 ${
+                  activeTab === tab
+                    ? 'bg-purple-700 text-white'
+                    : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </div>
+
+          {/* Blurred Leaderboard Content */}
+          <div className="bg-gray-900 rounded-xl border border-gray-700 overflow-hidden mt-6 relative">
+            <div className="p-6 filter blur-sm pointer-events-none">
+              <div className="flex items-center space-x-2 mb-4">
+                <TrendingUp className="w-5 h-5 text-purple-400" />
+                <h2 className="text-lg font-semibold text-white">
+                  {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Rankings
+                </h2>
+              </div>
+
+              <div className="space-y-3">
+                {leaderboardData[activeTab].map((user, index) => {
+                  const rank = index + 1;
+                  const isCurrentUser = user.name === 'You';
+                  const colors = getRankColors(rank, isCurrentUser);
+                  
+                  return (
+                    <div
+                      key={index}
+                      className={`flex items-center space-x-4 p-4 rounded-lg transition-all duration-200 ${colors.bg}`}
+                    >
+                      <div className="flex items-center justify-center w-8">
+                        {getRankIcon(rank)}
+                      </div>
+                      
+                      <div className="flex items-center space-x-3 flex-1">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${colors.avatar}`}>
+                          {user.avatar}
+                        </div>
+                        <div>
+                          <div className={`font-medium ${colors.name}`}>
+                            {user.name}
+                            {rank <= 3 && !isCurrentUser && (
+                              <span className="ml-2 text-xs px-2 py-1 rounded-full bg-opacity-20 bg-white">
+                                {rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-gray-400 text-sm">
+                            {user.solved} problems • {user.streak} day streak
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <div className={`font-semibold ${rank <= 3 && !isCurrentUser ? colors.name : 'text-white'}`}>
+                          {user.score}
+                        </div>
+                        <div className={`text-sm ${getChangeColor(user.change)}`}>
+                          {user.change}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Premium Unlock Overlay */}
+            <div className="absolute inset-0 bg-gray-900/90 backdrop-blur-sm flex items-center justify-center">
+              <div className="text-center p-2 max-w-md">
+                {/* Premium Icon */}
+                <div className="w-20 h-20 bg-gradient-to-r from-purple-800 to-purple-900 rounded-full flex items-center justify-center mx-auto mb-6 relative">
+                  <Crown className="w-10 h-10 text-yellow-400" />
+                  <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-gray-900" />
+                  </div>
+                </div>
+
+                {/* Premium Message */}
+                <h2 className="text-2xl font-bold text-white mb-3">
+                  Unlock Global Leaderboard
+                </h2>
+                <p className="text-gray-300 mb-6 leading-relaxed">
+                  Join the elite community of coders! Get access to detailed rankings, 
+                  track your progress against peers, and compete for the top spot.
+                </p>
+
+                {/* Feature List */}
+                <div className="bg-gray-800 rounded-lg p-4 mb-6 text-left">
+                  <h3 className="text-white font-semibold mb-3 text-center">Premium Features:</h3>
+                  <ul className="space-y-2 text-sm text-gray-300">
+                    <li className="flex items-center gap-2">
+                      <Star className="w-4 h-4 text-purple-400" />
+                      Global institute rankings
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Star className="w-4 h-4 text-purple-400" />
+                      Monthly & weekly leaderboards
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Star className="w-4 h-4 text-purple-400" />
+                      Detailed progress tracking
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Star className="w-4 h-4 text-purple-400" />
+                      Competitive streak monitoring
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Upgrade Button */}
+                <button
+                  onClick={handleUpgradeClick}
+                  className="w-full px-8 py-4 bg-gradient-to-r from-purple-800 to-purple-900 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-200 font-semibold text-lg flex items-center justify-center gap-2 shadow-lg hover:shadow-purple-500/25"
+                >
+                  <Crown className="w-5 h-5" />
+                  Upgrade to Premium
+                </button>
+
+                <p className="text-xs text-gray-400 mt-4">
+                  One simple plan • Cancel anytime
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Original leaderboard for subscribed users
   return (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:p-6 text-white">
-        <h1 className="text-3xl font-bold mb-2">Leaderboard</h1>
+        <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
+          Leaderboard
+          <div className="inline-flex items-center gap-2 bg-yellow-500/20 text-yellow-200 px-3 py-1 rounded-full text-sm">
+            <Star className="w-4 h-4" />
+            Premium
+          </div>
+        </h1>
         <p className="text-purple-100 text-lg">Compete with the best coders worldwide</p>
       </div>
 
