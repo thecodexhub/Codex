@@ -126,7 +126,7 @@ const Navbar = ({ onMenuClick }) => {
           <div className="relative">
             <button
               className="profile-button flex items-center space-x-1 sm:space-x-2 p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-lg transition-colors"
-              onClick={() => setShowProfile(!showProfile)}
+              onClick={handleProfileClick}
             >
               <div className="w-8 h-8 bg-purple-800 rounded-full flex items-center justify-center">
                 <User className="w-4 h-4 text-white" />
@@ -135,7 +135,7 @@ const Navbar = ({ onMenuClick }) => {
             </button>
 
             {/* Profile Modal */}
-            {showProfile && (
+            {/* {showProfile && (
               <div className="profile-modal absolute right-0 top-12 w-48 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50">
                 <div className="p-2">
                   <button className="w-full flex items-center space-x-2 p-2 text-gray-200 hover:bg-gray-800 rounded-lg">
@@ -155,7 +155,7 @@ const Navbar = ({ onMenuClick }) => {
                   </button>
                 </div>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>
