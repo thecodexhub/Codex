@@ -8,7 +8,7 @@ const Leaderboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
     // const user = { subscription: true };
-  const hasSubscription = user?.subscription || false;
+  const hasSubscription = user?.subscription || true;
   // const navigate = (path) => console.log(`Navigating to: ${path}`);
 
   const leaderboardData = {

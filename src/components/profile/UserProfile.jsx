@@ -28,6 +28,8 @@ const ProfilePage = () => {
                     }
                 });
                 console.log("Profile Response:", res);
+                const options = { year: 'numeric', month: 'long' };
+                // const joinDate = new Date(user.metadata.creationTime).toLocaleDateString('en-US', options);
                 if (res.data.success && res.data.data) {
                     const profileData = {
                         firstName: res.data.data.name.firstName || '',
@@ -35,11 +37,11 @@ const ProfilePage = () => {
                         email: res.data.data.email || user.email || '',
                         department: res.data.data.department || '',
                         year: res.data.data.year || '',
-                        joinDate: new Date(user.metadata.creationTime).toLocaleDateString(),
+                        joinDate: new Date(user.metadata.creationTime).toLocaleDateString('en-US', options),
                         location: 'KKWIEER, Nashik',
-                        bio: 'Hey there!',
-                        githubUrl: 'https://github.com/sobiya-22',
-                        profilePicture: user.photoURL,
+                        bio: res.data.data.aboutUser || '--',
+                        githubUrl: res.data.data.githubUrl || '-',
+                        profilePicture: res.data.data.profilePic || '',
                         currentStreak: 22,
                         dailyProblemsSolved: 5,
                     };
@@ -67,7 +69,9 @@ const ProfilePage = () => {
                 firstName: editProfile.firstName,
                 lastName: editProfile.lastName,
                 department: editProfile.department,
-                year: editProfile.year
+                year: editProfile.year,
+                aboutUser: editProfile.bio,
+                githubUrl: editProfile.githubUrl,
             };
 
             await axios.patch(
