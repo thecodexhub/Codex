@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { CheckCircle, User, GraduationCap, Calendar, Code, ArrowRight, ArrowLeft, Send } from 'lucide-react';
 import { useAuth } from "../../../context/AuthContext";
 import axios from "axios";
-import { BASE_URL,USERPROFILE } from "../../../config";
+import { BASE_URL, USERPROFILE } from "../../../config";
 import { useNavigate } from 'react-router-dom';
 
 const UserOnboarding = () => {
@@ -14,6 +14,8 @@ const UserOnboarding = () => {
     lastName: '',
     department: '',
     year: '',
+    githubUrl: '',
+    aboutUser: '',
     codingExperience: ''
   });
 
@@ -21,7 +23,7 @@ const UserOnboarding = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const totalSteps = 4;
+  const totalSteps = 5; // Updated to 5 steps
 
   const departmentOptions = [
     { value: 'COMP', label: 'Computer Engineering' },
@@ -40,24 +42,24 @@ const UserOnboarding = () => {
     { value: 'LY', label: 'Final Year (BE)' }
   ];
 
-const codingOptions = [
-  {
-    label: "I've worked on some projects and basic DSA",
-    value: "EXPERT"
-  },
-  {
-    label: "I know the basics and syntax of programming",
-    value: "BASIC_CODING"
-  },
-  {
-    label: "I'm just starting my coding journey",
-    value: "JUST_STARTING"
-  },
-  {
-    label: "I have no coding experience yet",
-    value: "COMPLETELY_NEW"
-  }
-];
+  const codingOptions = [
+    {
+      label: "I've worked on some projects and basic DSA",
+      value: "EXPERT"
+    },
+    {
+      label: "I know the basics and syntax of programming",
+      value: "BASIC_CODING"
+    },
+    {
+      label: "I'm just starting my coding journey",
+      value: "JUST_STARTING"
+    },
+    {
+      label: "I have no coding experience yet",
+      value: "COMPLETELY_NEW"
+    }
+  ];
 
   const handleInputChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
@@ -89,6 +91,9 @@ const codingOptions = [
         }
         break;
       case 3:
+        // GitHub URL and aboutUser are optional, so no validation needed
+        break;
+      case 4:
         if (!formData.codingExperience) {
           newErrors.codingExperience = 'Please select your coding experience level';
         }
@@ -112,6 +117,7 @@ const codingOptions = [
       setCurrentStep(currentStep - 1);
     }
   };
+
   const handleSubmit = async () => {
     if (!validateCurrentStep()) return;
 
@@ -123,6 +129,7 @@ const codingOptions = [
       if (!mongodbId || !user.uid) {
         alert('No ID found! Please Login')
         navigate('/login');
+        return;
       }
       const token = await user.getIdToken?.();
       if (!token) throw new Error("Failed to get token.");
@@ -133,6 +140,8 @@ const codingOptions = [
         lastName: formData.lastName,
         department: formData.department,
         year: formData.year,
+        githubUrl: formData.githubUrl || "",
+        aboutUser: formData.aboutUser || "",
         codingSoFar: formData.codingExperience
       };
 
@@ -148,7 +157,7 @@ const codingOptions = [
       );
 
       console.log("User story patched:", response.data);
-      console.log('Path data:', patchData);
+      console.log('Patch data:', patchData);
       setIsSubmitted(true);
       setTimeout(() => {
         navigate('/dashboard')
@@ -157,12 +166,11 @@ const codingOptions = [
     } catch (error) {
       console.error('Error submitting form:', error);
       setIsSubmitting(false);
-      setIsSubmitted(false);
     }
   };
 
   const getStepIcon = (step) => {
-    const icons = [User, GraduationCap, Calendar, Code];
+    const icons = [User, GraduationCap, Calendar, User, Code]; // Updated icons array
     const Icon = icons[step];
     return <Icon className="w-6 h-6" />;
   };
@@ -172,6 +180,7 @@ const codingOptions = [
       "What do we call you?",
       "Which department are you from?",
       "What year are you currently in?",
+      "Tell us more about yourself",
       "How much coding have you done so far?"
     ];
     return titles[step];
@@ -301,8 +310,37 @@ const codingOptions = [
               </div>
             )}
 
-            {/* Step 3: Coding Experience */}
+            {/* Step 3: GitHub URL and About User */}
             {currentStep === 3 && (
+              <div className="space-y-6 max-w-lg mx-auto">
+                <div className="space-y-4">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={formData.githubUrl}
+                      onChange={(e) => handleInputChange('githubUrl', e.target.value)}
+                      placeholder="GitHub Profile URL (Optional)"
+                      className="w-full bg-gray-900 border-2 border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors duration-300 text-xl py-4 px-6 rounded-xl"
+                    />
+                    {errors.githubUrl && <p className="text-red-400 text-sm mt-1">{errors.githubUrl}</p>}
+                  </div>
+                  <div className="relative">
+                    <textarea
+                      value={formData.aboutUser}
+                      onChange={(e) => handleInputChange('aboutUser', e.target.value)}
+                      placeholder="Tell us about yourself (Optional)"
+                      className="w-full bg-gray-900 border-2 border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors duration-300 text-xl py-4 px-6 rounded-xl h-32 resize-none"
+                      maxLength="250"
+                    />
+                    <p className="text-right text-gray-400 text-xs mt-1">{formData.aboutUser.length} / 250</p>
+                    {errors.aboutUser && <p className="text-red-400 text-sm mt-1">{errors.aboutUser}</p>}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Step 4: Coding Experience */}
+            {currentStep === 4 && (
               <div className="space-y-4 max-w-2xl mx-auto">
                 {codingOptions.map((option, index) => (
                   <button

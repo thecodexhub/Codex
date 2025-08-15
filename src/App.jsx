@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './layouts/Layout';
+import FullPageLayout from './layouts/FullPageLayout';
 import Dashboard from './components/dashboard/Dashboard';
 import DSA from './components/dsa/DSA';
 import SpecializationPath from './components/specialization/SpecializationPath';
@@ -14,23 +15,26 @@ import AuthWrapper from './components/auth/AuthWrapper';
 import FAQ from './components/FAQ/FAQ';
 import InterviewExperience from './components/placement/InterviewExperience';
 import ProfilePage from './components/profile/ProfilePage';
-
 import CompanyExperiences from './components/placement/Experiencelist';
 import Contests from './components/contests/Contests';
 import ContestDetails from './components/contests/ContestDetails';
-// Wrap the Layout itself
+import UserOnboarding from "./components/auth/onboarding/UserOnboarding";
+import UserProfile from './components/profile/UserProfile';
+
+// Wrap the Layout with authentication
 const ProtectedLayout = AuthWrapper(Layout);
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Public routes */}
+        {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        {/* Protected layout and nested routes */}
-        <Route path="/" element={<ProtectedLayout />}> 
+
+        {/* Protected Layout */}
+        <Route path="/" element={<ProtectedLayout />}>
           <Route index element={<Navigate to="/dashboard" />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="dsa" element={<DSA />} />
@@ -42,9 +46,14 @@ function App() {
           <Route path="faq" element={<FAQ />} />
           <Route path="contests" element={<Contests />} />
           <Route path="contests/details" element={<ContestDetails />} />
-          <Route path="/company/:id" element={<CompanyExperiences />} />
-          <Route path="/company/:id/interview-experience" element={<InterviewExperience />} />
-          {/* <Route path="/" element={<></>}></Route> */}
+          <Route path="company/:id" element={<CompanyExperiences />} />
+          <Route path="company/:id/interview-experience" element={<InterviewExperience />} />
+        </Route>
+
+        {/* Full Page Layout Routes */}
+        <Route element={<FullPageLayout />}>
+          <Route path="useronboarding" element={<UserOnboarding />} />
+          <Route path="userprofile" element={<UserProfile />} />
         </Route>
       </Routes>
     </Router>

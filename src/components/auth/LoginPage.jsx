@@ -74,6 +74,7 @@ export default function LoginPage() {
         {
           uid: user.uid,
           email: user.email,
+          profilePic: user.photoURL || "",
         },
         {
           headers: {
@@ -100,9 +101,9 @@ export default function LoginPage() {
       }
       const userStoryResponse = await addUserStory(user);
       setMongodbId(userStoryResponse._id);
-      setUserData({
-        _id: userStoryResponse._id,
-      });
+      // setUserData({
+      //   _id: userStoryResponse._id,
+      // });
       if (userStoryResponse?.success && userStoryResponse?.isNewUser) {
         navigate("/useronboarding");
       } else {

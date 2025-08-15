@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
-import { Crown, Trophy, Medal, TrendingUp } from 'lucide-react';
+import { Crown, Trophy, Medal, TrendingUp, Star, Sparkles } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Leaderboard = () => {
   const [activeTab, setActiveTab] = useState('institute');
+  const { user } = useAuth();
+  const navigate = useNavigate();
+    // const user = { subscription: true };
+  const hasSubscription = user?.subscription || true;
+  // const navigate = (path) => console.log(`Navigating to: ${path}`);
 
   const leaderboardData = {
     institute: [
@@ -79,15 +86,19 @@ const Leaderboard = () => {
     }
   };
 
+  const handleUpgradeClick = () => {
+    navigate('/pricing');
+  };
+
   return (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:px-6 text-white">
         <h1 className="text-2xl sm:text-3xl font-bold mb-2">Leaderboard</h1>
-        <p className="text-purple-100 text-base sm:text-lg">Compete with the best coders worldwide</p>
+        <p className="text-purple-100 text-base sm:text-lg">Compete with the best coders</p>
       </div>
 
-      {/* Tab Navigation */}
-      <div className="flex space-x-1 bg-gray-800 rounded-lg p-1">
+      {/* Tab Navigation - `flex-shrink-0` ensures it doesn't shrink. */}
+      <div className="flex space-x-1 bg-gray-800 rounded-lg p-1 overflow-hidden mt-6 flex-shrink-0">
         {['institute', 'monthly', 'weekly'].map((tab) => (
           <button
             key={tab}
@@ -103,63 +114,113 @@ const Leaderboard = () => {
         ))}
       </div>
 
-      {/* Leaderboard Table */}
-      <div className="bg-gray-900 rounded-xl border border-gray-700 overflow-hidden">
-        <div className="p-6">
-          <div className="flex items-center space-x-2 mb-4">
-            <TrendingUp className="w-5 h-5 text-purple-400" />
-            <h2 className="text-lg font-semibold text-white">
-              {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Rankings
-            </h2>
-          </div>
+      {/* Leaderboard Container - `flex-grow` allows it to fill the remaining space. `overflow-hidden` ensures its children respect the boundaries. */}
+      <div className="relative mt-6 flex-grow overflow-hidden rounded-xl">
+        {/* Main Leaderboard Content - `h-full` and `flex flex-col` ensure it fills the parent and controls the layout of its children. */}
+        <div className={`bg-gray-900 rounded-xl border border-gray-700 h-full ${!hasSubscription ? 'filter blur-sm' : ''}`}>
+          <div className="p-6 h-full flex flex-col">
+            <div className="flex items-center space-x-2 mb-4 flex-shrink-0">
+              <TrendingUp className="w-5 h-5 text-purple-400" />
+              <h2 className="text-lg font-semibold text-white">
+                {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Rankings
+              </h2>
+            </div>
 
-          <div className="space-y-3">
-            {leaderboardData[activeTab].map((user, index) => {
-              const rank = index + 1;
-              const isCurrentUser = user.name === 'You';
-              const colors = getRankColors(rank, isCurrentUser);
-              
-              return (
-                <div
-                  key={index}
-                  className={`flex items-center space-x-4 p-4 rounded-lg transition-all duration-200 ${colors.bg}`}
-                >
-                  <div className="flex items-center justify-center w-8">
-                    {getRankIcon(rank)}
-                  </div>
-                  
-                  <div className="flex items-center space-x-3 flex-1">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${colors.avatar}`}>
-                      {user.avatar}
+            <div className="space-y-3 flex-grow overflow-y-auto pr-2 scrollbar-hidden">
+              {leaderboardData[activeTab].map((user, index) => {
+                const rank = index + 1;
+                const isCurrentUser = user.name === 'You';
+                const colors = getRankColors(rank, isCurrentUser);
+                
+                return (
+                  <div
+                    key={index}
+                    className={`flex items-center space-x-4 p-4 rounded-lg transition-all duration-200 ${colors.bg} ${!hasSubscription ? 'pointer-events-none' : ''}`}
+                  >
+                    <div className="flex items-center justify-center w-8">
+                      {getRankIcon(rank)}
                     </div>
-                    <div>
-                      <div className={`font-medium ${colors.name}`}>
-                        {user.name}
-                        {rank <= 3 && !isCurrentUser && (
-                          <span className="ml-2 text-xs px-2 py-1 rounded-full bg-opacity-20 bg-white">
-                            {rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}
-                          </span>
-                        )}
+                    
+                    <div className="flex items-center space-x-3 flex-1">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${colors.avatar}`}>
+                        {user.avatar}
                       </div>
-                      <div className="text-gray-400 text-sm">
-                        {user.solved} problems • {user.streak} day streak
+                      <div>
+                        <div className={`font-medium ${colors.name}`}>
+                          {user.name}
+                          {rank <= 3 && !isCurrentUser && (
+                            <span className="ml-2 text-xs px-2 py-1 rounded-full bg-opacity-20 bg-white">
+                              {rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-gray-400 text-sm">
+                          {user.solved} problems • {user.streak} day streak
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="text-right">
-                    <div className={`font-semibold ${rank <= 3 && !isCurrentUser ? colors.name : 'text-white'}`}>
-                      {user.score}
-                    </div>
-                    <div className={`text-sm ${getChangeColor(user.change)}`}>
-                      {user.change}
+                    <div className="text-right">
+                      <div className={`font-semibold ${rank <= 3 && !isCurrentUser ? colors.name : 'text-white'}`}>
+                        {user.score}
+                      </div>
+                      <div className={`text-sm ${getChangeColor(user.change)}`}>
+                        {user.change}
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
+
+        {/* Premium Overlay */}
+        {!hasSubscription && (
+          <div className="absolute inset-0 bg-gray-900/90 backdrop-blur-sm flex items-center justify-center">
+            <div className="bg-gray-800 rounded-xl p-5 text-center max-w-screen-sm mx-4 border border-gray-800 shadow-2xl">
+              {/* Premium Icon */}
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-800 to-purple-900 rounded-full flex items-center justify-center mx-auto mb-4 relative">
+                <Crown className="w-8 h-8 text-yellow-400"/>
+              </div>
+
+              {/* Premium Message */}
+              <h3 className="text-lg font-bold text-white mb-2">
+                Premium Feature
+              </h3>
+              <p className="text-gray-300 mb-4 text-sm">
+                Unlock detailed rankings and compete with coders worldwide!
+              </p>
+
+              {/* Feature List - Compact */}
+              <div className="bg-gray-700 rounded-lg p-3 mb-4 text-left">
+                <ul className="space-y-1 text-xs text-gray-300">
+                  <li className="flex items-center gap-2">
+                    <Star className="w-3 h-3 text-purple-400" />
+                    Global rankings
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Star className="w-3 h-3 text-purple-400" />
+                    Monthly & weekly boards
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Star className="w-3 h-3 text-purple-400" />
+                    Progress tracking
+                  </li>
+                </ul>
+              </div>
+
+              {/* Upgrade Button */}
+              <button
+                onClick={handleUpgradeClick}
+                className="w-full px-4 py-3 bg-gradient-to-r from-purple-800 to-purple-900 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-200 font-semibold text-sm flex items-center justify-center gap-2"
+              >
+                <Crown className="w-4 h-4" />
+                Upgrade to Premium
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
