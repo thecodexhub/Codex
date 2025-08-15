@@ -5,6 +5,7 @@ import {
   Target,
   Briefcase,
   Trophy,
+  Medal,
   MessageSquare,
   CreditCard,
   ChevronRight,
@@ -28,10 +29,10 @@ const Sidebar = ({ isOpen, onClose }) => {
     { path: '/dsa', label: 'DSA', icon: Code2 },
     { path: '/specialization', label: 'Specialization Path', icon: Target },
     { path: '/placement', label: 'Placement Preparation', icon: Briefcase },
-    { path: '/leaderboard', label: 'Leaderboard', icon: Trophy },
-    { path: '/feedback', label: 'Feedback', icon: MessageSquare },
+    { path: '/contests', label: 'Contests', icon: Trophy },
+    { path: '/leaderboard', label: 'Leaderboard', icon: Medal },
+    { path: '/feedback', label: 'Feedback & Support', icon: MessageSquare },
     { path: '/pricing', label: 'Pricing', icon: CreditCard },
-    { path: '/queries', label: 'Queries', icon: MessageSquare },
     { path: '/faq', label: 'FAQs', icon: FileQuestionMark },
   ];
 
@@ -61,9 +62,12 @@ const Sidebar = ({ isOpen, onClose }) => {
         {menuItems.map(({ path, label, icon: Icon }) => {
           let isActive = location.pathname === path;
 
-          // Special case for Placement Preparation tab
+          // Special cases for tabs with nested routes
           if (path === '/placement') {
             isActive = location.pathname.startsWith('/placement') || location.pathname.startsWith('/company');
+          }
+          if (path === '/contests') {
+            isActive = location.pathname.startsWith('/contests');
           }
           
 
@@ -88,15 +92,6 @@ const Sidebar = ({ isOpen, onClose }) => {
 
       {/* Profile and Logout */}
       <div className="p-4 border-t border-gray-800 space-y-3">
-        <div className="flex items-center space-x-3 p-3 rounded-lg bg-gray-800">
-          <div className="w-8 h-8 bg-purple-800 rounded-full flex items-center justify-center">
-            <Code2 className="w-4 h-4 text-white" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-white text-sm font-medium truncate">Sobiya</p>
-            <p className="text-gray-400 text-xs truncate">Premium Member</p>
-          </div>
-        </div>
 
         <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-colors">
           <LogOut

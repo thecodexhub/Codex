@@ -11,12 +11,13 @@ import Pricing from './components/pricing/Pricing';
 import LoginPage from './components/auth/LoginPage';
 import SignupPage from './components/auth/SignupPage';
 import AuthWrapper from './components/auth/AuthWrapper';
-import Queries from './components/feedback/Queries';
 import FAQ from './components/FAQ/FAQ';
 import InterviewExperience from './components/placement/InterviewExperience';
 import ProfilePage from './components/profile/ProfilePage';
 
 import CompanyExperiences from './components/placement/Experiencelist';
+import Contests from './components/contests/Contests';
+import ContestDetails from './components/contests/ContestDetails';
 // Wrap the Layout itself
 const ProtectedLayout = AuthWrapper(Layout);
 
@@ -38,8 +39,9 @@ function App() {
           <Route path="leaderboard" element={<Leaderboard />} />
           <Route path="feedback" element={<Feedback />} />
           <Route path="pricing" element={<Pricing />} />
-          <Route path="queries" element={<Queries />} />
           <Route path="faq" element={<FAQ />} />
+          <Route path="contests" element={<Contests />} />
+          <Route path="contests/details" element={<ContestDetails />} />
           <Route path="/company/:id" element={<CompanyExperiences />} />
           <Route path="/company/:id/interview-experience" element={<InterviewExperience />} />
           {/* <Route path="/" element={<></>}></Route> */}

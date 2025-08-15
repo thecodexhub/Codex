@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 
 const FAQ = () => {
-    const [expandedItems, setExpandedItems] = useState(new Set([0])); // Start with first item expanded
+    const [expandedId, setExpandedId] = useState(0); 
 
     const faqData = [
         {
@@ -28,13 +28,7 @@ const FAQ = () => {
     ];
 
     const toggleItem = (id) => {
-        const newExpandedItems = new Set(expandedItems);
-        if (newExpandedItems.has(id)) {
-            newExpandedItems.delete(id);
-        } else {
-            newExpandedItems.add(id);
-        }
-        setExpandedItems(newExpandedItems);
+        setExpandedId((prev) => (prev === id ? null : id));
     };
 
     return (
@@ -45,7 +39,7 @@ const FAQ = () => {
                 <h1 className="text-2xl sm:text-3xl font-bold mb-2">Frequently Asked Questions</h1>
                 <p className="text-purple-100 text-base sm:text-lg">Get your all doubts cleared</p>
             </div>
-            <div className="max-w-4xl mx-auto">
+            <>
                 
 
                 {/* FAQ Items */}
@@ -58,12 +52,12 @@ const FAQ = () => {
                             >
                                 <span className="text-base md:text-lg font-medium">{item.question}</span>
                                 <span className="text-xl ml-4">
-                                    {expandedItems.has(item.id) ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+                                    {expandedId === item.id ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                                 </span>
 
                             </button>
 
-                            {expandedItems.has(item.id) && (
+                            {expandedId === item.id && (
                                 <div className="pb-6">
                                     <div className="border-b border-gray-700 mb-4"></div>
                                     <p className="text-base md:text-lg text-gray-300 leading-relaxed px-3">
@@ -74,7 +68,7 @@ const FAQ = () => {
                         </div>
                     ))}
                 </div>
-            </div>
+            </>
         </div>
     );
 };

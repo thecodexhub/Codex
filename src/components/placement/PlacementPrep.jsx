@@ -52,7 +52,7 @@ export default function CompanyGrid() {
 
   return (
     <div className="text-white space-y-6">
-      <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:p-6 text-white">
+      <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:px-6 text-white">
         <h1 className="text-2xl sm:text-3xl font-bold mb-2">Interview Experiences</h1>
         <p className="text-purple-100 text-base sm:text-lg">Get ready for your dream company</p>
       </div>

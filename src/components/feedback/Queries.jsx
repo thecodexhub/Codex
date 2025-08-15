@@ -1,84 +1,68 @@
 import React, { useState } from 'react';
 import { MessageSquare, UploadCloud } from 'lucide-react';
 import emailjs from '@emailjs/browser';
-import { getAuth } from 'firebase/auth';
-
-const user = getAuth().currentUser;
-const email = user?.email;
+import { useAuth } from '../../context/AuthContext'; 
 
 const Queries = () => {
+  const { user } = useAuth(); 
+  const email = user?.email;
+  const name = user?.displayName;
+
   const [subject, setSubject] = useState('');
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
-  const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-
   const [statusModal, setStatusModal] = useState({ show: false, success: true, message: '' });
 
   const categories = ['Account', 'Technical Issue', 'Payment', 'Feedback', 'Other'];
-
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
 
     emailjs.send(
-      'service_vclfbkb',
-      'template_ky6zoqa', // ✅ user email template
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_TEMPLATE_USER,
       { 
         subject,
         category,
         description,
         email: email || 'no-reply@example.com',
+        name: name || 'Anonymous',
       },
-      'LLPZs1YiihhKkLZml'
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
     )
-    .then((response) => {
-      console.log('User email SUCCESS!', response.status, response.text);
-    
-      // ✅ Then send to Admin
-      emailjs.send(
-        'service_vclfbkb',
-        'template_vs3rqhv',
+    .then(() => {
+      // Send to Admin
+      return emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ADMIN,
         {
           subject,
           category,
           description,
           email: email || 'no-reply@example.com',
-          name: user?.displayName || 'Anonymous', // Optional: send name to admin
-          //attachment: file,     // Optional: send time to admin
+          name: name || 'Anonymous',
         },
-        'LLPZs1YiihhKkLZml'
-      )
-      .then((adminRes) => {
-        console.log('Admin email SUCCESS!', adminRes.status, adminRes.text);
-      })
-      .catch((adminErr) => {
-        console.error('Admin email FAILED...', adminErr);
-      });
-    
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
+    })
+    .then(() => {
       setStatusModal({ show: true, success: true, message: 'Query submitted successfully!' });
       setSubject('');
       setCategory('');
       setDescription('');
-      setFile(null);
-    
-      setTimeout(() => {
-        setStatusModal({ ...statusModal, show: false });
-      }, 2000);
+      setTimeout(() => setStatusModal((prev) => ({ ...prev, show: false })), 2000);
     })
     .catch((error) => {
-      console.error('User email FAILED...', error);
+      console.error('Email sending FAILED...', error);
       setStatusModal({ show: true, success: false, message: 'Failed to send query. Please try again.' });
     })
     .finally(() => {
       setLoading(false);
     });
-    
   };
+
 
   return (
     <div className="relative">
@@ -142,24 +126,12 @@ const Queries = () => {
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Please explain the issue in detail."
-              className="w-full p-3 bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-purple-500 focus:outline-none resize-none h-32"
+              placeholder="Please explain the issue in detail..."
+              className="w-full p-3 bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-purple-500 focus:outline-none resize-none h-32 sm:h-24"
               required
             />
           </div>
 
-          <div className="flex flex-col items-center">
-            <label htmlFor="file-upload" className="cursor-pointer flex items-center justify-center gap-4 border-2 border-dashed border-gray-600 rounded-lg p-6 w-full max-w-s text-gray-400 hover:border-purple-500 transition-colors">
-              <UploadCloud className="w-8 h-8" />
-              <span>{file ? file.name : 'Click to browse or drag and drop your files'}</span>
-              <input
-                id="file-upload"
-                type="file"
-                className="hidden"
-                onChange={handleFileChange}
-              />
-            </label>
-          </div>
 
           <button
             type="submit"
