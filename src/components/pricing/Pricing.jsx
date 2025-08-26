@@ -4,7 +4,7 @@ import { GraduationCap, Clock, Code, LayoutDashboard, Briefcase, Trophy, Calenda
 
 const Pricing = () => {
   // Toggle this boolean to show Active Plan view
-  const isplantaken = true;
+  const isplantaken = false;
   const features = [
     {
       icon: GraduationCap,

@@ -28,7 +28,7 @@ const Dashboard = () => {
     <div className="space-y-6">
       {/* Welcome Section */}
       <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:px-6 text-white">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Hi {user?.firstName}, Welcome back!</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Hi {user?.displayName}, Welcome back!</h1>
         <p className="text-purple-100 text-base sm:text-lg">
           Ready to continue your coding journey?
         </p>

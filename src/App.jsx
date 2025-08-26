@@ -14,7 +14,6 @@ import SignupPage from './components/auth/SignupPage';
 import AuthWrapper from './components/auth/AuthWrapper';
 import FAQ from './components/FAQ/FAQ';
 import InterviewExperience from './components/placement/InterviewExperience';
-import ProfilePage from './components/profile/ProfilePage';
 import CompanyExperiences from './components/placement/Experiencelist';
 import Contests from './components/contests/Contests';
 import ContestDetails from './components/contests/ContestDetails';
@@ -31,7 +30,6 @@ function App() {
         {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
 
         {/* Protected Layout */}
         <Route path="/" element={<ProtectedLayout />}>

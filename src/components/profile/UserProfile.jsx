@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { User, Mail, MapPin, Calendar, Edit3, Save, X, Github, ExternalLink, Trophy, Target, Globe } from 'lucide-react';
+import { User, Mail, MapPin, Calendar, Edit3, Save, X, Github, ExternalLink, Trophy, Target, Globe, ArrowLeft } from 'lucide-react';
 import { BASE_URL, USERPROFILE } from '../../config';
 import { useAuth } from "../../context/AuthContext";
 import axios from 'axios';
@@ -92,10 +92,13 @@ const ProfilePage = () => {
         }
     };
 
-
     const handleCancel = () => {
         setEditProfile(profile);
         setIsEditing(false);
+    };
+
+    const handleGoBack = () => {
+        window.history.back();
     };
 
     if (loading) {
@@ -114,6 +117,16 @@ const ProfilePage = () => {
 
     return (
         <div className="min-h-screen bg-gray-950 pt-6 w-full max-w-7xl mx-auto">
+            {/* Back Button */}
+            <div className="mx-6 xl:mx-0 mb-4">
+                <button
+                    onClick={handleGoBack}
+                    className="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 border border-gray-700 hover:border-gray-600"
+                >
+                    <ArrowLeft className="w-5 h-5" />
+                    <span>Back</span>
+                </button>
+            </div>
 
             {/* Profile Header Card - Full Width */}
             <div className="bg-gray-900 shadow-xl overflow-hidden border-b border-gray-800 rounded-2xl mx-6 xl:mx-0">
@@ -357,4 +370,4 @@ const ProfilePage = () => {
     );
 };
 
-export default ProfilePage; 
+export default ProfilePage;

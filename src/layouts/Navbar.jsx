@@ -19,7 +19,7 @@ const Navbar = ({ onMenuClick }) => {
 
   const handleProfileClick = () => {
     setShowProfile(false);
-    navigate("/profile");
+    navigate("/userprofile");
   };
   const handleLogout = async() => {
     // localStorage.removeItem("Auth");

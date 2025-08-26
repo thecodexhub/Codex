@@ -26,9 +26,9 @@ const Sidebar = ({ isOpen, onClose }) => {
   };
   const menuItems = [
     { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/dsa', label: 'DSA', icon: Code2 },
+    { path: '/dsa', label: 'Programming', icon: Code2 },
     { path: '/specialization', label: 'Specialization Path', icon: Target },
-    { path: '/placement', label: 'Placement Preparation', icon: Briefcase },
+    { path: '/placement', label: 'Interview Experience', icon: Briefcase },
     { path: '/contests', label: 'Contests', icon: Trophy },
     { path: '/leaderboard', label: 'Leaderboard', icon: Medal },
     { path: '/feedback', label: 'Feedback & Support', icon: MessageSquare },
