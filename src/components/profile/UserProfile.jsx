@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { User, Mail, MapPin, Calendar, Edit3, Save, X, Github, ExternalLink, Trophy, Target, Globe, ArrowLeft } from 'lucide-react';
+import { User, Camera, Mail, MapPin, Calendar, Edit3, Save, X, Github, ExternalLink, Trophy, Target, Globe, ArrowLeft } from 'lucide-react';
 import { BASE_URL, USERPROFILE } from '../../config';
 import { useAuth } from "../../context/AuthContext";
 import axios from 'axios';
@@ -10,6 +10,8 @@ const ProfilePage = () => {
     const [profile, setProfile] = useState(null);
     const [editProfile, setEditProfile] = useState(profile);
     const [loading, setLoading] = useState(true);
+    const [uploading, setUploading] = useState(false);
+
 
     useEffect(() => {
         console.log("User:", user);
@@ -19,17 +21,18 @@ const ProfilePage = () => {
         const fetchUserProfile = async () => {
             try {
                 const token = await user.getIdToken();
-                console.log(`${BASE_URL}${USERPROFILE}/${mongodbId}`);
-
                 const res = await axios.get(`${BASE_URL}${USERPROFILE}/${mongodbId}`, {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                console.log("Profile Response:", res);
+                const data = res.data;
+
+                const profilePictureUrl = data.data.profilePic
+                    ? `${BASE_URL}/api/image/view/${data.data.profilePic}`
+                    : null;
                 const options = { year: 'numeric', month: 'long' };
-                // const joinDate = new Date(user.metadata.creationTime).toLocaleDateString('en-US', options);
                 if (res.data.success && res.data.data) {
                     const profileData = {
                         firstName: res.data.data.name.firstName || '',
@@ -41,7 +44,7 @@ const ProfilePage = () => {
                         location: 'KKWIEER, Nashik',
                         bio: res.data.data.aboutUser || '--',
                         githubUrl: res.data.data.githubUrl || '-',
-                        profilePicture: res.data.data.profilePic || '',
+                        profilePicture: profilePictureUrl || '',
                         currentStreak: 22,
                         dailyProblemsSolved: 5,
                     };
@@ -58,11 +61,39 @@ const ProfilePage = () => {
 
         fetchUserProfile();
     }, [user, mongodbId]);
+    const handleImageUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
 
+        try {
+            setUploading(true);
+            const token = await user.getIdToken();
+            const formData = new FormData();
+            formData.append("image", file);
+
+            const res = await axios.post(`${BASE_URL}/api/image/upload`, formData, {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
+
+            if (res.data.imageId) {
+                const previewUrl = `${BASE_URL}/api/image/view/${res.data.imageId}`;
+                setEditProfile((prev) => ({
+                    ...prev,
+                    profilePicture: previewUrl,
+                    profilePicId: res.data.imageId,
+                }));
+            }
+        } catch (err) {
+            console.error("Error uploading image:", err);
+        } finally {
+            setUploading(false);
+        }
+    };
     const handleSave = async () => {
         try {
             if (!user || !mongodbId) return;
-
             const token = await user.getIdToken();
 
             const payload = {
@@ -72,18 +103,15 @@ const ProfilePage = () => {
                 year: editProfile.year,
                 aboutUser: editProfile.bio,
                 githubUrl: editProfile.githubUrl,
+                profilePic: editProfile.profilePicId || profile.profilePicId || "", // send imageId
             };
 
-            await axios.patch(
-                `${BASE_URL}${USERPROFILE}/${mongodbId}`,
-                payload,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                }
-            );
+            await axios.patch(`${BASE_URL}${USERPROFILE}/${mongodbId}`, payload, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
 
             setProfile(editProfile);
             setIsEditing(false);
@@ -117,7 +145,6 @@ const ProfilePage = () => {
 
     return (
         <div className="min-h-screen bg-gray-950 pt-6 w-full max-w-7xl mx-auto">
-            {/* Back Button */}
             <div className="mx-6 xl:mx-0 mb-4">
                 <button
                     onClick={handleGoBack}
@@ -128,26 +155,41 @@ const ProfilePage = () => {
                 </button>
             </div>
 
-            {/* Profile Header Card - Full Width */}
             <div className="bg-gray-900 shadow-xl overflow-hidden border-b border-gray-800 rounded-2xl mx-6 xl:mx-0">
-                {/* Purple Header Section */}
                 <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:px-6 text-white mx-4 sm:mx-0">
                     <div className="relative ">
-
-                        {/* Profile Avatar, Name & Edit Button in the Same Row */}
                         <div className="flex flex-row justify-between">
-
-                            {/* Avatar & Name */}
                             <div className="flex flex-row items-center space-x-2 sm:space-x-6">
-                                <div className="w-30 h-30 sm:w-36 sm:h-36 md:w-40 md:h-40 bg-white/15 backdrop-blur-sm rounded-full border-2 border-white/20 shadow-2xl flex items-center justify-center overflow-hidden">
-                                    {profile.profilePicture ? (
-                                        <img
-                                            src={profile.profilePicture}
-                                            alt={`${profile.firstName} ${profile.lastName}`}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    ) : (
-                                        <User className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 text-white/90" />
+                                <div className="w-30 h-30 sm:w-36 sm:h-36 md:w-40 md:h-40 relative">
+                                    <div className="w-full h-full bg-white/15 backdrop-blur-sm rounded-full border-2 border-white/20 shadow-2xl flex items-center justify-center overflow-hidden">
+                                        {(isEditing ? editProfile?.profilePicture : profile?.profilePicture) ? (
+                                            <img
+                                                src={isEditing ? editProfile.profilePicture : profile.profilePicture}
+                                                alt="Profile"
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <User className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 text-white/90" />
+                                        )}
+                                    </div>
+
+                                    {isEditing && (
+                                        <label className="absolute bottom-2 right-2 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full cursor-pointer shadow-lg">
+                                            <Camera className="w-5 h-5" />
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={handleImageUpload}
+                                                disabled={uploading}
+                                            />
+                                        </label>
+                                    )}
+
+                                    {uploading && (
+                                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-full">
+                                            <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                        </div>
                                     )}
                                 </div>
 

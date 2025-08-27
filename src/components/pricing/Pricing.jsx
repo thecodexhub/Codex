@@ -117,7 +117,7 @@ const Pricing = () => {
           </div>
 
           <div className="relative bg-gray-900/60 rounded-xl p-8 border border-gray-800/50 flex flex-col lg:flex-row backdrop-blur-md overflow-hidden">
-            <div className="hidden lg:block absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="lg:block absolute inset-0 flex items-center justify-center pointer-events-none">
               <AuroraBackground className="w-[120%] h-[120%] opacity-40 blur-3xl" />
             </div>
 

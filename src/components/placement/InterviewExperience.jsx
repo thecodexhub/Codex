@@ -63,8 +63,8 @@ export default function InterviewExperience() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-slate-100 px-4 py-6 grid place-items-center">
-        <p className="text-slate-400">Loading…</p>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -207,8 +207,8 @@ export default function InterviewExperience() {
 
                         <span
                           className={`text-xs px-2.5 py-1 rounded-full font-medium ${round.isRoundOffline
-                              ? 'bg-amber-500/20 text-amber-400 border border-amber-400/30'
-                              : 'bg-emerald-500/20 text-emerald-400 border border-emerald-400/30'
+                            ? 'bg-amber-500/20 text-amber-400 border border-amber-400/30'
+                            : 'bg-emerald-500/20 text-emerald-400 border border-emerald-400/30'
                             }`}
                         >
                           {round.isRoundOffline ? 'Offline' : 'Online'}

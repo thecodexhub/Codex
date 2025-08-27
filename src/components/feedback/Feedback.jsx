@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Star, Send, MessageCircle, ThumbsUp, ThumbsDown, MessageSquare } from 'lucide-react';
 import emailjs from '@emailjs/browser';
+import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
+import { BASE_URL } from '../../config';
 
 const Feedback = () => {
-  const { user } = useAuth();
+  const { user, mongodbId } = useAuth();
   const userEmail = user?.email;
   const userName = user?.displayName;
 
@@ -46,11 +48,37 @@ const Feedback = () => {
     }
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Feedback submitted:', { rating, feedback });
-    setRating(0);
-    setFeedback('');
+    if (!rating || !feedback.trim()) {
+      setStatusModal({ show: true, success: false, message: 'Please provide rating and feedback.' });
+      return;
+    }
+    setLoading(true);
+    const token = await user?.getIdToken();
+    try {
+      const res = await axios.post(`${BASE_URL}/api/feedback`, {
+        user_id: mongodbId,
+        feedback_description: feedback,
+        number_of_stars: rating,
+      },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        console.log('Feedback response:', res.data);
+      setStatusModal({ show: true, success: true, message: 'Feedback submitted successfully!' });
+      setRating(0);
+      setFeedback('');
+      setTimeout(() => setStatusModal((prev) => ({ ...prev, show: false })), 2000);
+    } catch (error) {
+      console.error('Feedback error:', error);
+      setStatusModal({ show: true, success: false, message: 'Failed to submit feedback. Try again later.' });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSupportSubmit = (e) => {
@@ -146,18 +174,13 @@ const Feedback = () => {
           </button>
         </div>
 
-
         <div
           className={`mt-4 ${activeTab === 'support'
-              ? 'flex justify-center' // center the card without breaking grid
-              : 'grid gap-6 grid-cols-1 lg:grid-cols-2'
+            ? 'flex justify-center'
+            : 'grid gap-6 grid-cols-1 lg:grid-cols-2'
             }`}
         >
-
-          <div
-            className={`bg-gray-900 rounded-xl p-6 border border-gray-800 ${activeTab === 'support'? 'w-[90%] md:w-[75%]': ''  } `}
-          >
-
+          <div className={`bg-gray-900 rounded-xl p-6 border border-gray-800 ${activeTab === 'support' ? 'w-[90%] md:w-[75%]' : ''}`}>
             {activeTab === 'feedback' ? (
               <>
                 <h2 className="text-xl font-semibold text-white mb-4">Share Your Feedback</h2>
@@ -170,8 +193,7 @@ const Feedback = () => {
                           key={star}
                           type="button"
                           onClick={() => setRating(star)}
-                          className={`p-1 rounded transition-colors ${star <= rating ? 'text-yellow-400' : 'text-gray-500 hover:text-yellow-400'
-                            }`}
+                          className={`p-1 rounded transition-colors ${star <= rating ? 'text-yellow-400' : 'text-gray-500 hover:text-yellow-400'}`}
                         >
                           <Star className="w-8 h-8 fill-current" />
                         </button>
@@ -191,10 +213,15 @@ const Feedback = () => {
 
                   <button
                     type="submit"
+                    disabled={loading}
                     className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-200"
                   >
-                    <Send className="w-4 h-4" />
-                    <span>Submit Feedback</span>
+                    {loading ? 'Submitting...' : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        <span>Submit Feedback</span>
+                      </>
+                    )}
                   </button>
                 </form>
               </>
@@ -288,7 +315,6 @@ const Feedback = () => {
               </div>
             </div>
           )}
-
         </div>
       </div>
     </div>

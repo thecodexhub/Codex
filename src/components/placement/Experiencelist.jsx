@@ -10,8 +10,10 @@ import {
   DollarSign,
   GraduationCap,
   Users,
+  Lock
 } from 'lucide-react';
 import { BASE_URL, INTERVIEW_EXP_BY_COMPANYID } from '../../config';
+import { useAuth } from '../../context/AuthContext';
 
 // Subtle skeleton row
 const ExperienceSkeleton = () => (
@@ -40,6 +42,8 @@ export default function CompanyExperiences() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
+  const { user } = useAuth();
+  const isSubscribed = user?.subscription || false;
   useEffect(() => {
     const fetchExperiences = async () => {
       try {
@@ -75,7 +79,6 @@ export default function CompanyExperiences() {
     <div className="min-h-screen bg-black text-slate-100">
       <div className="container mx-auto px-4 py-6 space-y-8">
 
-        {/* Header – understated */}
         <header className="rounded-2xl border border-white/5 bg-black/50 shadow-[0_10px_28px_rgba(0,0,0,.45)]">
           <div className="p-5 sm:p-6 flex items-center gap-4 sm:gap-6">
             <button
@@ -93,6 +96,11 @@ export default function CompanyExperiences() {
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold tracking-tight">{companyName}</h1>
                 <p className="text-slate-400 text-sm">Interview Experiences</p>
+              </div>
+              <div>
+                {!isSubscribed && (
+                  <Lock className="w-10 h-10 text-yellow-500" />
+                )}
               </div>
             </div>
           </div>
@@ -148,57 +156,72 @@ export default function CompanyExperiences() {
           </div>
         ) : (
           <ul className="space-y-3">
-            {filteredExperiences.map((exp, index) => (
-              <li key={exp._id}>
-                <button
-                  onClick={() => openExperience(exp)}
-                  className="
-                    w-full text-left rounded-xl border border-white/8 bg-black/50
-                    px-4 sm:px-5 py-4
-                    hover:border-purple-500/35 hover:bg-white/[.04]
-                    transition-[background,border,transform,box-shadow] duration-200 ease-out
-                    focus:outline-none focus:ring-2 focus:ring-purple-400/30
-                  "
-                >
-                  <div className="flex items-start gap-4">
-                    {/* Avatar */}
-                    <div className="shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 grid place-items-center text-white font-semibold">
-                      {exp.name?.charAt(0) || 'U'}
+            {filteredExperiences.map((exp, index) => {
+               
+              return (
+                <li key={exp._id} className="relative">
+                  <button
+                    onClick={() => {
+                      if (!isSubscribed) {
+                        alert("Subscribe to unlock this experience!");
+                        return;
+                      }
+                      openExperience(exp);
+                    }}
+                    className={`
+                      w-full text-left rounded-xl border border-white/8 bg-black/50
+                      px-4 sm:px-5 py-4
+                      transition duration-200 ease-out
+                      focus:outline-none
+                      ${!isSubscribed ? "cursor-not-allowed" : "hover:border-purple-500/35 hover:bg-white/[.04] focus:ring-2 focus:ring-purple-400/30"}
+                    `}
+                  >
+                    <div className="flex items-start gap-4">
+                      {/* Avatar */}
+                      <div className="shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 grid place-items-center text-white font-semibold">
+                        {exp.name?.charAt(0) || 'U'}
+                      </div>
+
+                      {/* Main content */}
+                      <div className="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-semibold text-slate-100 truncate">
+                              {exp.name || 'Unknown Candidate'}
+                            </h3>
+                            <span className="hidden sm:inline text-xs text-slate-500">#{index + 1}</span>
+                          </div>
+                          <p className="text-yellow-600 text-sm truncate">
+                            {!isSubscribed ? "Premium • Subscribe to unlock" : exp.role}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-2 text-sm text-slate-200">
+                          <GraduationCap size={15} className="text-slate-400" />
+                          <span className="truncate">{exp.dept || '—'}</span>
+                        </div>
+
+                        <div className="flex items-center sm:justify-end gap-4">
+                          <div className="flex items-center gap-1.5 text-sm">
+                            <DollarSign size={15} className="text-emerald-400" />
+                            <span className="text-emerald-400 font-medium">{exp.ctcOffered || '—'}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 text-sm text-slate-200">
+                            <Calendar size={15} className="text-slate-400" />
+                            <span>{exp.year || '—'}</span>
+                          </div>
+                          {!isSubscribed ? (
+                            <Lock className="w-6 h-6 text-yellow-400" />
+                          ) : (
+                            <ArrowRight className="hidden sm:block w-4 h-4 text-slate-400" />
+                          )}
+                        </div>
+                      </div>
                     </div>
-
-                    {/* Main content */}
-                    <div className="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-semibold text-slate-100 truncate">
-                            {exp.name || 'Unknown Candidate'}
-                          </h3>
-                          <span className="hidden sm:inline text-xs text-slate-500">#{index + 1}</span>
-                        </div>
-                        <p className="text-slate-400 text-sm truncate">{exp.role}</p>
-                      </div>
-
-                      <div className="flex items-center gap-2 text-sm text-slate-200">
-                        <GraduationCap size={15} className="text-slate-400" />
-                        <span className="truncate">{exp.dept || '—'}</span>
-                      </div>
-
-                      <div className="flex items-center sm:justify-end gap-4">
-                        <div className="flex items-center gap-1.5 text-sm">
-                          <DollarSign size={15} className="text-emerald-400" />
-                          <span className="text-emerald-400 font-medium">{exp.ctcOffered || '—'}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 text-sm text-slate-200">
-                          <Calendar size={15} className="text-slate-400" />
-                          <span>{exp.year || '—'}</span>
-                        </div>
-                        <ArrowRight className="hidden sm:block w-4 h-4 text-slate-400" />
-                      </div>
-                    </div>
-                  </div>
-                </button>
-              </li>
-            ))}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>

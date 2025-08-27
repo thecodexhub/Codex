@@ -23,7 +23,7 @@ const UserOnboarding = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const totalSteps = 5; // Updated to 5 steps
+  const totalSteps = 5;
 
   const departmentOptions = [
     { value: 'COMP', label: 'Computer Engineering' },
