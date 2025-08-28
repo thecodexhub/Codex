@@ -21,32 +21,7 @@ const Feedback = () => {
   const [statusModal, setStatusModal] = useState({ show: false, success: true, message: '' });
   const categories = ['Account', 'Technical Issue', 'Payment', 'Feedback', 'Other'];
   const [recentFeedback, setRecentFeedback] = useState([]);
-  // const recentFeedback = [
-  //   {
-  //     id: 1,
-  //     user: 'Alex Chen',
-  //     rating: 5,
-  //     comment: 'Amazing platform! The DSA problems are well-structured and the explanations are clear.',
-  //     date: '2 days ago',
-  //     helpful: 24
-  //   },
-  //   {
-  //     id: 2,
-  //     user: 'Sarah Kim',
-  //     rating: 4,
-  //     comment: 'Great learning experience. Would love to see more system design questions.',
-  //     date: '1 week ago',
-  //     helpful: 18
-  //   },
-  //   {
-  //     id: 3,
-  //     user: 'Mike Johnson',
-  //     rating: 5,
-  //     comment: 'The placement preparation section is incredibly helpful. Got placed at Google!',
-  //     date: '2 weeks ago',
-  //     helpful: 35
-  //   }
-  // ];
+
   useEffect(() => {
     const fetchRecentFeedback = async () => {
       try {
@@ -70,47 +45,45 @@ const Feedback = () => {
     setLoading(true);
     const token = await user?.getIdToken();
     try {
-  const newFeedback = {
-    fullName: userName || "Anonymous",
-    stars: rating,
-    description: feedback,
-    date: new Date().toISOString(), 
-  };
+      const newFeedback = {
+        fullName: userName || "Anonymous",
+        stars: rating,
+        description: feedback,
+        date: new Date().toISOString(),
+      };
 
-  setRecentFeedback((prev) => [newFeedback, ...prev]);
+      setRecentFeedback((prev) => [newFeedback, ...prev]);
 
-  const res = await axios.post(
-    `${BASE_URL}/api/feedback`,
-    {
-      user_id: mongodbId,
-      feedback_description: feedback,
-      number_of_stars: rating,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
+      const res = await axios.post(
+        `${BASE_URL}/api/feedback`,
+        {
+          user_id: mongodbId,
+          feedback_description: feedback,
+          number_of_stars: rating,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      console.log("Feedback response:", res.data);
+
+      setRating(0);
+      setFeedback("");
+
+      setTimeout(() => setStatusModal((prev) => ({ ...prev, show: false })), 2000);
+    } catch (error) {
+      console.error("Feedback error:", error);
+      setStatusModal({ show: true, success: false, message: "Failed to submit feedback. Try again later." });
+
+
+      setRecentFeedback((prev) => prev.slice(1));
+    } finally {
+      setLoading(false);
     }
-  );
-
-  console.log("Feedback response:", res.data);
-
-  // setStatusModal({ show: true, success: true, message: "Feedback submitted successfully!" });
-
-  setRating(0);
-  setFeedback("");
-
-  setTimeout(() => setStatusModal((prev) => ({ ...prev, show: false })), 2000);
-} catch (error) {
-  console.error("Feedback error:", error);
-  setStatusModal({ show: true, success: false, message: "Failed to submit feedback. Try again later." });
-
-
-  setRecentFeedback((prev) => prev.slice(1));
-} finally {
-  setLoading(false);
-}
 
   };
 
@@ -319,36 +292,36 @@ const Feedback = () => {
               <div className="space-y-4">
                 {Array.isArray(recentFeedback) && recentFeedback.length > 0 ? (
                   recentFeedback.map((item, index) => (
-                  <div key={index} className="p-4 bg-gray-800 rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-white font-medium">{item.fullName}</span>
-                      <div className="flex items-center space-x-1">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-4 h-4 ${i < item.stars ? 'text-yellow-400 fill-current' : 'text-gray-500'}`}
-                          />
-                        ))}
+                    <div key={index} className="p-4 bg-gray-800 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-white font-medium">{item.fullName}</span>
+                        <div className="flex items-center space-x-1">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-4 h-4 ${i < item.stars ? 'text-yellow-400 fill-current' : 'text-gray-500'}`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-gray-300 text-sm mb-3">{item.description}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-gray-400 text-xs">
+                          {new Date(item.date).toLocaleDateString()}
+                        </span>
+                        <div className="flex items-center space-x-2">
+                          <button className="flex items-center space-x-1 text-green-400 hover:text-green-300">
+                            <ThumbsUp className="w-3 h-3" />
+                          </button>
+                          <button className="text-gray-400 hover:text-red-400">
+                            <ThumbsDown className="w-3 h-3" />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                    <p className="text-gray-300 text-sm mb-3">{item.description}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-400 text-xs">
-                        {new Date(item.date).toLocaleDateString()}
-                      </span>
-                      <div className="flex items-center space-x-2">
-                        <button className="flex items-center space-x-1 text-green-400 hover:text-green-300">
-                          <ThumbsUp className="w-3 h-3" />
-                        </button>
-                        <button className="text-gray-400 hover:text-red-400">
-                          <ThumbsDown className="w-3 h-3" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))
+                  ))
                 ) : (
-                    <p className="text-gray-400 text-sm">No feedback available yet.</p>
+                  <p className="text-gray-400 text-sm">No feedback available yet.</p>
                 )}
               </div>
             </div>

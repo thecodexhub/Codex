@@ -3,10 +3,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Search } from 'lucide-react';
 import { COMPANY_LIST, BASE_URL } from '../../config';
-
+import { useAuth } from '../../context/AuthContext';
 function CompanyCard({ company, onClick }) {
   const [showImg, setShowImg] = useState(true);
-
   // Fallback initials + deterministic hue per company (for a unique gradient)
   const name = company?.name || 'Company';
   const initials = name
@@ -90,6 +89,8 @@ export default function CompanyGrid() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
 
+  const { user } = useAuth();
+  const isSubscribed = user?.subscription || false;
   const navigate = useNavigate();
 
   // Debounce search input
@@ -108,8 +109,20 @@ export default function CompanyGrid() {
       const res = await axios.get(`${BASE_URL}${COMPANY_LIST}`, {
         params: { page, search: debouncedQuery },
       });
-      setCompanies(res.data?.data || []);
+      // setCompanies(res.data?.data || []);
+      let fetchedCompanies = res.data?.data || [];
       setTotalPages(res.data?.totalPages || 1);
+
+      if (!isSubscribed) {
+      const demoCompany = {
+        _id: '789',
+        name: 'Sobiya Tech',
+        company_logo: null,
+      };
+      fetchedCompanies = [demoCompany, ...fetchedCompanies];
+    }
+
+    setCompanies(fetchedCompanies);
     } catch (err) {
       console.error('Error fetching companies:', err);
     } finally {

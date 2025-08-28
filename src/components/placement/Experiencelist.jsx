@@ -47,10 +47,43 @@ export default function CompanyExperiences() {
   useEffect(() => {
     const fetchExperiences = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}${INTERVIEW_EXP_BY_COMPANYID}`, {
-          params: { companyId: id },
-        });
-        setExperiences(res.data || []);
+        if (!isSubscribed && id === '789') {
+          // demo experience
+          const demoExperience = {
+            "_id": "789",
+            "companyId": "789",
+            "name": "Sobiya Shaikh",
+            "year": "2026",
+            "dept": "COMPUTER",
+            "companyName": "Sobiya Tech",
+            "role": "CEO",
+            "isInternshipOrTrainingProvided": true,
+            "internshipPeriodInMonths": "6",
+            "image": "string",
+            "numberOfRounds": 2,
+            "ctcOffered": "20 LPA",
+            "rounds": [
+              {
+                "round_name": "Technical Round",
+                "isRoundOffline": true,
+                "description": "Very difficult round"
+              },
+              {
+                "round_name": "HR Round",
+                "isRoundOffline": true,
+                "description": "Okay Okay"
+              }
+            ],
+            "linkedinUrl": "https://www.linkedin.com/in/sobiyashaikh/",
+            "eligibilityCriteria": "No active backlogs and minimum 8.5 CGPA",
+          };
+          setExperiences([demoExperience]);
+        } else {
+          const res = await axios.get(`${BASE_URL}${INTERVIEW_EXP_BY_COMPANYID}`, {
+            params: { companyId: id },
+          });
+          setExperiences(res.data || []);
+        }
       } catch (error) {
         console.error('Failed to load experiences:', error);
       } finally {
@@ -58,7 +91,8 @@ export default function CompanyExperiences() {
       }
     };
     if (id) fetchExperiences();
-  }, [id]);
+  }, [id, isSubscribed]);
+
 
   const filteredExperiences = experiences.filter((exp) => {
     const q = searchTerm.trim().toLowerCase();
@@ -98,9 +132,12 @@ export default function CompanyExperiences() {
                 <p className="text-slate-400 text-sm">Interview Experiences</p>
               </div>
               <div>
-                {!isSubscribed && (
-                  <Lock className="w-10 h-10 text-yellow-500" />
-                )}
+                <div>
+                  {!isSubscribed && id !== '789' && (
+                    <Lock className="w-10 h-10 text-yellow-500" />
+                  )}
+                </div>
+
               </div>
             </div>
           </div>
@@ -157,12 +194,12 @@ export default function CompanyExperiences() {
         ) : (
           <ul className="space-y-3">
             {filteredExperiences.map((exp, index) => {
-               
+
               return (
                 <li key={exp._id} className="relative">
                   <button
                     onClick={() => {
-                      if (!isSubscribed) {
+                      if (!isSubscribed && id !== '789') {
                         alert("Subscribe to unlock this experience!");
                         return;
                       }
@@ -192,7 +229,12 @@ export default function CompanyExperiences() {
                             <span className="hidden sm:inline text-xs text-slate-500">#{index + 1}</span>
                           </div>
                           <p className="text-yellow-600 text-sm truncate">
-                            {!isSubscribed ? "Premium • Subscribe to unlock" : exp.role}
+                            <span className="text-yellow-600 text-sm truncate">
+                              {!isSubscribed && id !== '789'
+                                ? "Premium • Subscribe to unlock"
+                                : exp.role}
+                            </span>
+
                           </p>
                         </div>
 
@@ -210,11 +252,12 @@ export default function CompanyExperiences() {
                             <Calendar size={15} className="text-slate-400" />
                             <span>{exp.year || '—'}</span>
                           </div>
-                          {!isSubscribed ? (
+                          {!isSubscribed && id !== '789' ? (
                             <Lock className="w-6 h-6 text-yellow-400" />
                           ) : (
                             <ArrowRight className="hidden sm:block w-4 h-4 text-slate-400" />
                           )}
+
                         </div>
                       </div>
                     </div>
