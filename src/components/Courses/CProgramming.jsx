@@ -4,14 +4,18 @@ import { useEffect, useMemo, useState } from "react"
 import { cModule } from "./data/c-module"
 import { BookOpen, Code, Terminal, Settings } from "lucide-react"
 import TopicItem from "./TopicItem"
+import { useAuth } from "../../context/AuthContext"  
+
 
 const API_BASE = "https://codex-test-server.onrender.com/api/documentation"
-const USER_ID = "68b161a2b1d7c0d709d769b2"
 const MODULE_ID = "M1"
 
 const CProgramming = () => {
   const [expandedTopic, setExpandedTopic] = useState(null)
   const [completedByChapter, setCompletedByChapter] = useState({})
+
+  const { mongodbId } = useAuth()
+  const USER_ID = mongodbId
 
   const toggleTopic = (topicId) => {
     setExpandedTopic(expandedTopic === topicId ? null : topicId)
