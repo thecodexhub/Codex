@@ -19,6 +19,9 @@ import Contests from './components/contests/Contests';
 import ContestDetails from './components/contests/ContestDetails';
 import UserOnboarding from "./components/auth/onboarding/UserOnboarding";
 import UserProfile from './components/profile/UserProfile';
+import Courses from './components/Courses/Courses';
+import CProgramming from './components/Courses/CProgramming';
+import Documentation from './components/Courses/Documentation';
 
 // Wrap the Layout with authentication
 const ProtectedLayout = AuthWrapper(Layout);
@@ -30,11 +33,14 @@ function App() {
         {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/documentation/:topicId/:chapterId?" element={<Documentation />} />
 
         {/* Protected Layout */}
         <Route path="/" element={<ProtectedLayout />}>
           <Route index element={<Navigate to="/dashboard" />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="/courses" element={<Courses />} />
+          <Route path="/courses/c-programming" element={<CProgramming />} />
           <Route path="dsa" element={<DSA />} />
           <Route path="specialization" element={<SpecializationPath />} />
           <Route path="placement" element={<PlacementPrep />} />

@@ -26,7 +26,7 @@ const Sidebar = ({ isOpen, onClose }) => {
   };
   const menuItems = [
     { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/dsa', label: 'Programming', icon: Code2 },
+    { path: '/courses', label: 'Programming', icon: Code2 },
     { path: '/specialization', label: 'Specialization Path', icon: Target },
     { path: '/placement', label: 'Interview Experience', icon: Briefcase },
     { path: '/contests', label: 'Contests', icon: Trophy },
