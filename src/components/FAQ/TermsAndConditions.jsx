@@ -35,8 +35,8 @@ const TermsAndConditions = () => {
                     </p>
                     <p className="text-gray-300 leading-relaxed">
                         For any issues with access, please contact our support team at{' '}
-                        <a href="mailto:codex33@gmail.com" className="text-purple-400 hover:text-purple-300 underline">
-                            codex33@gmail.com
+                        <a href="mailto:team.codex33@gmail.com" className="text-purple-400 hover:text-purple-300 underline">
+                            team.codex33@gmail.com
                         </a>.
                     </p>
                 </div>
@@ -56,8 +56,8 @@ const TermsAndConditions = () => {
                     </ol>
                     <p className="text-gray-300 leading-relaxed mt-4">
                         For further details, contact us at{' '}
-                        <a href="mailto:codex33@gmail.com" className="text-purple-400 hover:text-purple-300 underline">
-                            codex33@gmail.com
+                        <a href="mailto:team.codex33@gmail.com" className="text-purple-400 hover:text-purple-300 underline">
+                            team.codex33@gmail.com
                         </a>.
                     </p>
                 </div>
@@ -72,8 +72,8 @@ const TermsAndConditions = () => {
                         <li>Once a contest or course is purchased, it cannot be canceled.</li>
                         <li>Refunds will be processed only if a payment has been deducted but access was not granted.</li>
                         <li>Refund requests must be made within 7 days by contacting{' '}
-                            <a href="mailto:codex33@gmail.com" className="text-purple-400 hover:text-purple-300 underline">
-                                codex33@gmail.com
+                            <a href="mailto:team.codex33@gmail.com" className="text-purple-400 hover:text-purple-300 underline">
+                                team.codex33@gmail.com
                             </a>.
                         </li>
                         <li>Refunds, if applicable, will be credited within 5–7 business days.</li>
@@ -93,15 +93,15 @@ const TermsAndConditions = () => {
                             like Razorpay to securely process your payments.</li>
                         <li>All transactions are encrypted and secure.</li>
                         <li>Users can request data deletion by contacting{' '}
-                            <a href="mailto:codex33@gmail.com" className="text-purple-400 hover:text-purple-300 underline">
-                                codex33@gmail.com
+                            <a href="mailto:team.codex33@gmail.com" className="text-purple-400 hover:text-purple-300 underline">
+                                team.codex33@gmail.com
                             </a>.
                         </li>
                     </ul>
                     <p className="text-gray-300 leading-relaxed mt-4">
                         For more information, reach out to us at{' '}
-                        <a href="mailto:codex33@gmail.com" className="text-purple-400 hover:text-purple-300 underline">
-                            codex33@gmail.com
+                        <a href="mailto:team.codex33@gmail.com" className="text-purple-400 hover:text-purple-300 underline">
+                            team.codex33@gmail.com
                         </a>.
                     </p>
                 </div>

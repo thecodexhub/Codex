@@ -62,7 +62,7 @@ function App() {
           <Route path="contests/details" element={<ContestDetails />} />
           <Route path="company/:id" element={<CompanyExperiences />} />
           <Route path="company/:id/interview-experience" element={<InterviewExperience />} />
-          <Route path="terms" element={<TermsAndConditions/>} />
+          <Route path="faq/terms" element={<TermsAndConditions/>} />
           
           
         </Route>
