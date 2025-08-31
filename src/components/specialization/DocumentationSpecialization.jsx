@@ -1,62 +1,52 @@
-/**
- * Documentation Component
- * Displays interactive learning content with theory, practice, and navigation
- */
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
 import { useState, useEffect, useCallback, useMemo } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { ChevronLeft, ChevronRight, Trophy, Target, Zap, Menu } from "lucide-react"
-import { cModule } from "./data/c-module"
+import specalization_data from "./data/specalization_data"
 import CodeEditor from "../CodeEditor/CodeEditor"
 import Sidebar from "./Sidebar"
-import renderTheoryContent from "./renderTheoryContent" // Declare the variable before using it
-import { useAuth } from "../../context/AuthContext"  
+import renderTheoryContent from "./renderTheoryContent"
+import { useAuth } from "../../context/AuthContext"
 
-
-
-// Constants for API
+// Constants for API (same backend as C, but module_id is dynamic for specialization)
 const API_BASE = "https://codex-test-server.onrender.com/api/documentation"
-const MODULE_ID = "M1"
 
-/**
- * Documentation Component - Main learning interface
- * Features:
- * - Interactive theory content
- * - Code practice with compiler
- * - Progress tracking
- * - Mobile-responsive sidebar
- * - Chapter navigation
- */
-const Documentation = () => {
-  // URL parameters and navigation
-  const { moduleId, chapterId } = useParams()
+export default function DocumentationSpecialization() {
+  // URL params: module is "html" or "css"; chapterId optional
+  const { module, chapterId } = useParams()
   const navigate = useNavigate()
   const { mongodbId } = useAuth()
   const USER_ID = mongodbId
 
-  // Component state
-  const [currentChapter, setCurrentChapter] = useState(0)
-  const [currentSubtopic, setCurrentSubtopic] = useState(0)
-  // Track completed topic ids per chapter and index-based set for Sidebar compatibility
-  const [completedByChapter, setCompletedByChapter] = useState({}) // { [chapterId]: Set<topicId> }
-  const [completedSections, setCompletedSections] = useState(new Set()) // Set(`${chapterIndex}-${subIndex}`)
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
+  const normalizeModule = (m) => {
+    const mk = (m || "html").toLowerCase()
+    if (mk === "s1") return "html"
+    if (mk === "s2") return "css"
+    return mk
+  }
+  const moduleKey = normalizeModule(module)
+  const currentModuleId = moduleKey === "css" ? "S2" : "S1"
 
-  const moduleData = cModule.module
+  // Resolve module to dataset (HTML=M1, CSS=M2)
+  const moduleData = useMemo(() => {
+    return specalization_data.modules.find((m) => m.module_id === currentModuleId)?.chapters || []
+  }, [currentModuleId])
 
+  // Build derived chapters in the same shape used by Documentation.jsx + Sidebar
   const derivedChapters = useMemo(() => {
-    const chapters = moduleData?.chapters || []
-    return chapters.map((ch) => ({
+    return (moduleData || []).map((ch) => ({
       id: ch.chapter_id,
       name: ch.chapter_name,
-      // keep fields if needed elsewhere
       description: ch.chapter_description,
       icon: ch.icon,
       subtopics: (ch.subtopics || []).map((sub) => {
         const theory = sub.theory || {}
         const items = []
-        if (thoryHeadingExists(theory)) items.push({ heading: theory.heading })
+        if (typeof theory.heading === "string" && theory.heading.length > 0) {
+          items.push({ heading: theory.heading })
+        }
         if (theory.paragraph) items.push({ paragraph: theory.paragraph })
         if (Array.isArray(theory.bulletpoints) && theory.bulletpoints.length > 0) {
           items.push({ bulletPoints: theory.bulletpoints })
@@ -66,15 +56,14 @@ const Documentation = () => {
         }
 
         const firstPractice =
-          Array.isArray(theory.practise_problems) && theory.practise_problems.length > 0
-            ? theory.practise_problems[0]
+          Array.isArray(sub.practise_problems) && sub.practise_problems.length > 0
+            ? sub.practise_problems[0]
             : undefined
 
         return {
           id: sub.topic_id,
           name: sub.topic_name,
-          // fields expected elsewhere
-          showCompiler: !!(sub.show_compiler || firstPractice), // auto-enable compiler if a practice exists
+          showCompiler: !!(sub.show_compiler || firstPractice),
           theory: items,
           code: theory.example_code || "",
           output: theory.output || "",
@@ -87,14 +76,16 @@ const Documentation = () => {
     }))
   }, [moduleData])
 
-  // Helper: guard for heading existence
-  function thoryHeadingExists(theory) {
-    return typeof theory.heading === "string" && theory.heading.length > 0
-  }
+  // State mirrors Documentation.jsx to keep UI/behavior identical
+  const [currentChapter, setCurrentChapter] = useState(0)
+  const [currentSubtopic, setCurrentSubtopic] = useState(0)
+  const [completedByChapter, setCompletedByChapter] = useState({}) // { [chapterId]: Set<topicId> }
+  const [completedSections, setCompletedSections] = useState(new Set()) // Set(`${chapterIndex}-${subIndex}`)
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
 
-  // Current chapter and subtopic data
   const chapterCount = derivedChapters.length
 
+  // When route chapterId changes, set the currentChapter and reset subtopic index
   useEffect(() => {
     if (chapterId && chapterCount > 0) {
       const idx = derivedChapters.findIndex((ch) => ch.id === chapterId)
@@ -109,16 +100,12 @@ const Documentation = () => {
   const subtopic = chapter?.subtopics[currentSubtopic]
   const topicName = chapter?.name || ""
 
-  /**
-   * Effect: Close mobile sidebar when navigation occurs
-   */
+  // Close mobile sidebar when navigating internally
   useEffect(() => {
     setIsMobileSidebarOpen(false)
   }, [currentChapter, currentSubtopic])
 
-  /**
-   * Effect: Scroll to top when content changes
-   */
+  // Scroll to top of main content when changing section
   useEffect(() => {
     const mainContent = document.querySelector(".main-content")
     if (mainContent) {
@@ -126,7 +113,7 @@ const Documentation = () => {
     }
   }, [currentChapter, currentSubtopic])
 
-  // Effect: Fetch completion for all chapters for sidebar + progress
+  // Fetch completion for ALL chapters (for sidebar ticks + progress)
   useEffect(() => {
     let cancelled = false
     async function fetchAllChaptersCompletion() {
@@ -135,9 +122,9 @@ const Documentation = () => {
         const results = await Promise.all(
           derivedChapters.map((ch) =>
             fetch(
-              `${API_BASE}/chapter?user_id=${encodeURIComponent(
-                USER_ID,
-              )}&module_id=${encodeURIComponent(MODULE_ID)}&chapter_id=${encodeURIComponent(ch.id)}`,
+              `${API_BASE}/chapter?user_id=${encodeURIComponent(USER_ID)}&module_id=${encodeURIComponent(
+                currentModuleId,
+              )}&chapter_id=${encodeURIComponent(ch.id)}`,
             )
               .then((r) => r.json())
               .catch(() => ({ success: false })),
@@ -157,63 +144,55 @@ const Documentation = () => {
 
         if (!cancelled) {
           setCompletedByChapter(map)
-          // build index-based set for Sidebar
+          // Build index-based set for Sidebar
           const indexSet = new Set()
           derivedChapters.forEach((ch, chIdx) => {
             const set = map[ch.id] || new Set()
             ch.subtopics.forEach((sub, subIdx) => {
-              if (set.has(sub.id)) {
-                indexSet.add(`${chIdx}-${subIdx}`)
-              }
+              if (set.has(sub.id)) indexSet.add(`${chIdx}-${subIdx}`)
             })
           })
           setCompletedSections(indexSet)
         }
-      } catch (e) {
-        // Fail silently; keep UI responsive
+      } catch {
+        if (!cancelled) {
+          setCompletedByChapter({})
+          setCompletedSections(new Set())
+        }
       }
     }
     fetchAllChaptersCompletion()
     return () => {
       cancelled = true
     }
-  }, [derivedChapters])
+  }, [derivedChapters, currentModuleId])
 
-  /**
-   * Navigate to next subtopic or chapter (new schema)
-   */
+  // Navigation handlers (identical logic, but specialization routes)
   const handleNext = useCallback(() => {
     if (!chapter) return
     if (currentSubtopic < chapter.subtopics.length - 1) {
       setCurrentSubtopic((s) => s + 1)
       return
     }
-    // move to next chapter if available
     if (currentChapter < derivedChapters.length - 1) {
       const nextChapter = derivedChapters[currentChapter + 1]
-      navigate(`/documentation/${MODULE_ID}/${nextChapter.id}`)
+      navigate(`/documentation-specialization/${moduleKey}/${nextChapter.id}`)
     }
-  }, [chapter, currentSubtopic, currentChapter, derivedChapters, navigate])
+  }, [chapter, currentSubtopic, currentChapter, derivedChapters, navigate, moduleKey])
 
-  /**
-   * Navigate to previous subtopic or chapter (new schema)
-   */
   const handlePrevious = useCallback(() => {
     if (!chapter) return
     if (currentSubtopic > 0) {
       setCurrentSubtopic((s) => s - 1)
       return
     }
-    // move to previous chapter if available
     if (currentChapter > 0) {
       const prevChapter = derivedChapters[currentChapter - 1]
-      navigate(`/documentation/${MODULE_ID}/${prevChapter.id}`)
+      navigate(`/documentation-specialization/${moduleKey}/${prevChapter.id}`)
     }
-  }, [chapter, currentSubtopic, currentChapter, derivedChapters, navigate])
+  }, [chapter, currentSubtopic, currentChapter, derivedChapters, navigate, moduleKey])
 
-  /**
-   * Mark current section as completed (POST to backend)
-   */
+  // POST mark as complete (always enabled for specialization)
   const markAsCompleted = useCallback(async () => {
     if (!chapter || !subtopic) return
     try {
@@ -222,7 +201,7 @@ const Documentation = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           user_id: USER_ID,
-          module_id: MODULE_ID,
+          module_id: currentModuleId,
           chapter_id: chapter.id,
           topic_id: subtopic.id,
           isComplete: true,
@@ -230,7 +209,7 @@ const Documentation = () => {
       })
       const json = await res.json()
       if (json && json.success) {
-        // Update local completion maps
+        // Update per-chapter completion map
         setCompletedByChapter((prev) => {
           const next = { ...prev }
           const set = new Set(next[chapter.id] || [])
@@ -238,19 +217,19 @@ const Documentation = () => {
           next[chapter.id] = set
           return next
         })
-        // Also update index-based set used by Sidebar
+        // Update index-based set used by Sidebar
         setCompletedSections((prev) => {
           const next = new Set(prev)
           next.add(`${currentChapter}-${currentSubtopic}`)
           return next
         })
       }
-    } catch (e) {
-      // Optionally show a toast; for now, fail silently to keep UX smooth
+    } catch {
+      // no-op; keep UI responsive
     }
-  }, [chapter, subtopic, currentChapter, currentSubtopic])
+  }, [chapter, subtopic, currentChapter, currentSubtopic, currentModuleId])
 
-  // Calculate progress percentage from backend completions: completed/total * 100
+  // Progress calculation (completed/total * 100)
   const progressPercent = useMemo(() => {
     if (!chapter) return 0
     const set = completedByChapter[chapter.id]
@@ -259,14 +238,14 @@ const Documentation = () => {
     return (completedCount / total) * 100
   }, [chapter, completedByChapter])
 
-  // Derive current topic completion to disable the button and change its label
+  // Current topic completion for disabling the button
   const isCurrentComplete = useMemo(() => {
     if (!chapter || !subtopic) return false
     const set = completedByChapter[chapter.id]
     return !!(set && set.has(subtopic.id))
   }, [chapter, subtopic, completedByChapter])
 
-  // Navigation state flags
+  // Navigation flags
   const isLastSubtopic = currentSubtopic === (chapter?.subtopics.length || 1) - 1
   const isLastChapter = currentChapter === (derivedChapters.length || 1) - 1
   const isFirstSubtopic = currentSubtopic === 0
@@ -293,12 +272,7 @@ const Documentation = () => {
 
       {/* Sidebar - Fixed height with independent scroll */}
       <div
-        className={`
-        fixed lg:static inset-y-0 left-0 z-50 lg:z-auto
-        transform ${isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0
-        transition-transform duration-300 ease-in-out
-        w-80 lg:w-80 h-full
-      `}
+        className={`fixed lg:static inset-y-0 left-0 z-50 lg:z-auto transform ${isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 transition-transform duration-300 ease-in-out w-80 lg:w-80 h-full`}
       >
         <Sidebar
           chapters={derivedChapters}
@@ -307,7 +281,7 @@ const Documentation = () => {
           onChapterSelect={(chapterIndex) => {
             const target = derivedChapters[chapterIndex]
             if (target) {
-              navigate(`/documentation/${MODULE_ID}/${target.id}`)
+              navigate(`/documentation-specialization/${moduleKey}/${target.id}`)
             }
           }}
           onSubtopicSelect={setCurrentSubtopic}
@@ -334,7 +308,7 @@ const Documentation = () => {
               <div className="min-w-0 flex-1">
                 {/* Back to topics button */}
                 <button
-                  onClick={() => navigate("/courses/c-programming")}
+                  onClick={() => navigate(`/specialization/${moduleKey}`)}
                   className="flex items-center gap-2 text-purple-200 hover:text-white mb-2 transition-colors text-sm sm:text-base"
                 >
                   <ChevronLeft className="w-4 h-4" />
@@ -358,7 +332,7 @@ const Documentation = () => {
                 <div
                   className="bg-gradient-to-r from-purple-400 to-purple-500 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${progressPercent}%` }}
-                ></div>
+                />
               </div>
             </div>
           </div>
@@ -382,14 +356,11 @@ const Documentation = () => {
               {/* Mark as complete button */}
               <button
                 onClick={markAsCompleted}
-                disabled={isCurrentComplete} // Disable when already completed
-                className="px-3 py-2 sm:px-4 sm:py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center gap-2 text-sm sm:text-base self-start sm:self-auto"
+                disabled={isCurrentComplete}
+                className="px-3 py-2 sm:px-4 sm:py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-700 disabled:text-gray-400 text-white rounded-lg transition-colors flex items-center gap-2 text-sm sm:text-base self-start sm:self-auto"
               >
                 <Trophy className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">
-                  {/* Show Completed label when already done */}
-                  {isCurrentComplete ? "Completed" : "Mark Complete"}
-                </span>
+                <span className="hidden sm:inline">{isCurrentComplete ? "Completed" : "Mark Complete"}</span>
                 <span className="sm:hidden">{isCurrentComplete ? "Completed" : "Complete"}</span>
               </button>
             </div>
@@ -398,7 +369,7 @@ const Documentation = () => {
             <div className="prose prose-invert max-w-none">{renderTheoryContent(subtopic.theory)}</div>
           </div>
 
-          {/* Practice Section - Only show if compiler is enabled for this subtopic */}
+          {/* Practice Section (only if enabled) */}
           {subtopic.showCompiler && (
             <div className="bg-gray-900 rounded-xl border border-gray-800 p-4 sm:p-6 mb-6">
               <div className="flex items-center gap-3 mb-6">
@@ -411,7 +382,6 @@ const Documentation = () => {
                 </div>
               </div>
 
-              {/* Code Editor Component */}
               <CodeEditor
                 initialCode={
                   subtopic.code ||
@@ -425,7 +395,7 @@ const Documentation = () => {
 
           {/* Navigation Controls */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            {/* Previous button */}
+            {/* Previous */}
             <button
               onClick={handlePrevious}
               disabled={isFirstChapter && isFirstSubtopic}
@@ -435,14 +405,14 @@ const Documentation = () => {
               Previous
             </button>
 
-            {/* Progress indicator */}
+            {/* Section indicator */}
             <div className="text-center order-first sm:order-none">
               <p className="text-gray-400 text-xs sm:text-sm">
                 Section {currentSubtopic + 1} of {chapter.subtopics.length}
               </p>
             </div>
 
-            {/* Next button */}
+            {/* Next */}
             <button
               onClick={handleNext}
               disabled={isLastChapter && isLastSubtopic}
@@ -457,5 +427,3 @@ const Documentation = () => {
     </div>
   )
 }
-
-export default Documentation

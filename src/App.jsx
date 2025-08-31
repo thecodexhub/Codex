@@ -4,7 +4,6 @@ import Layout from './layouts/Layout';
 import FullPageLayout from './layouts/FullPageLayout';
 import Dashboard from './components/dashboard/Dashboard';
 import DSA from './components/dsa/DSA';
-import SpecializationPath from './components/specialization/SpecializationPath';
 import PlacementPrep from './components/placement/PlacementPrep';
 import Leaderboard from './components/leaderboard/Leaderboard';
 import Feedback from './components/feedback/Feedback';
@@ -22,6 +21,10 @@ import UserProfile from './components/profile/UserProfile';
 import Courses from './components/Courses/Courses';
 import CProgramming from './components/Courses/CProgramming';
 import Documentation from './components/Courses/Documentation';
+import HTML from './components/specialization/HTML';
+import CSS from './components/specialization/CSS';
+import Specialization from './components/specialization/Specialization';
+import DocumentationSpecialization from './components/specialization/DocumentationSpecialization';
 
 // Wrap the Layout with authentication
 const ProtectedLayout = AuthWrapper(Layout);
@@ -34,6 +37,10 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/documentation/:topicId/:chapterId?" element={<Documentation />} />
+        <Route path="/documentation-specialization/:module" element={<DocumentationSpecialization />} />
+          <Route path="/documentation-specialization/:module/:chapterId" element={<DocumentationSpecialization />} />
+          <Route path="*" element={<Navigate to="/specialization" replace />} />
+         
 
         {/* Protected Layout */}
         <Route path="/" element={<ProtectedLayout />}>
@@ -42,7 +49,9 @@ function App() {
           <Route path="/courses" element={<Courses />} />
           <Route path="/courses/c-programming" element={<CProgramming />} />
           <Route path="dsa" element={<DSA />} />
-          <Route path="specialization" element={<SpecializationPath />} />
+           <Route path="/specialization" element={<Specialization />} /> {/* new route */}
+          <Route path="/specialization/html" element={<HTML />} />
+          <Route path="/specialization/css" element={<CSS />} />
           <Route path="placement" element={<PlacementPrep />} />
           <Route path="leaderboard" element={<Leaderboard />} />
           <Route path="feedback" element={<Feedback />} />
