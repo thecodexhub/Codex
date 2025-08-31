@@ -24,7 +24,7 @@ const TermsAndConditions = () => {
             </div>
 
             {/* Content Sections */}
-            <div className="space-y-6 max-w-4xl mx-auto">
+            <div className="space-y-6 w-full mx-auto">
                 {/* Shipping Policy */}
                 <div className="bg-gray-900 rounded-xl p-6 border border-gray-700">
                     <h2 className="text-xl font-bold text-purple-400 mb-4">Shipping Policy</h2>

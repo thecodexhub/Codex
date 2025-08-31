@@ -25,6 +25,7 @@ import HTML from './components/specialization/HTML';
 import CSS from './components/specialization/CSS';
 import Specialization from './components/specialization/Specialization';
 import DocumentationSpecialization from './components/specialization/DocumentationSpecialization';
+import TermsAndConditions from './components/FAQ/TermsAndConditions';
 
 // Wrap the Layout with authentication
 const ProtectedLayout = AuthWrapper(Layout);
@@ -61,6 +62,9 @@ function App() {
           <Route path="contests/details" element={<ContestDetails />} />
           <Route path="company/:id" element={<CompanyExperiences />} />
           <Route path="company/:id/interview-experience" element={<InterviewExperience />} />
+          <Route path="terms" element={<TermsAndConditions/>} />
+          
+          
         </Route>
 
         {/* Full Page Layout Routes */}
