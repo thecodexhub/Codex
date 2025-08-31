@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Search, Bell, User, Settings, LogOut, Flame, Menu } from 'lucide-react';
-import { logout } from '../config';
+import { logout } from '../config/firebase';
+import UserProfile from '../components/profile/UserProfile';
 const Navbar = ({ onMenuClick }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const notifications = [
     { id: 1, message: 'New DSA problem added to Arrays section', time: '2 hours ago', unread: true },
     { id: 2, message: 'Your weekly progress report is ready', time: '1 day ago', unread: true },
@@ -14,6 +16,11 @@ const Navbar = ({ onMenuClick }) => {
   ];
 
   const unreadCount = notifications.filter(n => n.unread).length;
+
+  const handleProfileClick = () => {
+    setShowProfile(false);
+    navigate("/userprofile");
+  };
   const handleLogout = async() => {
     // localStorage.removeItem("Auth");
     await logout();
@@ -58,18 +65,14 @@ const Navbar = ({ onMenuClick }) => {
           </div>
         </div>
 
-        {/* Right Side - Notifications and Profile */}
+        {/* Right Side - Contests, Streak, Notifications and Profile */}
         <div className="flex items-center space-x-2 sm:space-x-4">
+          {/* Contests button removed; now in sidebar */}
+
           {/* Streak */}
           <div className="hidden sm:flex items-center space-x-2 px-3 py-2 bg-gray-800 rounded-lg">
             <Flame className="w-4 h-4 text-orange-500" />
             <span className="text-white text-sm font-medium">12</span>
-          </div>
-
-          {/* Mobile Streak */}
-          <div className="sm:hidden flex items-center space-x-1 px-2 py-1 bg-gray-800 rounded-lg">
-            <Flame className="w-4 h-4 text-orange-500" />
-            <span className="text-white text-xs font-medium">12</span>
           </div>
 
           {/* Notifications */}
@@ -120,7 +123,7 @@ const Navbar = ({ onMenuClick }) => {
           <div className="relative">
             <button
               className="profile-button flex items-center space-x-1 sm:space-x-2 p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-lg transition-colors"
-              onClick={() => setShowProfile(!showProfile)}
+              onClick={handleProfileClick}
             >
               <div className="w-8 h-8 bg-purple-800 rounded-full flex items-center justify-center">
                 <User className="w-4 h-4 text-white" />
@@ -128,17 +131,27 @@ const Navbar = ({ onMenuClick }) => {
               {/* <span className="hidden sm:block text-gray-200 text-sm">Sobiya</span> */}
             </button>
 
+            {/* <div className="flex items-center space-x-3 p-3 rounded-lg bg-gray-800">
+              <div className="w-8 h-8 bg-purple-800 rounded-full flex items-center justify-center">
+                <Code2 className="w-4 h-4 text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-white text-sm font-medium truncate">Sobiya</p>
+                <p className="text-gray-400 text-xs truncate">Premium Member</p>
+              </div>
+            </div> */}
+
             {/* Profile Modal */}
-            {showProfile && (
+            {/* {showProfile && (
               <div className="profile-modal absolute right-0 top-12 w-48 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-50">
                 <div className="p-2">
                   <button className="w-full flex items-center space-x-2 p-2 text-gray-200 hover:bg-gray-800 rounded-lg">
                     <Settings className="w-4 h-4" />
                     <span>Settings</span>
                   </button>
-                  <button className="w-full flex items-center space-x-2 p-2 text-gray-200 hover:bg-gray-800 rounded-lg">
+                  <button className="w-full flex items-center space-x-2 p-2 text-gray-200 hover:bg-gray-800 rounded-lg" onClick={() => navigate("/profile")}>
                     <User className="w-4 h-4" />
-                    <span>Profile</span>
+                    <span onClick={handleProfileClick}>Profile</span>
                   </button>
                   <hr className="my-2 border-gray-700" />
                   <button className="w-full flex items-center space-x-2 p-2 text-red-400 hover:bg-gray-800 rounded-lg">
@@ -149,7 +162,7 @@ const Navbar = ({ onMenuClick }) => {
                   </button>
                 </div>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>

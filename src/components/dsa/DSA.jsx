@@ -12,7 +12,7 @@ const DSA = () => {
   return (
     <div className="min-h-screen bg-gray-950">
       <div className="max-w-7xl mx-auto space-y-6">
-        <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:p-6 text-white">
+        <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:px-6 text-white">
           <h1 className="text-2xl sm:text-3xl font-bold mb-2">Data Structures & Algorithms</h1>
           <p className="text-purple-100 text-base sm:text-lg">Master the fundamentals of programming</p>
         </div>
