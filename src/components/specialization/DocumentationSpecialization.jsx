@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback, useMemo } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { ChevronLeft, ChevronRight, Trophy, Target, Zap, Menu } from "lucide-react"
 import specalization_data from "./data/specalization_data"
-import CodeEditor from "../CodeEditor/CodeEditor"
+import CodeSandboxRunner from "../CodeEditor/CodeSandboxRunner"
 import Sidebar from "./Sidebar"
 import renderTheoryContent from "./renderTheoryContent"
 import { useAuth } from "../../context/AuthContext"
@@ -195,6 +195,11 @@ export default function DocumentationSpecialization() {
   // POST mark as complete (always enabled for specialization)
   const markAsCompleted = useCallback(async () => {
     if (!chapter || !subtopic) return
+
+    const proceed =
+      typeof window !== "undefined" ? window.confirm("Are you sure you want to mark this topic as complete?") : true
+    if (!proceed) return
+
     try {
       const res = await fetch(API_BASE, {
         method: "POST",
@@ -382,11 +387,12 @@ export default function DocumentationSpecialization() {
                 </div>
               </div>
 
-              <CodeEditor
-                initialCode={
-                  subtopic.code ||
-                  '#include <stdio.h>\\n\\nint main() {\\n    printf("Hello, World!\\\\n");\\n    return 0;\\n}'
+              <CodeSandboxRunner
+                initialHTML={
+                  subtopic.code || "<h1>Hello, World!</h1>\n<p>Edit the HTML, CSS, and JS to see changes.</p>"
                 }
+                initialCSS={"/* Add styles here */"}
+                initialJS={"// Add interactivity here"}
                 expectedOutput={subtopic.practiceExpected || subtopic.output}
                 practiceQuestion={subtopic.practiceQuestion}
               />

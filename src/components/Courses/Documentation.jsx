@@ -216,6 +216,9 @@ const Documentation = () => {
    */
   const markAsCompleted = useCallback(async () => {
     if (!chapter || !subtopic) return
+    const proceed =
+      typeof window !== "undefined" ? window.confirm("Are you sure you want to mark this topic as complete?") : true
+    if (!proceed) return
     try {
       const res = await fetch(API_BASE, {
         method: "POST",
