@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { ChevronRight, ChevronDown } from 'lucide-react';
+import { ChevronRight, ChevronDown, FileText } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const FAQ = () => {
     const [expandedId, setExpandedId] = useState(0); 
+    const navigate = useNavigate();
 
     const faqData = [
         {
             id: 0,
             question: "How do I create an account on Codex?",
-            answer: "Creating an account on Codex is simple. Click on the Sign Up button on the homepage, fill in your basic details like name, email, and password, and you’re ready to explore courses, track your progress, and participate in the leaderboard."
+            answer: "Creating an account on Codex is simple. Click on the Sign Up button on the homepage, fill in your basic details like name, email, and password, and you're ready to explore courses, track your progress, and participate in the leaderboard."
         },
         {
             id: 1,
@@ -67,6 +69,17 @@ const FAQ = () => {
                             )}
                         </div>
                     ))}
+                </div>
+
+                {/* Terms and Conditions Button */}
+                <div className="pt-6">
+                    <button
+                        onClick={() => navigate('/faq/terms')}
+                        className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl"
+                    >
+                        <FileText className="w-5 h-5" />
+                        Terms & Conditions
+                    </button>
                 </div>
             </>
         </div>
