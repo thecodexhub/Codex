@@ -23,6 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-node_modules
-gitignore
-DemoBackend/
+/node_modules
+.gitignore
