@@ -68,7 +68,7 @@ const ProgressChart = () => {
               stroke="url(#colorHoursLine)"
               strokeWidth={3}
               dot={{ r: 5 }}
-              name="Hours Spent"
+              name="Modules Completed"
             />
           </LineChart>
         </ResponsiveContainer>

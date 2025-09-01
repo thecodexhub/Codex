@@ -49,7 +49,7 @@ export default function CompanyExperiences() {
       try {
         if (!isSubscribed && id === '789') {
           // demo experience
-          const demoExperience = {
+          const demoExperience = [{
             "_id": "789",
             "companyId": "789",
             "name": "Sobiya Shaikh",
@@ -76,8 +76,36 @@ export default function CompanyExperiences() {
             ],
             "linkedinUrl": "https://www.linkedin.com/in/sobiyashaikh/",
             "eligibilityCriteria": "No active backlogs and minimum 8.5 CGPA",
-          };
-          setExperiences([demoExperience]);
+          },
+          {
+            "_id": "789",
+            "companyId": "789",
+            "name": "Sobiya Shaikh",
+            "year": "2026",
+            "dept": "COMPUTER",
+            "companyName": "Sobiya Tech",
+            "role": "CEO",
+            "isInternshipOrTrainingProvided": true,
+            "internshipPeriodInMonths": "6",
+            "image": "string",
+            "numberOfRounds": 2,
+            "ctcOffered": "20 LPA",
+            "rounds": [
+              {
+                "round_name": "Technical Round",
+                "isRoundOffline": true,
+                "description": "Very difficult round"
+              },
+              {
+                "round_name": "HR Round",
+                "isRoundOffline": true,
+                "description": "Okay Okay"
+              }
+            ],
+            "linkedinUrl": "https://www.linkedin.com/in/sobiyashaikh/",
+            "eligibilityCriteria": "No active backlogs and minimum 8.5 CGPA",
+          }];
+          setExperiences(demoExperience);
         } else {
           const res = await axios.get(`${BASE_URL}${INTERVIEW_EXP_BY_COMPANYID}`, {
             params: { companyId: id },

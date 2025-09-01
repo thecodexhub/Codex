@@ -26,6 +26,8 @@ import CSS from './components/specialization/CSS';
 import Specialization from './components/specialization/Specialization';
 import DocumentationSpecialization from './components/specialization/DocumentationSpecialization';
 import TermsAndConditions from './components/FAQ/TermsAndConditions';
+import MakePayment from './components/pricing/MakePayment';
+import InterviewForm from './components/InterviewForm/interviewForm';
 
 // Wrap the Layout with authentication
 const ProtectedLayout = AuthWrapper(Layout);
@@ -39,9 +41,9 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/documentation/:topicId/:chapterId?" element={<Documentation />} />
         <Route path="/documentation-specialization/:module" element={<DocumentationSpecialization />} />
-          <Route path="/documentation-specialization/:module/:chapterId" element={<DocumentationSpecialization />} />
-          <Route path="*" element={<Navigate to="/specialization" replace />} />
-         
+        <Route path="/documentation-specialization/:module/:chapterId" element={<DocumentationSpecialization />} />
+        <Route path="*" element={<Navigate to="/specialization" replace />} />
+        <Route path="/experience-form" element={<InterviewForm />} />
 
         {/* Protected Layout */}
         <Route path="/" element={<ProtectedLayout />}>
@@ -50,7 +52,7 @@ function App() {
           <Route path="/courses" element={<Courses />} />
           <Route path="/courses/c-programming" element={<CProgramming />} />
           <Route path="dsa" element={<DSA />} />
-           <Route path="/specialization" element={<Specialization />} /> {/* new route */}
+          <Route path="/specialization" element={<Specialization />} /> {/* new route */}
           <Route path="/specialization/html" element={<HTML />} />
           <Route path="/specialization/css" element={<CSS />} />
           <Route path="placement" element={<PlacementPrep />} />
@@ -62,15 +64,16 @@ function App() {
           <Route path="contests/details" element={<ContestDetails />} />
           <Route path="company/:id" element={<CompanyExperiences />} />
           <Route path="company/:id/interview-experience" element={<InterviewExperience />} />
-          <Route path="faq/terms" element={<TermsAndConditions/>} />
-          
-          
+          <Route path="faq/terms" element={<TermsAndConditions />} />
+          <Route path="make-payment" element={<MakePayment />} />
+
         </Route>
 
         {/* Full Page Layout Routes */}
         <Route element={<FullPageLayout />}>
           <Route path="useronboarding" element={<UserOnboarding />} />
           <Route path="userprofile" element={<UserProfile />} />
+
         </Route>
       </Routes>
     </Router>
