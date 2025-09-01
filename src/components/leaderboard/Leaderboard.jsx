@@ -1,33 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Crown, Trophy, Medal, TrendingUp, Star, Sparkles, Users, Target, Award, Construction, Rocket, Zap } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../../config';
 
 const Leaderboard = () => {
   const [activeTab, setActiveTab] = useState('institute');
-  // Control overlay states
-  const [overlayMode, setOverlayMode] = useState('coming-soon'); // 'none', 'premium', 'coming-soon' change accordingly
+  // State for API data
+  const [instituteData, setInstituteData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
   
   const { user } = useAuth();
   const navigate = useNavigate();
   const hasSubscription = user?.subscription || false;
 
+  // Determine overlay mode based on activeTab
+  const overlayMode = (activeTab === 'monthly' || activeTab === 'weekly') ? 'coming-soon' : 'none';
+
   // Determine which overlay to show
-  const showPremiumOverlay = (!hasSubscription && overlayMode !== 'coming-soon');
+  const showPremiumOverlay = (!hasSubscription && overlayMode !== 'coming-soon' && overlayMode === 'premium');
   const showComingSoonOverlay = overlayMode === 'coming-soon';
   const showOverlay = showPremiumOverlay || showComingSoonOverlay;
 
+  // Fetch leaderboard data for 'institute' tab
+  useEffect(() => {
+    if (activeTab !== 'institute') return;
+    setLoading(true);
+    fetch(BASE_URL + `/api/leaderboard?page=${page}&limit=10`)
+      .then(res => res.json())
+      .then(res => {
+        if (res.success) {
+          setInstituteData(res.data || []);
+          setTotalPages(res.totalPages || 1);
+        }
+      })
+      .finally(() => setLoading(false));
+  }, [activeTab, page]);
+
   const leaderboardData = {
-    institute: [
-      { name: 'Alex Chen', avatar: 'AC', score: 2847, solved: 423, streak: 45, change: '+2' },
-      { name: 'Sarah Kim', avatar: 'SK', score: 2756, solved: 398, streak: 32, change: '+1' },
-      { name: 'Mike Johnson', avatar: 'MJ', score: 2689, solved: 356, streak: 28, change: '-1' },
-      { name: 'Emma Davis', avatar: 'ED', score: 2634, solved: 342, streak: 21, change: '+3' },
-      { name: 'David Wilson', avatar: 'DW', score: 2578, solved: 329, streak: 19, change: '+1' },
-      { name: 'Lisa Brown', avatar: 'LB', score: 2465, solved: 298, streak: 15, change: '-2' },
-      { name: 'James Miller', avatar: 'JM', score: 2398, solved: 287, streak: 12, change: '+4' },
-      { name: 'You', avatar: 'U', score: 2234, solved: 267, streak: 12, change: '+5' },
-    ],
     monthly: [
       { name: 'Sarah Kim', avatar: 'SK', score: 387, solved: 45, streak: 32, change: '+1' },
       { name: 'Alex Chen', avatar: 'AC', score: 356, solved: 42, streak: 45, change: '-1' },
@@ -105,7 +117,7 @@ const Leaderboard = () => {
       </div>
 
       {/* Tab Navigation - Always show but disable interaction if overlay is active */}
-      <div className={`flex space-x-1 bg-gray-800 rounded-lg p-1 overflow-hidden mt-6 flex-shrink-0 ${showOverlay ? 'opacity-50 pointer-events-none' : ''}`}>
+      <div className="flex space-x-1 bg-gray-800 rounded-lg p-1 overflow-hidden mt-6 flex-shrink-0">
         {['institute', 'monthly', 'weekly'].map((tab) => (
           <button
             key={tab}
@@ -282,53 +294,90 @@ const Leaderboard = () => {
                   {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Rankings
                 </h2>
               </div>
-
-              <div className="space-y-3 flex-grow overflow-y-auto pr-2 scrollbar-hidden">
-                {leaderboardData[activeTab].map((user, index) => {
-                  const rank = index + 1;
-                  const isCurrentUser = user.name === 'You';
-                  const colors = getRankColors(rank, isCurrentUser);
-                  
-                  return (
-                    <div
-                      key={index}
-                      className={`flex items-center space-x-4 p-4 rounded-lg transition-all duration-200 ${colors.bg}`}
-                    >
-                      <div className="flex items-center justify-center w-8">
-                        {getRankIcon(rank)}
-                      </div>
-                      
-                      <div className="flex items-center space-x-3 flex-1">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${colors.avatar}`}>
-                          {user.avatar}
-                        </div>
-                        <div>
-                          <div className={`font-medium ${colors.name}`}>
-                            {user.name}
-                            {rank <= 3 && !isCurrentUser && (
-                              <span className="ml-2 text-xs px-2 py-1 rounded-full bg-opacity-20 bg-white">
-                                {rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}
-                              </span>
-                            )}
+              {activeTab === 'institute' ? (
+                <>
+                  {loading ? (
+                    <div className="text-center text-gray-400 py-8">Loading...</div>
+                  ) : (
+                    <div className="space-y-3 flex-grow overflow-y-auto pr-2 scrollbar-hidden">
+                      {instituteData.map((user, index) => {
+                        const rank = (page - 1) * 10 + index + 1;
+                        const isCurrentUser = user.fullName === (user?.fullName || 'You');
+                        const colors = getRankColors(rank, isCurrentUser);
+                        return (
+                          <div
+                            key={user.fullName + index}
+                            className={`flex items-center space-x-4 p-4 rounded-lg transition-all duration-200 ${colors.bg}`}
+                          >
+                            <div className="flex items-center justify-center w-8">
+                              <span className="w-6 h-6 text-gray-400 text-lg font-bold">{rank}</span>
+                            </div>
+                            <div className="flex items-center space-x-3 flex-1">
+                              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${colors.avatar}`}
+                                style={user.avatar ? { backgroundImage: `url(${user.avatar})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
+                                {!user.avatar && (user.fullName ? user.fullName.split(' ').map(n => n[0]).join('').toUpperCase() : '?')}
+                              </div>
+                              <div>
+                                <div className={`font-medium ${colors.name}`}>{user.fullName}</div>
+                                <div className="text-gray-400 text-sm">
+                                  {user.streak} day streak
+                                </div>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <div className={`font-semibold ${rank <= 3 && !isCurrentUser ? colors.name : 'text-white'}`}>{user.score}</div>
+                              {/* No change field in API, so skip */}
+                            </div>
                           </div>
-                          <div className="text-gray-400 text-sm">
-                            {user.solved} problems • {user.streak} day streak
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="text-right">
-                        <div className={`font-semibold ${rank <= 3 && !isCurrentUser ? colors.name : 'text-white'}`}>
-                          {user.score}
-                        </div>
-                        <div className={`text-sm ${getChangeColor(user.change)}`}>
-                          {user.change}
-                        </div>
-                      </div>
+                        );
+                      })}
                     </div>
-                  );
-                })}
-              </div>
+                  )}
+                  {/* Pagination Controls */}
+                  <div className="flex justify-center mt-4 gap-2">
+                    <button
+                      onClick={() => setPage(p => Math.max(1, p - 1))}
+                      disabled={page === 1}
+                      className="px-3 py-1 rounded bg-gray-800 text-white disabled:opacity-50"
+                    >Prev</button>
+                    <span className="text-gray-300 px-2">Page {page} of {totalPages}</span>
+                    <button
+                      onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                      disabled={page === totalPages}
+                      className="px-3 py-1 rounded bg-gray-800 text-white disabled:opacity-50"
+                    >Next</button>
+                  </div>
+                </>
+              ) : (
+                <div className="space-y-3 flex-grow overflow-y-auto pr-2 scrollbar-hidden">
+                  {leaderboardData[activeTab].map((user, index) => {
+                    const rank = index + 1;
+                    const isCurrentUser = user.name === 'You';
+                    const colors = getRankColors(rank, isCurrentUser);
+                    return (
+                      <div
+                        key={index}
+                        className={`flex items-center space-x-4 p-4 rounded-lg transition-all duration-200 ${colors.bg}`}
+                      >
+                        <div className="flex items-center justify-center w-8">
+                          <span className="w-6 h-6 text-gray-400 text-lg font-bold">{rank}</span>
+                        </div>
+                        <div className="flex items-center space-x-3 flex-1">
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${colors.avatar}`}>{user.avatar}</div>
+                          <div>
+                            <div className={`font-medium ${colors.name}`}>{user.name}</div>
+                            <div className="text-gray-400 text-sm">{user.solved} problems • {user.streak} day streak</div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className={`font-semibold ${rank <= 3 && !isCurrentUser ? colors.name : 'text-white'}`}>{user.score}</div>
+                          <div className={`text-sm ${getChangeColor(user.change)}`}>{user.change}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </div>

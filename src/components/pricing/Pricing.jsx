@@ -1,9 +1,12 @@
 import AuroraBackground from '../utils/BlueBackground';
 import { GraduationCap, Clock, Code, LayoutDashboard, Briefcase, Trophy, CalendarDays, AlertTriangle, BookOpen, Flame } from 'lucide-react';
-
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 const Pricing = () => {
   // Toggle this boolean to show Active Plan view
-  const isplantaken = false;
+  const navigate= useNavigate();
+  const { paymentStatus } = useAuth();
+  const isSubscribedUser = paymentStatus === 'VERIFIED';
   const features = [
     {
       icon: GraduationCap,
@@ -36,10 +39,12 @@ const Pricing = () => {
       description: "Leaderboard boosts your progress"
     }
   ];
-
+  const handleBuyNow = () => {
+    navigate('/make-payment');
+  }
   return (
     <div className="relative h-fit text-white overflow-hidden">
-      {isplantaken ? (
+      {isSubscribedUser ? (
         <div className="relative max-w-6xl mx-auto space-y-9">
           <div className="relative border-2 border-[#343434] rounded-2xl p-6 sm:p-8 text-white overflow-hidden">
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -141,7 +146,7 @@ const Pricing = () => {
               <div className="text-5xl font-bold text-white mb-2">499/-</div>
               <div className="text-gray-400 text-lg mb-8">Purchase Price</div>
 
-              <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-4 px-8 rounded-lg text-lg uppercase tracking-wide hover:opacity-90 transition-opacity duration-200 mb-4">
+                <button onClick={handleBuyNow} className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-4 px-8 rounded-lg text-lg uppercase tracking-wide hover:opacity-90 transition-opacity duration-200 mb-4">
                 Buy Now
               </button>
 
