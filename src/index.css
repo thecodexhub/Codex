@@ -3,14 +3,30 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  @apply custom-scrollbar; /* apply Tailwind + our scrollbar */
+}
 
-/* <style>{` */
-.scrollbar-hidden::-webkit-scrollbar {
-    width: 0;
-    height: 0;
+/*  white scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px; /* slim scrollbar */
 }
-.scrollbar-hidden {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* no background track */
 }
-      /* `}</style> */
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.6); /* white but a bit transparent */
+  border-radius: 9999px; /* pill shape */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.9); /* brighter on hover */
+}
+
+/* Firefox support */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.6) transparent;
+}

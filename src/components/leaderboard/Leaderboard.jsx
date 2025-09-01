@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const Leaderboard = () => {
   const [activeTab, setActiveTab] = useState('institute');
   // Control overlay states
-  const [overlayMode, setOverlayMode] = useState('coming-soon'); // 'none', 'premium', 'coming-soon'
+  const [overlayMode, setOverlayMode] = useState('coming-soon'); // 'none', 'premium', 'coming-soon' change accordingly
   
   const { user } = useAuth();
   const navigate = useNavigate();

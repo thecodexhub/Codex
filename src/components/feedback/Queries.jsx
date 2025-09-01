@@ -69,7 +69,7 @@ const Queries = () => {
       {/* Modal */}
       {statusModal.show && (
         <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="bg-gray-900 p-6 rounded-xl max-w-md w-full border border-purple-700 text-center text-white shadow-2xl">
+          <div className="bg-gray-900 p-6 rounded-xl w-full border border-purple-700 text-center text-white shadow-2xl">
             <h2 className={`text-xl font-bold mb-4 ${statusModal.success ? 'text-green-400' : 'text-red-400'}`}>
               {statusModal.success ? 'Success' : 'Error'}
             </h2>
@@ -93,7 +93,7 @@ const Queries = () => {
           <p className="text-purple-100 text-base sm:text-lg">Share your thoughts with us</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-gray-900 rounded-xl p-6 border border-gray-800 max-w-3xl mx-auto space-y-6">
+        <form onSubmit={handleSubmit} className="bg-gray-900 rounded-xl p-6 border border-gray-800 max-w-4xl mx-auto space-y-6">
           <div>
             <label className="block text-gray-300 mb-2 font-semibold">Subject</label>
             <input

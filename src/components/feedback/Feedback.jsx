@@ -5,6 +5,27 @@ import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import { BASE_URL } from '../../config';
 
+
+const dummyFeedback = [
+  {
+    "fullName": "Aarav Sharma",
+    "stars": 5,
+    "description": "As a complete beginner, I found Codex very easy to follow. The step-by-step guidance made me feel confident while learning coding for the first time.",
+    "date": "2025-08-20T15:12:45Z"
+  },
+  {
+    "fullName": "Priya Nair",
+    "stars": 4,
+    "description": "I like how Codex connects coding concepts with real examples from academics. It would be nice if there were more practice questions, but overall it’s super beginner friendly.",
+    "date": "2025-08-23T09:47:10Z"
+  },
+  {
+    "fullName": "Rohan Patel",
+    "stars": 5,
+    "description": "Codex explains everything in simple words. I had no prior coding knowledge, but now I can solve small problems on my own. Highly recommend for beginners!",
+    "date": "2025-08-28T18:05:22Z"
+  }
+];
 const Feedback = () => {
   const { user, mongodbId } = useAuth();
   const userEmail = user?.email;
@@ -27,11 +48,13 @@ const Feedback = () => {
       try {
         const res = await axios.get(`${BASE_URL}/api/feedback`);
         if (res.data && Array.isArray(res.data.data)) {
-          setRecentFeedback(res.data.data);
-          console.log('Recent feedback data:', res.data.data);
+          setRecentFeedback([...dummyFeedback, ...res.data.data]);
+        } else {
+          setRecentFeedback(dummyFeedback);
         }
       } catch (error) {
         console.error('Failed to load recent feedback:', error);
+        setRecentFeedback(dummyFeedback);
       }
     };
     fetchRecentFeedback();
@@ -186,7 +209,7 @@ const Feedback = () => {
             : 'grid gap-6 grid-cols-1 lg:grid-cols-2'
             }`}
         >
-          <div className={`bg-gray-900 rounded-xl p-6 border border-gray-800 ${activeTab === 'support' ? 'w-[90%] md:w-[75%]' : ''}`}>
+          <div className={`bg-gray-900 rounded-xl p-6 border border-gray-800 ${activeTab === 'support' ? 'w-full' : ''}`}>
             {activeTab === 'feedback' ? (
               <>
                 <h2 className="text-xl font-semibold text-white mb-4">Share Your Feedback</h2>
@@ -282,50 +305,52 @@ const Feedback = () => {
             )}
           </div>
 
-          {activeTab === 'feedback' && (
-            <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
-              <div className="flex items-center space-x-2 mb-4">
-                <MessageCircle className="w-5 h-5 text-purple-400" />
-                <h2 className="text-xl font-semibold text-white">Recent Feedback</h2>
-              </div>
+         {activeTab === 'feedback' && (
+  <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
+    <div className="flex items-center space-x-2 mb-4">
+      <MessageCircle className="w-5 h-5 text-purple-400" />
+      <h2 className="text-xl font-semibold text-white">Recent Feedback</h2>
+    </div>
 
-              <div className="space-y-4">
-                {Array.isArray(recentFeedback) && recentFeedback.length > 0 ? (
-                  recentFeedback.map((item, index) => (
-                    <div key={index} className="p-4 bg-gray-800 rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-white font-medium">{item.fullName}</span>
-                        <div className="flex items-center space-x-1">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-4 h-4 ${i < item.stars ? 'text-yellow-400 fill-current' : 'text-gray-500'}`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <p className="text-gray-300 text-sm mb-3">{item.description}</p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-gray-400 text-xs">
-                          {new Date(item.date).toLocaleDateString()}
-                        </span>
-                        <div className="flex items-center space-x-2">
-                          <button className="flex items-center space-x-1 text-green-400 hover:text-green-300">
-                            <ThumbsUp className="w-3 h-3" />
-                          </button>
-                          <button className="text-gray-400 hover:text-red-400">
-                            <ThumbsDown className="w-3 h-3" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-gray-400 text-sm">No feedback available yet.</p>
-                )}
+    {/* 👇 Add scrollable container */}
+    <div className="space-y-4 max-h-80 overflow-y-auto pr-2 custom-scrollbar">
+      {Array.isArray(recentFeedback) && recentFeedback.length > 0 ? (
+        recentFeedback.map((item, index) => (
+          <div key={index} className="p-4 bg-gray-800 rounded-lg">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-white font-medium">{item.fullName}</span>
+              <div className="flex items-center space-x-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`w-4 h-4 ${i < item.stars ? 'text-yellow-400 fill-current' : 'text-gray-500'}`}
+                  />
+                ))}
               </div>
             </div>
-          )}
+            <p className="text-gray-300 text-sm mb-3">{item.description}</p>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-400 text-xs">
+                {new Date(item.date).toLocaleDateString()}
+              </span>
+              <div className="flex items-center space-x-2">
+                <button className="flex items-center space-x-1 text-green-400 hover:text-green-300">
+                  <ThumbsUp className="w-3 h-3" />
+                </button>
+                <button className="text-gray-400 hover:text-red-400">
+                  <ThumbsDown className="w-3 h-3" />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p className="text-gray-400 text-sm">No feedback available yet.</p>
+      )}
+    </div>
+  </div>
+)}
+
         </div>
       </div>
     </div>

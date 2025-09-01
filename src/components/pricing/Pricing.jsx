@@ -1,4 +1,3 @@
-import React from 'react';
 import AuroraBackground from '../utils/BlueBackground';
 import { GraduationCap, Clock, Code, LayoutDashboard, Briefcase, Trophy, CalendarDays, AlertTriangle, BookOpen, Flame } from 'lucide-react';
 
@@ -13,8 +12,8 @@ const Pricing = () => {
     },
     {
       icon: Clock,
-      title: "Lifetime Access",
-      description: "Learn anytime, revisit forever"
+      title: "Semester Access",
+      description: "Valid for one academic term"
     },
     {
       icon: Code,
@@ -52,7 +51,7 @@ const Pricing = () => {
                 <h1 className="text-2xl sm:text-4xl font-bold mb-1">Active Plan</h1>
                 <p className="text-purple-100 text-base sm:text-lg">Your learning journey continues</p>
               </div>
-              <span className="px-4 py-2 rounded-full bg-purple-700 border border-purple-300/20 text-sm sm:text-base font-semibold">LIFETIME</span>
+              {/* <span className="px-4 py-2 rounded-full bg-purple-700 border border-purple-300/20 text-sm sm:text-base font-semibold">CURRENT SEMESTER</span> */}
             </div>
           </div>
 
@@ -86,14 +85,14 @@ const Pricing = () => {
                       <Trophy className="w-5 h-5 text-purple-300 mt-1" />
                       <div>
                         <div className="text-sm text-gray-400">Current Plan</div>
-                        <div className="font-medium">Lifetime Account</div>
+                        <div className="font-medium">Semester </div>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
                       <CalendarDays className="w-5 h-5 text-purple-300 mt-1" />
                       <div>
                         <div className="text-sm text-gray-400">Expires</div>
-                        <div className="font-medium">Never</div>
+                        <div className="font-medium">After Current Semester</div>
                       </div>
                     </div>
                   </div>
@@ -139,14 +138,14 @@ const Pricing = () => {
             </div>
 
             <div className="flex-1 flex flex-col items-center justify-center text-center mt-12 lg:mt-0 lg:pl-8 relative z-10">
-              <div className="text-5xl font-bold text-white mb-2">$99</div>
-              <div className="text-gray-400 text-lg mb-8">Lifetime Account</div>
+              <div className="text-5xl font-bold text-white mb-2">499/-</div>
+              <div className="text-gray-400 text-lg mb-8">Purchase Price</div>
 
               <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-4 px-8 rounded-lg text-lg uppercase tracking-wide hover:opacity-90 transition-opacity duration-200 mb-4">
                 Buy Now
               </button>
 
-              <div className="text-gray-400 text-sm">30 Days Moneyback Guarantee</div>
+              {/* <div className="text-gray-400 text-sm">30 Days Moneyback Guarantee</div> */}
             </div>
           </div>
         </div>

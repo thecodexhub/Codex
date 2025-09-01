@@ -6,7 +6,7 @@ import { auth } from '../../config/firebase';
 
 const AuthWrapper = (Component) => {
   return function ProtectedComponent(props) {
-    const [isLoading, setIsLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
@@ -16,13 +16,19 @@ const AuthWrapper = (Component) => {
         } else {
           setIsAuthenticated(false);
         }
-        setIsLoading(false);
+        setLoading(false);
       });
 
       return () => unsubscribe();
     }, []);
 
-    if (isLoading) return <div>Loading...</div>;
+    if (loading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-black">
+          <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      );
+    }
 
     return isAuthenticated ? <Component {...props} /> : <Navigate to="/login" />;
   };

@@ -42,11 +42,11 @@ const Badge = ({ children, color = 'purple' }) => {
 
 const Contests = () => {
   // Control overlay states
-  const [overlayMode, setOverlayMode] = useState('coming-soon'); // 'none', 'premium', 'coming-soon'
+  const [overlayMode, setOverlayMode] = useState('none'); // 'none', 'premium', 'coming-soon'
   
   const { user } = useAuth();
   const navigate = useNavigate();
-  const hasSubscription = user?.subscription || false;
+  const hasSubscription = user?.subscription || true;
 
   // Determine which overlay to show
   const showPremiumOverlay = (!hasSubscription && overlayMode !== 'coming-soon');
