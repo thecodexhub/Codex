@@ -44,7 +44,7 @@ const Navbar = ({ onMenuClick }) => {
 
   return (
     <div className="bg-gray-900 border-b border-gray-800 px-4 sm:px-6 py-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-end">
         {/* Mobile Menu Button */}
         <button
           onClick={onMenuClick}
@@ -52,18 +52,6 @@ const Navbar = ({ onMenuClick }) => {
         >
           <Menu className="w-5 h-5" />
         </button>
-
-        {/* Search Bar */}
-        <div className="flex-1 max-w-md mx-4 lg:mx-0">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <input
-              type="text"
-              placeholder="Search problems, topics..."
-              className="w-full pl-10 pr-4 py-2 bg-gray-800 text-gray-200 rounded-lg border border-gray-700 focus:border-purple-500 focus:outline-none text-sm sm:text-base"
-            />
-          </div>
-        </div>
 
         {/* Right Side - Contests, Streak, Notifications and Profile */}
         <div className="flex items-center space-x-2 sm:space-x-4">

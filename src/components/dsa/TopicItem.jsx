@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const TopicItem = ({ topic, isExpanded, onToggle }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const hasSubscription = user?.subscription || false;
+  const hasSubscription = user?.subscription || true;
 
   const getStatusIcon = (status) => {
     switch (status) {

@@ -43,6 +43,14 @@ const Courses = () => {
     },
   ]
 
+<<<<<<< HEAD
+  return (
+      <div className=" space-y-6">
+        {/* Welcome Section */}
+        <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:px-6 text-white">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">Your Learning Journey Starts Here</h1>
+          <p className="text-purple-100 text-base sm:text-lg">Pick a course and unlock your coding potential.</p>
+=======
   const handleCardClick = (card) => {
     if (paymentStatus === "NOT_PROCESSED") {
       setShowPremiumModal(true)
@@ -65,6 +73,7 @@ const Courses = () => {
           >
             <X className="w-6 h-6" />
           </button>
+>>>>>>> ddcfc5e3033d2d2130d5f8d3f593fb2055590306
         </div>
         
         <div className="space-y-4">
@@ -112,7 +121,7 @@ const Courses = () => {
           </div>
         </div>
       </div>
-    </div>
+  
   )
 
   return (
