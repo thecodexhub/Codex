@@ -206,7 +206,7 @@ const MakePayment = () => {
                         onClick={() => navigate('/pricing')}
                         className="mt-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity"
                     >
-                        Go to Dashboard
+                        Okay!
                     </button>
                 </div>
             </div>
