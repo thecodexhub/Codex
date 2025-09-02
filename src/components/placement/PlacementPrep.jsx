@@ -113,14 +113,14 @@ export default function CompanyGrid() {
       let fetchedCompanies = res.data?.data || [];
       setTotalPages(res.data?.totalPages || 1);
 
-      if (!isSubscribed) {
-      const demoCompany = {
-        _id: '789',
-        name: 'Sobiya Tech',
-        company_logo: null,
-      };
-      fetchedCompanies = [demoCompany, ...fetchedCompanies];
-    }
+      // if (!isSubscribed) {
+      // const demoCompany = {
+      //   _id: '789',
+      //   name: 'Sobiya Tech',
+      //   company_logo: null,
+      // };
+      // fetchedCompanies = [fetchedCompanies];
+    // }
 
     setCompanies(fetchedCompanies);
     } catch (err) {

@@ -42,11 +42,11 @@ const Badge = ({ children, color = 'purple' }) => {
 
 const Contests = () => {
   // Control overlay states
-  const [overlayMode, setOverlayMode] = useState('none'); // 'none', 'premium', 'coming-soon'
+  const [overlayMode, setOverlayMode] = useState('premium'); // 'none', 'premium', 'coming-soon'
   
   const { user } = useAuth();
   const navigate = useNavigate();
-  const hasSubscription = user?.subscription || true;
+  const hasSubscription = user?.subscription || false;
 
   // Determine which overlay to show
   const showPremiumOverlay = (!hasSubscription && overlayMode !== 'coming-soon');
@@ -143,7 +143,7 @@ const Contests = () => {
             </div>
 
             {/* Notify Button */}
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+            {/* <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
               <button
                 onClick={() => {
                   console.log('User wants to be notified');
@@ -154,7 +154,7 @@ const Contests = () => {
                 <Rocket className="w-5 sm:w-6 h-5 sm:h-6" />
                 Notify Me When Ready
               </button>
-            </div>
+            </div> */}
             
             <p className="text-gray-400 mt-6 sm:mt-8 text-sm sm:text-base">
               Expected launch: Q2 2024
