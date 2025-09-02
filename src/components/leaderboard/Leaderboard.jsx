@@ -279,7 +279,7 @@ const Leaderboard = () => {
             </div>
             
             <p className="text-gray-400 mt-6 sm:mt-8 text-sm sm:text-base">
-              Start your 7-day free trial today
+              Start your premium journey today and unlock your full potential!
             </p>
           </div>
         </div>

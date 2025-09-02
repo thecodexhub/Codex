@@ -291,6 +291,10 @@ function InterviewForm() {
         },
       );
 
+      if(!response.body.companyId) {
+        throw new Error("Please select company from the list or click add");
+      }
+
       if (!response.ok) {
         throw new Error("Failed to submit experience.");
       }
