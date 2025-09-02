@@ -7,20 +7,20 @@ import { useAuth } from '../../context/AuthContext';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, } = useAuth();
   
   const cardData = [
     {
       title: 'DSA Progress',
       progress: 68,
       current: 'Dynamic Programming',
-      onClick: () => navigate('/dsa')
+      onClick: () => navigate('/')
      },
     {
       title: 'Specialization',
       progress: 45,
       current: 'React Advanced Patterns',
-      onClick: () => navigate('/specialization'),
+      onClick: () => navigate('/'),
      },
   ];
 

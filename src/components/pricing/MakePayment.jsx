@@ -120,7 +120,7 @@ const MakePayment = () => {
         window.history.back();
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async() => {
         if (uploadedImage && imageUrl) {
             const paymentData = {
                 user_id: mongodbId,
@@ -130,7 +130,7 @@ const MakePayment = () => {
                 screenshotUrl: imageUrl 
             };
             console.log("Payment Data to submit:", paymentData);
-            
+            const res = await axios.post(`${BASE_URL}/api/payments`, paymentData);
             // Mark as submitted and show success modal
             setIsSubmitted(true);
             setShowSuccessModal(true);

@@ -8,7 +8,7 @@ import { useAuth } from "../../context/AuthContext"
 
 
 const API_BASE = "https://codex-test-server.onrender.com/api/documentation"
-const MODULE_ID = "M1"
+const MODULE_ID = "P1"
 
 const CProgramming = () => {
   const [expandedTopic, setExpandedTopic] = useState(null)
