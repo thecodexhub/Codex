@@ -19,10 +19,9 @@ const Specialization = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-950 py-6 px-4 sm:px-6">
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="space-y-6">
         {/* Welcome Section */}
-        <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:p-6 text-white">
+        <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:px-6 text-white">
           <h1 className="text-2xl sm:text-3xl font-bold mb-2">Your Learning Journey Starts Here</h1>
           <p className="text-purple-100 text-base sm:text-lg">Pick a course and unlock your coding potential.</p>
         </div>
@@ -63,7 +62,6 @@ const Specialization = () => {
           ))}
         </div>
       </div>
-    </div>
   )
 }
 
