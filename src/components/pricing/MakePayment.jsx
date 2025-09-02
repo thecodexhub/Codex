@@ -159,7 +159,8 @@ const MakePayment = () => {
                 } catch (err) {
                     console.error("Error updating payment status:", err);
                 }
-                if (!res.ok) throw new Error('Failed to submit payment');
+                console.log(res)
+                if (!res.data.success) throw new Error('Failed to submit payment');
                 // paymentId = res.data.paymentId;
 
                 await refreshPaymentStatus();

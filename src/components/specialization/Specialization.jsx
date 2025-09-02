@@ -30,7 +30,7 @@ const Specialization = () => {
   ]
 
   const handleCardClick = (card) => {
-    if (paymentStatus === "NOT_PROCESSED") {
+    if (paymentStatus !== "DONE") {
       setShowPremiumModal(true)
     } else {
       card.onClick()
@@ -113,7 +113,7 @@ const Specialization = () => {
           {/* Progress Overview Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {cardData.map((card, index) => {
-              const isLocked = paymentStatus === "NOT_PROCESSED"
+              const isLocked = paymentStatus !== "DONE"
               
               return (
                 <div
