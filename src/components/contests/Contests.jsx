@@ -42,7 +42,7 @@ const Badge = ({ children, color = 'purple' }) => {
 
 const Contests = () => {
   // Control overlay states
-  const [overlayMode, setOverlayMode] = useState('premium'); // 'none', 'premium', 'coming-soon'
+  const [overlayMode, setOverlayMode] = useState('none'); // 'none', 'premium', 'coming-soon'
   
   const { user } = useAuth();
   const navigate = useNavigate();

@@ -44,13 +44,20 @@ function Aurora() {
             float dist = length(uv);
             float glow = smoothstep(0.5, 0.0, dist); // fade out edges
 
-            // Aurora color mix (deep navy -> purple-blue glow)
-            vec3 baseColor = vec3(0.02, 0.02, 0.05); // dark navy
-            vec3 glowColor = mix(vec3(0.4, 0.3, 0.7), vec3(0.0, 0.6, 1.0), sin(time * 0.2) * 0.5 + 0.5);
+            // Aurora color mix (deep navy -> animated purple glow)
+            vec3 baseColor = vec3(0.02, 0.02, 0.05); // dark navy background
+
+            // Purple-only animated glow (no blue shifts)
+            vec3 glowColor = vec3(
+              0.5 + 0.2 * sin(time * 0.3),  // red channel
+              0.2 + 0.1 * cos(time * 0.2),  // green (kept low)
+              0.6 + 0.2 * sin(time * 0.25)  // blue channel
+            );
 
             vec3 finalColor = mix(baseColor, glowColor, glow * 0.8);
 
             gl_FragColor = vec4(finalColor, 1.0);
+
           }
         `}
       />

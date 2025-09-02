@@ -3,7 +3,7 @@ import { User, Camera, Mail, MapPin, Calendar, Edit3, Save, X, Github, ExternalL
 import { BASE_URL, USERPROFILE } from '../../config';
 import { useAuth } from "../../context/AuthContext";
 import axios from 'axios';
-
+// import {uploadImageToCloudinary} from '../../utils/cloudinary';
 const ProfilePage = () => {
     const [isEditing, setIsEditing] = useState(false);
     const { user, mongodbId } = useAuth();
@@ -11,7 +11,7 @@ const ProfilePage = () => {
     const [editProfile, setEditProfile] = useState(profile);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
-
+    const [imageUrl, setImageUrl] = useState("");
 
     useEffect(() => {
         console.log("User:", user);
@@ -29,9 +29,7 @@ const ProfilePage = () => {
                 });
                 const data = res.data;
 
-                const profilePictureUrl = data.data.profilePic
-                    ? `${BASE_URL}/api/image/view/${data.data.profilePic}`
-                    : null;
+                // const profilePictureUrl = data.data.profilePic||"";
                 const options = { year: 'numeric', month: 'long' };
                 if (res.data.success && res.data.data) {
                     const profileData = {
@@ -44,7 +42,7 @@ const ProfilePage = () => {
                         location: 'KKWIEER, Nashik',
                         bio: res.data.data.aboutUser || '--',
                         githubUrl: res.data.data.githubUrl || '-',
-                        profilePicture: profilePictureUrl || '',
+                        profilePicture: res.data.data.profilePic|| '',
                         currentStreak: 22,
                         dailyProblemsSolved: 5,
                     };
@@ -61,28 +59,35 @@ const ProfilePage = () => {
 
         fetchUserProfile();
     }, [user, mongodbId]);
+
+
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
+        setUploading(true);
+        const formData = new FormData();
+        formData.append("file", file);
+
+        formData.append("upload_preset", "image_upload");
+        formData.append("cloud_name", "drkhfntxp");
+
         try {
-            setUploading(true);
-            const token = await user.getIdToken();
-            const formData = new FormData();
-            formData.append("image", file);
+            const res = await fetch(
+                `https://api.cloudinary.com/v1_1/drkhfntxp/image/upload`,
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            );
 
-            const res = await axios.post(`${BASE_URL}/api/image/upload`, formData, {
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                },
-            });
-
-            if (res.data.imageId) {
-                const previewUrl = `${BASE_URL}/api/image/view/${res.data.imageId}`;
+            const data = await res.json();
+            if (data.secure_url) {
+                setImageUrl(data.secure_url); 
                 setEditProfile((prev) => ({
                     ...prev,
-                    profilePicture: previewUrl,
-                    profilePicId: res.data.imageId,
+                    profilePicture: data.secure_url, 
+                    profilePicId: data.public_id,
                 }));
             }
         } catch (err) {
@@ -103,7 +108,7 @@ const ProfilePage = () => {
                 year: editProfile.year,
                 aboutUser: editProfile.bio,
                 githubUrl: editProfile.githubUrl,
-                profilePic: editProfile.profilePicId || profile.profilePicId || "", // send imageId
+                profilePic: editProfile.profilePicture || profile.profilePicture || "",
             };
 
             await axios.patch(`${BASE_URL}${USERPROFILE}/${mongodbId}`, payload, {
