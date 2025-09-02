@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
     fetchPaymentStatus();
   }, [mongodbId]);
   return (
-    <AuthContext.Provider value={{ user, loading, mongodbId, setMongodbId }}>
+    <AuthContext.Provider value={{ user, loading, mongodbId, setMongodbId,paymentStatus }}>
       {children}
     </AuthContext.Provider>
   );
