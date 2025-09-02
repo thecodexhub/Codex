@@ -2,11 +2,14 @@ import AuroraBackground from '../utils/BlueBackground';
 import { GraduationCap, Clock, Code, LayoutDashboard, Briefcase, Trophy, CalendarDays, AlertTriangle, BookOpen, Flame } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+
 const Pricing = () => {
-  // Toggle this boolean to show Active Plan view
-  const navigate= useNavigate();
+  const navigate = useNavigate();
   const { paymentStatus } = useAuth();
+  
+  // Only show Active Plan view for VERIFIED status
   const isSubscribedUser = paymentStatus === 'VERIFIED';
+  
   const features = [
     {
       icon: GraduationCap,
@@ -39,9 +42,27 @@ const Pricing = () => {
       description: "Leaderboard boosts your progress"
     }
   ];
+  
   const handleBuyNow = () => {
     navigate('/make-payment');
   }
+
+  // Show payment under review banner for IN_VERIFICATION status
+  const PaymentUnderReviewBanner = () => (
+    <div className="bg-yellow-900/30 border border-yellow-500/30 rounded-xl p-6 mb-6">
+      <div className="flex items-center space-x-4">
+        <div className="w-12 h-12 rounded-full bg-yellow-500/20 border border-yellow-500/50 flex items-center justify-center">
+          <Clock className="w-6 h-6 text-yellow-400" />
+        </div>
+        <div>
+          <h3 className="text-xl font-semibold text-yellow-100">Payment Under Review</h3>
+          <p className="text-yellow-200/80">Your payment screenshot has been submitted and is being verified by our team.</p>
+          <p className="text-yellow-300/70 text-sm mt-1">Expected verification time: 2-3 business days</p>
+        </div>
+      </div>
+    </div>
+  );
+  
   return (
     <div className="relative h-fit text-white overflow-hidden">
       {isSubscribedUser ? (
@@ -56,7 +77,6 @@ const Pricing = () => {
                 <h1 className="text-2xl sm:text-4xl font-bold mb-1">Active Plan</h1>
                 <p className="text-purple-100 text-base sm:text-lg">Your learning journey continues</p>
               </div>
-              {/* <span className="px-4 py-2 rounded-full bg-purple-700 border border-purple-300/20 text-sm sm:text-base font-semibold">CURRENT SEMESTER</span> */}
             </div>
           </div>
 
@@ -106,10 +126,7 @@ const Pricing = () => {
                     <span>End Plan</span>
                   </button>
                 </div>
-
-
               </div>
-
             </div>
           </div>
         </div>
@@ -119,6 +136,9 @@ const Pricing = () => {
             <h1 className="text-2xl sm:text-3xl font-bold mb-2">Pricing</h1>
             <p className="text-purple-100 text-base sm:text-lg">Make the best investment</p>
           </div>
+
+          {/* Show payment under review banner if status is IN_VERIFICATION */}
+          {paymentStatus === 'IN_VERIFICATION' && <PaymentUnderReviewBanner />}
 
           <div className="relative bg-gray-900/60 rounded-xl p-8 border border-gray-800/50 flex flex-col lg:flex-row backdrop-blur-md overflow-hidden">
             <div className="lg:block absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -146,11 +166,18 @@ const Pricing = () => {
               <div className="text-5xl font-bold text-white mb-2">499/-</div>
               <div className="text-gray-400 text-lg mb-8">Purchase Price</div>
 
-                <button onClick={handleBuyNow} className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-4 px-8 rounded-lg text-lg uppercase tracking-wide hover:opacity-90 transition-opacity duration-200 mb-4">
-                Buy Now
+              {/* Disable buy button if payment is under verification */}
+              <button 
+                onClick={handleBuyNow} 
+                disabled={paymentStatus === 'IN_VERIFICATION'}
+                className={`w-full font-semibold py-4 px-8 rounded-lg text-lg uppercase tracking-wide transition-all duration-200 mb-4 ${
+                  paymentStatus === 'IN_VERIFICATION'
+                    ? 'bg-gray-600 text-gray-400 cursor-not-allowed opacity-50'
+                    : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:opacity-90'
+                }`}
+              >
+                {paymentStatus === 'IN_VERIFICATION' ? 'Payment Under Review' : 'Buy Now'}
               </button>
-
-              {/* <div className="text-gray-400 text-sm">30 Days Moneyback Guarantee</div> */}
             </div>
           </div>
         </div>

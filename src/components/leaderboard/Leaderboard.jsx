@@ -70,7 +70,7 @@ const Leaderboard = () => {
   const getRankColors = (rank, isCurrentUser) => {
     if (isCurrentUser) {
       return {
-        bg: 'bg-purple-900 bg-opacity-30 border border-purple-500',
+        bg: 'bg-opacity-30 border border-purple-500',
         name: 'text-purple-300',
         avatar: 'bg-gradient-to-r from-purple-500 to-pink-500'
       };
