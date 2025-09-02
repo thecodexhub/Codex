@@ -11,6 +11,31 @@ const Courses = () => {
       description: "Master the basics of C programming from scratch",
       onClick: () => navigate("/courses/c-programming"),
     },
+    {
+      title: "Python Programming Language",
+      description: "Master the basics of Python programming from scratch",
+      onClick: () => navigate("/courses/c-programming"),
+    },
+    {
+      title: "C++ Programming Language",
+      description: "Master the basics of C++ programming from scratch",
+      onClick: () => navigate("/courses/c-programming"),
+    },
+    {
+      title: "Java Programming Language",
+      description: "Master the basics of Java programming from scratch",
+      onClick: () => navigate("/courses/c-programming"),
+    },
+    {
+      title: "JavaScript Programming Language",
+      description: "Master the basics of JavaScript programming from scratch",
+      onClick: () => navigate("/courses/c-programming"),
+    },
+    {
+      title: "C# Programming Language",
+      description: "Master the basics of C# programming from scratch",
+      onClick: () => navigate("/courses/c-programming"),
+    },
   ]
 
   return (
