@@ -11,13 +11,15 @@ import { cModule } from "./data/c-module"
 import CodeEditor from "../CodeEditor/CodeEditor"
 import Sidebar from "./Sidebar"
 import renderTheoryContent from "./renderTheoryContent" // Declare the variable before using it
+import ConfirmDialog from "../CodeEditor/ConfirmDialog"
+
 import { useAuth } from "../../context/AuthContext"  
 
 
 
 // Constants for API
 const API_BASE = "https://codex-test-server.onrender.com/api/documentation"
-const MODULE_ID = "M1"
+const MODULE_ID = "P1"
 
 /**
  * Documentation Component - Main learning interface
@@ -42,6 +44,9 @@ const Documentation = () => {
   const [completedByChapter, setCompletedByChapter] = useState({}) // { [chapterId]: Set<topicId> }
   const [completedSections, setCompletedSections] = useState(new Set()) // Set(`${chapterIndex}-${subIndex}`)
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+      const [isSubmitting, setIsSubmitting] = useState(false)
+
 
   const moduleData = cModule.module
 
@@ -215,43 +220,54 @@ const Documentation = () => {
    * Mark current section as completed (POST to backend)
    */
   const markAsCompleted = useCallback(async () => {
-    if (!chapter || !subtopic) return
-    const proceed =
-      typeof window !== "undefined" ? window.confirm("Are you sure you want to mark this topic as complete?") : true
-    if (!proceed) return
-    try {
-      const res = await fetch(API_BASE, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: USER_ID,
-          module_id: MODULE_ID,
-          chapter_id: chapter.id,
-          topic_id: subtopic.id,
-          isComplete: true,
-        }),
+  if (!chapter || !subtopic) return
+  try {
+    const res = await fetch(API_BASE, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id: USER_ID,
+        module_id: MODULE_ID,
+        chapter_id: chapter.id,
+        topic_id: subtopic.id,
+        isComplete: true,
+      }),
+    })
+    const json = await res.json()
+    if (json && json.success) {
+      // Update local completion maps
+      setCompletedByChapter((prev) => {
+        const next = { ...prev }
+        const set = new Set(next[chapter.id] || [])
+        set.add(subtopic.id)
+        next[chapter.id] = set
+        return next
       })
-      const json = await res.json()
-      if (json && json.success) {
-        // Update local completion maps
-        setCompletedByChapter((prev) => {
-          const next = { ...prev }
-          const set = new Set(next[chapter.id] || [])
-          set.add(subtopic.id)
-          next[chapter.id] = set
-          return next
-        })
-        // Also update index-based set used by Sidebar
-        setCompletedSections((prev) => {
-          const next = new Set(prev)
-          next.add(`${currentChapter}-${currentSubtopic}`)
-          return next
-        })
-      }
-    } catch (e) {
-      // Optionally show a toast; for now, fail silently to keep UX smooth
+      // Also update index-based set used by Sidebar
+      setCompletedSections((prev) => {
+        const next = new Set(prev)
+        next.add(`${currentChapter}-${currentSubtopic}`)
+        return next
+      })
     }
-  }, [chapter, subtopic, currentChapter, currentSubtopic])
+  } catch (e) {
+    // Optionally show a toast; for now, fail silently to keep UX smooth
+  }
+}, [chapter, subtopic, currentChapter, currentSubtopic])
+
+  const handleMarkCompleteClick = useCallback(() => {
+    setIsConfirmOpen(true)
+  }, [])
+
+  const handleConfirmMarkComplete = useCallback(async () => {
+    setIsSubmitting(true)
+    try {
+      await markAsCompleted()
+    } finally {
+      setIsSubmitting(false)
+      setIsConfirmOpen(false)
+    }
+  }, [markAsCompleted])
 
   // Calculate progress percentage from backend completions: completed/total * 100
   const progressPercent = useMemo(() => {
@@ -384,15 +400,12 @@ const Documentation = () => {
 
               {/* Mark as complete button */}
               <button
-                onClick={markAsCompleted}
-                disabled={isCurrentComplete} // Disable when already completed
-                className="px-3 py-2 sm:px-4 sm:py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center gap-2 text-sm sm:text-base self-start sm:self-auto"
+                onClick={handleMarkCompleteClick}
+                disabled={isCurrentComplete}
+                className="px-3 py-2 sm:px-4 sm:py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-700 disabled:text-gray-400 text-white rounded-lg transition-colors flex items-center gap-2 text-sm sm:text-base self-start sm:self-auto"
               >
                 <Trophy className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">
-                  {/* Show Completed label when already done */}
-                  {isCurrentComplete ? "Completed" : "Mark Complete"}
-                </span>
+                <span className="hidden sm:inline">{isCurrentComplete ? "Completed" : "Mark Complete"}</span>
                 <span className="sm:hidden">{isCurrentComplete ? "Completed" : "Complete"}</span>
               </button>
             </div>
@@ -457,6 +470,18 @@ const Documentation = () => {
           </div>
         </div>
       </div>
+
+      <ConfirmDialog
+              open={isConfirmOpen}
+              title="Mark topic as complete?"
+              description="This will mark the current topic as completed. You can revisit anytime."
+              confirmText={isSubmitting ? "Submitting..." : "Yes, mark complete"}
+              cancelText="Cancel"
+              onConfirm={handleConfirmMarkComplete}
+              onCancel={() => setIsConfirmOpen(false)}
+              loading={isSubmitting}
+            />
+      
     </div>
   )
 }

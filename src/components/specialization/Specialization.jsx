@@ -7,14 +7,19 @@ const Specialization = () => {
 
   const cardData = [
     {
-      title: "HTML",
+      title: "Web Development",
       description: "Master the basics of HTML from scratch",
       onClick: () => navigate("/specialization/html"),
     },
     {
-      title: "CSS",
+      title: "App Development",
       description: "Master the basics of CSS from scratch",
       onClick: () => navigate("/specialization/css"),
+    },
+    {
+      title: "Data Science and Machine Learning",
+      description: "Master the basics of HTML from scratch",
+      onClick: () => navigate("/specialization/html"),
     },
   ]
 
