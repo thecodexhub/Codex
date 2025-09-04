@@ -377,7 +377,7 @@ const ProfilePage = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-base md:text-lg text-gray-400 font-medium mb-1">Current Streak</p>
-                                <p className="text-2xl md:text-3xl font-bold text-orange-400 mb-1">22</p>
+                                <p className="text-2xl md:text-3xl font-bold text-orange-400 mb-1">0</p>
                                 <p className="text-xs md:text-sm text-gray-500">days</p>
                             </div>
                             <div className="bg-orange-500/20 p-3 rounded-full">
@@ -390,7 +390,7 @@ const ProfilePage = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-base md:text-lg text-gray-400 font-medium mb-1">Problems Solved</p>
-                                <p className="text-2xl md:text-3xl font-bold text-green-400 mb-1">75</p>
+                                <p className="text-2xl md:text-3xl font-bold text-green-400 mb-1">0</p>
                                 <p className="text-xs md:text-sm text-gray-500">this month</p>
                             </div>
                             <div className="bg-green-500/20 p-3 rounded-full">
@@ -403,7 +403,7 @@ const ProfilePage = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-base md:text-lg text-gray-400 font-medium mb-1">Specialization</p>
-                                <p className="text-2xl md:text-3xl font-bold text-purple-400 mb-1">89%</p>
+                                <p className="text-2xl md:text-3xl font-bold text-purple-400 mb-1">0%</p>
                                 <p className="text-xs md:text-sm text-gray-500">completed</p>
                             </div>
                             <div className="bg-purple-500/20 p-3 rounded-full">
