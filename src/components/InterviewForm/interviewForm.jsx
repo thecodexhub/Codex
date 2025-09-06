@@ -583,7 +583,7 @@ function InterviewForm() {
                           Aptitude
                         </option>
                         <option
-                          value="Technical 1"
+                          value="`Technical"
                           className="bg-gray-900 text-white"
                         >
                           Technical
