@@ -85,7 +85,9 @@ const MakePayment = () => {
     const [imageUrl, setImageUrl] = useState("");
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false); // 🔹 NEW
     const navigate = useNavigate();
+
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -123,8 +125,8 @@ const MakePayment = () => {
     };
 
     const handleSubmit = async () => {
-
         if (uploadedImage && imageUrl) {
+            setIsSubmitting(true); // 🔹 Start loader
             const paymentData = {
                 user_id: mongodbId,
                 firstName: user.displayName.split(' ')[0],
@@ -137,31 +139,15 @@ const MakePayment = () => {
                     `${BASE_URL}/api/payments`,
                     paymentData,
                     {
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                     }
                 );
-                console.log('Payment API response:', res.data.paymentId);
-                try {
-                    const paymentStatusUpdate = await axios.patch(
-                        `${BASE_URL}/api/payments/${mongodbId}/${res.data.paymentId}`,
-                        {
-                            paymentStatus: "IN_VERIFICATION"
-                        },
-                        {
-                            headers: {
-                                "Content-Type": "application/json"
-                            }
-                        }
-                    );
-                    console.log("Payment status update response:", paymentStatusUpdate.data);
-                } catch (err) {
-                    console.error("Error updating payment status:", err);
-                }
-                console.log(res)
-                if (!res.data.success) throw new Error('Failed to submit payment');
-                // paymentId = res.data.paymentId;
+
+                const paymentStatusUpdate = await axios.patch(
+                    `${BASE_URL}/api/payments/${mongodbId}/${res.data.paymentId}`,
+                    { paymentStatus: "IN_VERIFICATION" },
+                    { headers: { "Content-Type": "application/json" } }
+                );
 
                 await refreshPaymentStatus();
                 setIsSubmitted(true);
@@ -169,9 +155,9 @@ const MakePayment = () => {
             } catch (err) {
                 alert('Error submitting payment. Please try again.');
                 console.error('Payment API error:', err);
+            } finally {
+                setIsSubmitting(false); // 🔹 Stop loader
             }
-
-
         } else {
             alert('Please upload payment screenshot first.');
         }
@@ -418,18 +404,25 @@ const MakePayment = () => {
                     <div className="lg:col-span-2 flex justify-center mt-1 py-2">
                         <button
                             onClick={handleSubmit}
-                            disabled={!uploadedImage || !imageUrl || isUploading}
-                            className={`w-full lg:w-auto font-semibold py-4 px-8 rounded-lg text-lg uppercase tracking-wide transition-all duration-200 ${(!uploadedImage || !imageUrl || isUploading)
-                                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white cursor-not-allowed opacity-50'
-                                : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:opacity-90'
+                            disabled={!uploadedImage || !imageUrl || isUploading || isSubmitting}
+                            className={`w-full lg:w-auto font-semibold py-4 px-8 rounded-lg text-lg uppercase tracking-wide transition-all duration-200 
+                                ${(!uploadedImage || !imageUrl || isUploading || isSubmitting)
+                                    ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white cursor-not-allowed opacity-50'
+                                    : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:opacity-90'
                                 }`}
                         >
-                            {isUploading
-                                ? 'Uploading Image...'
-                                : (!uploadedImage || !imageUrl)
-                                    ? 'Upload Screenshot'
-                                    : 'Submit Payment Verification'
-                            }
+                            {isSubmitting ? (
+                                <div className="flex items-center justify-center space-x-2">
+                                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                                    <span>Submitting...</span>
+                                </div>
+                            ) : isUploading ? (
+                                'Uploading Image...'
+                            ) : (!uploadedImage || !imageUrl) ? (
+                                'Upload Screenshot'
+                            ) : (
+                                'Submit Payment Verification'
+                            )}
                         </button>
                     </div>
                 </div>
