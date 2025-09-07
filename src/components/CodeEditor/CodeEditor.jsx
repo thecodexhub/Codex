@@ -85,7 +85,7 @@ const CodeEditor = ({
 
     try {
       // For now we support C only; keep prop for labels
-      const resp = await fetch("https://backend-compiler-jhtg.onrender.com/run", {
+      const resp = await fetch(import.meta.env.VITE_COMPILER_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

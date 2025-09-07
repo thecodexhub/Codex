@@ -39,7 +39,7 @@ export default function LoginPage() {
   const [isPasswordResetLoading, setIsPasswordResetLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const [userData, setUserData] = useState(null);
+  // const [userData, setUserData] = useState(null);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const { setMongodbId } = useAuth();
@@ -128,7 +128,7 @@ export default function LoginPage() {
 
     try {
       const user = await signin(email, password);
-      console.log("User signed in:", user);
+      // console.log("User signed in:", user);
       await handleAuthSuccess(user);
     } catch (err) {
       console.error("Login error:", err);

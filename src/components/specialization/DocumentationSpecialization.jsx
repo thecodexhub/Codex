@@ -10,8 +10,8 @@ import Sidebar from "./Sidebar"
 import renderTheoryContent from "./renderTheoryContent"
 import { useAuth } from "../../context/AuthContext"
 import ConfirmDialog from "../CodeEditor/ConfirmDialog"
-
-const API_BASE = "https://codex-test-server.onrender.com/api/documentation"
+import { BASE_URL,DOCUMENTATION } from "../../config"
+const API_BASE = `${BASE_URL}${DOCUMENTATION}`;
 
 export default function DocumentationSpecialization() {
   const { module, chapterId } = useParams()

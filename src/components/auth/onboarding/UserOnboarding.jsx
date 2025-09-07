@@ -124,8 +124,8 @@ const UserOnboarding = () => {
     setIsSubmitting(true);
 
     try {
-      console.log("MongoDB User ID:", mongodbId);
-      console.log("Firebase User ID:", user.uid);
+      // console.log("MongoDB User ID:", mongodbId);
+      // console.log("Firebase User ID:", user.uid);
       if (!mongodbId || !user.uid) {
         alert('No ID found! Please Login')
         navigate('/login');
@@ -170,7 +170,7 @@ const UserOnboarding = () => {
   };
 
   const getStepIcon = (step) => {
-    const icons = [User, GraduationCap, Calendar, User, Code]; // Updated icons array
+    const icons = [User, GraduationCap, Calendar, User, Code]; 
     const Icon = icons[step];
     return <Icon className="w-6 h-6" />;
   };

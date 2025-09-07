@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Crown, Trophy, Medal, TrendingUp, Star, Sparkles, Users, Target, Award, Construction, Rocket, Zap } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { BASE_URL } from '../../config';
+import { BASE_URL,LEADERBOARD } from '../../config';
 
 const Leaderboard = () => {
   const [activeTab, setActiveTab] = useState('institute');
@@ -28,7 +28,7 @@ const Leaderboard = () => {
   useEffect(() => {
     if (activeTab !== 'institute') return;
     setLoading(true);
-    fetch(BASE_URL + `/api/leaderboard?page=${page}&limit=10`)
+    fetch(`${BASE_URL}${LEADERBOARD}?page=${page}&limit=10`)
       .then(res => res.json())
       .then(res => {
         if (res.success) {
