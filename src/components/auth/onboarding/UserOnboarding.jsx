@@ -4,6 +4,7 @@ import { useAuth } from "../../../context/AuthContext";
 import axios from "axios";
 import { BASE_URL, USERPROFILE } from "../../../config";
 import { useNavigate } from 'react-router-dom';
+import { updateFirebaseName } from '../../../config/firebase';
 
 const UserOnboarding = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -133,7 +134,11 @@ const UserOnboarding = () => {
       }
       const token = await user.getIdToken?.();
       if (!token) throw new Error("Failed to get token.");
-
+      //update user name in firebase 
+      const updateFirebaseDisplayName = await updateFirebaseName(formData.firstName + " " + formData.lastName);
+      if (updateFirebaseDisplayName) {
+        console.log("username updated successfully");
+      }
       const patchData = {
         uid: user.uid,
         firstName: formData.firstName,

@@ -3,7 +3,7 @@ import { ArrowLeft, Upload, CheckCircle, QrCode, Smartphone, CreditCard, User, I
 import qrImage from '../../assets/payment.png';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { BASE_URL, CLOUDINARY_URL } from '../../config';
+import { BASE_URL, CLOUDINARY_URL,PAYMENT } from '../../config';
 import axios from 'axios';
 const AuroraBackground = ({ className }) => (
     <div className={`${className} bg-gradient-to-br from-purple-600/30 via-blue-500/20 to-purple-800/30 animate-pulse`} />
