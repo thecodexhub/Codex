@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { Send, Users, CheckCircle, Plus, Upload, X, Image } from "lucide-react";
 import "react-datepicker/dist/react-datepicker.css";
+import { FETCH_COMPANY_BY_QUERY } from "../../config";
 
 function InterviewForm() {
   const [formData, setFormData] = useState({
@@ -94,7 +95,7 @@ function InterviewForm() {
   const fetchCompanySuggestions = async (query) => {
     try {
       const { data } = await axios.get(
-        `https://codex-test-server.onrender.com/api/company/search?query=${query}`,
+        `${BASE_URL}${FETCH_COMPANY_BY_QUERY}?query=${query}`,
       );
       setCompanySuggestions(data || []);
       setShowAddOption(
@@ -113,7 +114,7 @@ function InterviewForm() {
       const actualName = selectedName.replace("ADD::", "");
       try {
         const res = await axios.post(
-          "https://codex-test-server.onrender.com/api/company/add",
+          `${BASE_URL}${ADD_COMPANY}`,
           {
             name: actualName,
           },
@@ -178,12 +179,12 @@ function InterviewForm() {
   setIsUploading(true);
   const formDataUpload = new FormData();
   formDataUpload.append("file", selectedFile);
-  formDataUpload.append("upload_preset", "image_upload"); // your unsigned preset
-  formDataUpload.append("cloud_name", "drkhfntxp");       // your cloud name
+  formDataUpload.append("upload_preset", "image_upload"); 
+  formDataUpload.append("cloud_name", "drkhfntxp");       
 
-  try {
-    const res = await fetch(
-      "https://api.cloudinary.com/v1_1/drkhfntxp/image/upload",
+    try {
+      const res = await fetch(
+       ` ${CLOUDINARY_URL}`,
       {
         method: "POST",
         body: formDataUpload,
@@ -192,15 +193,15 @@ function InterviewForm() {
 
     const data = await res.json();
 
-    // Cloudinary returns `secure_url` and `public_id`
+    
     if (data.secure_url) {
       setFormData((prev) => ({
         ...prev,
-        image: data.secure_url, // same as before
+        image: data.secure_url,
       }));
 
       setSelectedFile(null);
-      setIsImageUploaded(true); // ✅ mark uploaded
+      setIsImageUploaded(true); 
     } else {
       throw new Error("Cloudinary upload failed");
     }
@@ -216,7 +217,7 @@ function InterviewForm() {
     setSelectedFile(null);
     setUploadPreview(null);
     setFormData((prev) => ({ ...prev, image: "" }));
-    setIsImageUploaded(false); // ✅ mark removed
+    setIsImageUploaded(false); 
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -281,7 +282,7 @@ function InterviewForm() {
 
     try {
       const response = await fetch(
-        "https://codex-test-server.onrender.com/api/interviewExperience",
+        `${BASE_URL}${INTERVIEW_EXP_BY_COMPANYID}`,
         {
           method: "POST",
           headers: {

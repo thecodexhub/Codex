@@ -3,7 +3,7 @@ import { ArrowLeft, Upload, CheckCircle, QrCode, Smartphone, CreditCard, User, I
 import qrImage from '../../assets/payment.png';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { BASE_URL } from '../../config';
+import { BASE_URL, CLOUDINARY_URL } from '../../config';
 import axios from 'axios';
 const AuroraBackground = ({ className }) => (
     <div className={`${className} bg-gradient-to-br from-purple-600/30 via-blue-500/20 to-purple-800/30 animate-pulse`} />
@@ -85,7 +85,7 @@ const MakePayment = () => {
     const [imageUrl, setImageUrl] = useState("");
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false); // 🔹 NEW
+    const [isSubmitting, setIsSubmitting] = useState(false); 
     const navigate = useNavigate();
 
     const handleImageUpload = async (e) => {
@@ -101,7 +101,7 @@ const MakePayment = () => {
 
         try {
             const res = await fetch(
-                `https://api.cloudinary.com/v1_1/drkhfntxp/image/upload`,
+                `${CLOUDINARY_URL}`,
                 {
                     method: "POST",
                     body: formData,
@@ -126,7 +126,7 @@ const MakePayment = () => {
 
     const handleSubmit = async () => {
         if (uploadedImage && imageUrl) {
-            setIsSubmitting(true); // 🔹 Start loader
+            setIsSubmitting(true);
             const paymentData = {
                 user_id: mongodbId,
                 firstName: user.displayName.split(' ')[0],
@@ -136,7 +136,7 @@ const MakePayment = () => {
             };
             try {
                 const res = await axios.post(
-                    `${BASE_URL}/api/payments`,
+                    `${BASE_URL}${PAYMENT}`,
                     paymentData,
                     {
                         headers: { 'Content-Type': 'application/json' },
@@ -144,7 +144,7 @@ const MakePayment = () => {
                 );
 
                 const paymentStatusUpdate = await axios.patch(
-                    `${BASE_URL}/api/payments/${mongodbId}/${res.data.paymentId}`,
+                    `${BASE_URL}${PAYMENT}/${mongodbId}/${res.data.paymentId}`,
                     { paymentStatus: "IN_VERIFICATION" },
                     { headers: { "Content-Type": "application/json" } }
                 );
@@ -156,7 +156,7 @@ const MakePayment = () => {
                 alert('Error submitting payment. Please try again.');
                 console.error('Payment API error:', err);
             } finally {
-                setIsSubmitting(false); // 🔹 Stop loader
+                setIsSubmitting(false);
             }
         } else {
             alert('Please upload payment screenshot first.');

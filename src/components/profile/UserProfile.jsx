@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { User, Camera, Mail, MapPin, Calendar, Edit3, Save, X, Github, ExternalLink, Trophy, Target, Globe, ArrowLeft } from 'lucide-react';
-import { BASE_URL, USERPROFILE } from '../../config';
+import { BASE_URL, CLOUDINARY_URL, USERPROFILE } from '../../config';
 import { useAuth } from "../../context/AuthContext";
 import axios from 'axios';
 // import {uploadImageToCloudinary} from '../../utils/cloudinary';
@@ -74,7 +74,7 @@ const ProfilePage = () => {
 
         try {
             const res = await fetch(
-                `https://api.cloudinary.com/v1_1/drkhfntxp/image/upload`,
+                `${CLOUDINARY_URL}`,
                 {
                     method: "POST",
                     body: formData,
