@@ -12,13 +12,13 @@ import CodeEditor from "../CodeEditor/CodeEditor"
 import Sidebar from "./Sidebar"
 import renderTheoryContent from "./renderTheoryContent" // Declare the variable before using it
 import ConfirmDialog from "../CodeEditor/ConfirmDialog"
-
+import { BASE_URL,DOCUMENTATION } from "../../config"
 import { useAuth } from "../../context/AuthContext"  
 
 
 
 // Constants for API
-const API_BASE = "https://codex-test-server.onrender.com/api/documentation"
+const API_BASE = BASE_URL+DOCUMENTATION;
 const MODULE_ID = "P1"
 
 /**

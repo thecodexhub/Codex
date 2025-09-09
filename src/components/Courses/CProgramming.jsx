@@ -5,9 +5,9 @@ import { cModule } from "./data/c-module"
 import { BookOpen, Code, Terminal, Settings } from "lucide-react"
 import TopicItem from "./TopicItem"
 import { useAuth } from "../../context/AuthContext"  
+import { BASE_URL,DOCUMENTATION } from "../../config"
 
-
-const API_BASE = "https://codex-test-server.onrender.com/api/documentation"
+const API_BASE = BASE_URL + DOCUMENTATION;
 const MODULE_ID = "P1"
 
 const CProgramming = () => {

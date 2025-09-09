@@ -3,7 +3,7 @@ import { Star, Send, MessageCircle, ThumbsUp, ThumbsDown, MessageSquare } from '
 import emailjs from '@emailjs/browser';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
-import { BASE_URL } from '../../config';
+import { BASE_URL, FEEDBACK } from '../../config';
 
 
 const dummyFeedback = [
@@ -78,7 +78,7 @@ const Feedback = () => {
       setRecentFeedback((prev) => [newFeedback, ...prev]);
 
       const res = await axios.post(
-        `${BASE_URL}/api/feedback`,
+        `${BASE_URL}${FEEDBACK}`,
         {
           user_id: mongodbId,
           feedback_description: feedback,

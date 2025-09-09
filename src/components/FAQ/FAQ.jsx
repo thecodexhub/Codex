@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronRight, ChevronDown, FileText } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
+import { INSTAGRAM_LINK, WHATSAPP_LINK } from '../../config';
 
 const FAQ = () => {
     const [expandedId, setExpandedId] = useState(0);
@@ -65,8 +66,6 @@ const FAQ = () => {
     return (
 
         <div className=" bg-black text-white space-y-6">
-            {/* Header Section */}
-            {/* Header Section */}
             <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:px-6 text-white flex items-start justify-between">
                 {/* Left side: Title + Subtitle */}
                 <div>
@@ -116,7 +115,7 @@ const FAQ = () => {
                 <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mt-10">
                     {/* WhatsApp Community */}
                     <a
-                        href="https://chat.whatsapp.com/J3ibXsmI0tq4blRBZkNxjw"
+                        href={WHATSAPP_LINK} 
                         target="_blank"
                         rel="noopener noreferrer"
                         className="relative rounded-xl p-6 text-center transition-all duration-300 overflow-hidden group flex-shrink-0 w-64 h-40"
@@ -136,7 +135,7 @@ const FAQ = () => {
 
                     {/* Instagram Handle */}
                     <a
-                        href="https://www.instagram.com/the_codex_hub/" // replace with actual handle
+                        href={INSTAGRAM_LINK}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="relative rounded-xl p-6 text-center transition-all duration-300 overflow-hidden group flex-shrink-0 w-64 h-40"
