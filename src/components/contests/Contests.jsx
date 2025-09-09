@@ -43,19 +43,26 @@ const Badge = ({ children, color = 'purple' }) => {
 
 const Contests = () => {
 
-  const { user } = useAuth();
+  const { paymentStatus } = useAuth();
   const navigate = useNavigate()
   // Control overlay states
-  const [overlayMode, setOverlayMode] = useState('verified'); // get from user
-  // possible values: 'none', 'premium', 'coming-soon', 'verified'
-
-  const hasSubscription = user?.subscription || false;
-
+  const overlayMode = paymentStatus || 'NOT_PROCESSED'; // get from user
+  // possible values: 'NOT_PROCESSED', 'IN_VERIFICATION', 'VERIFIED', 'DONE', 'COMING_SOON'
+  console.log("overlayMode:", overlayMode);
+  // const hasSubscription = user?.subscription || false;
   // ✅ Determine which overlay to show
-  const showVerifiedOverlay = overlayMode === 'verified';
-  const showComingSoonOverlay = overlayMode === 'coming-soon';
-  const showPremiumOverlay = (!hasSubscription && overlayMode !== 'coming-soon' && overlayMode !== 'verified');
+  const showVerifiedOverlay = overlayMode === "VERIFIED";
+  const showComingSoonOverlay = overlayMode === "COMING_SOON";
+  const showPremiumOverlay = overlayMode === "NOT_PROCESSED" || overlayMode === "IN_VERIFICATION";
+  const showFeatureOverlay = overlayMode === "DONE";
   const showOverlay = showVerifiedOverlay || showComingSoonOverlay || showPremiumOverlay;
+
+  // overlayMode meaning:
+  // "NOT_PROCESSED"  → user has not made payment
+  // "IN_VERIFICATION"  → user's payment is in verification
+  // "VERIFIED" → user made payment, verified but access will start after a few days
+  // "DONE" → user payment verified and plan is active (started)
+  // "COMING_SOON" → feature not ready yet, regardless of payment status
 
   const handleUpgradeClick = () => {
     navigate('/pricing');
@@ -73,7 +80,7 @@ const Contests = () => {
           </p>
 
           {/* Only show buttons if feature is available and user has subscription */}
-          {!showComingSoonOverlay && hasSubscription && (
+          {showFeatureOverlay && (
             <div className="mt-6 flex flex-wrap gap-3">
               <button className="inline-flex items-center px-4 py-2 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-sm font-medium transition-colors">
                 <Trophy className="w-4 h-4 mr-2" />
@@ -107,7 +114,7 @@ const Contests = () => {
                 <Check className="w-8 sm:w-10 lg:w-12 h-8 sm:h-10 lg:h-12 text-white" />
               </div>}
 
-            {/* Coming Soon Message */}
+            {/* Coming Soon or Verification Message */}
             <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
               {showComingSoonOverlay ? "Coming Soon!" : "Subscription Verified"}
             </h3>
