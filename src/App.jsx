@@ -73,7 +73,6 @@ function App() {
         <Route element={<FullPageLayout />}>
           <Route path="useronboarding" element={<UserOnboarding />} />
           <Route path="userprofile" element={<UserProfile />} />
-
         </Route>
       </Routes>
     </Router>

@@ -3,6 +3,8 @@ import { ArrowLeft, Upload, CheckCircle, QrCode, Smartphone, CreditCard, User, I
 import qrImage from '../../assets/payment.png';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../../config';
+import axios from 'axios';
 const AuroraBackground = ({ className }) => (
     <div className={`${className} bg-gradient-to-br from-purple-600/30 via-blue-500/20 to-purple-800/30 animate-pulse`} />
 );
@@ -44,7 +46,7 @@ const SuccessModal = ({ isOpen, onClose }) => {
                                 <div className="text-xs text-gray-400">2-3 business days</div>
                             </div>
                         </div>
-                        
+
                         <div className="flex items-center space-x-3">
                             <Shield className="w-5 h-5 text-purple-400 flex-shrink-0" />
                             <div>
@@ -57,7 +59,7 @@ const SuccessModal = ({ isOpen, onClose }) => {
                     {/* Additional info */}
                     <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
                         <p className="text-blue-300 text-sm">
-                            <strong>What's next?</strong> Our team will verify your payment and activate your semester access. 
+                            <strong>What's next?</strong> Our team will verify your payment and activate your semester access.
                             You'll receive a confirmation email once your plan is active.
                         </p>
                     </div>
@@ -76,14 +78,16 @@ const SuccessModal = ({ isOpen, onClose }) => {
 };
 
 const MakePayment = () => {
-    const {user, mongodbId} = useAuth();
+    const { user, mongodbId, paymentStatus, refreshPaymentStatus } = useAuth();
     const [uploadedImage, setUploadedImage] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const [imageUrl, setImageUrl] = useState("");
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false); // 🔹 NEW
     const navigate = useNavigate();
+
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -120,20 +124,40 @@ const MakePayment = () => {
         window.history.back();
     };
 
-    const handleSubmit = async() => {
+    const handleSubmit = async () => {
         if (uploadedImage && imageUrl) {
+            setIsSubmitting(true); // 🔹 Start loader
             const paymentData = {
                 user_id: mongodbId,
                 firstName: user.displayName.split(' ')[0],
                 lastName: user.displayName.split(' ')[1] || '',
-                email: user.email,
-                screenshotUrl: imageUrl 
+                amount: 499,
+                screenshotUrl: imageUrl
             };
-            console.log("Payment Data to submit:", paymentData);
-            const res = await axios.post(`${BASE_URL}/api/payments`, paymentData);
-            // Mark as submitted and show success modal
-            setIsSubmitted(true);
-            setShowSuccessModal(true);
+            try {
+                const res = await axios.post(
+                    `${BASE_URL}/api/payments`,
+                    paymentData,
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                    }
+                );
+
+                const paymentStatusUpdate = await axios.patch(
+                    `${BASE_URL}/api/payments/${mongodbId}/${res.data.paymentId}`,
+                    { paymentStatus: "IN_VERIFICATION" },
+                    { headers: { "Content-Type": "application/json" } }
+                );
+
+                await refreshPaymentStatus();
+                setIsSubmitted(true);
+                setShowSuccessModal(true);
+            } catch (err) {
+                alert('Error submitting payment. Please try again.');
+                console.error('Payment API error:', err);
+            } finally {
+                setIsSubmitting(false); // 🔹 Stop loader
+            }
         } else {
             alert('Please upload payment screenshot first.');
         }
@@ -141,7 +165,7 @@ const MakePayment = () => {
 
     const handleCloseModal = () => {
         setShowSuccessModal(false);
-        
+
         // Clear the form after closing modal
         setUploadedImage(null);
         setUploadSuccess(false);
@@ -150,6 +174,53 @@ const MakePayment = () => {
         navigate('/pricing')
     };
 
+    // Debug: Log paymentStatus whenever it changes
+    React.useEffect(() => {
+        console.log('Current paymentStatus:', paymentStatus);
+    }, [paymentStatus]);
+
+    // Handle IN_VERIFICATION status - show payment under review
+    if (paymentStatus === 'IN_VERIFICATION') {
+        return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+                <div className="bg-gray-900 border border-gray-700 rounded-2xl p-10 max-w-lg w-full mx-4 shadow-2xl text-center flex flex-col items-center">
+                    <Clock className="w-16 h-16 text-yellow-400 mx-auto mb-6 animate-pulse" />
+                    <h2 className="text-3xl font-bold mb-4 text-white">Payment Under Review</h2>
+                    <p className="text-gray-300 text-lg mb-2">Thank you for submitting your payment screenshot.</p>
+                    <p className="text-gray-400 text-base mb-6">Our team is reviewing your payment. You will receive an email once your plan is activated.</p>
+
+                    <button
+                        onClick={() => navigate('/pricing')}
+                        className="mt-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity"
+                    >
+                        Okay!
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    // Handle VERIFIED status - redirect to pricing page showing active plan
+    if (paymentStatus === 'VERIFIED') {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-950 text-white">
+                <div className="bg-gray-900 border border-gray-700 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl text-center">
+                    <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4 animate-pulse" />
+                    <h2 className="text-2xl font-bold mb-2">Payment Verified!</h2>
+                    <p className="text-gray-300 mb-4">Your semester access is now active. Welcome to the learning journey!</p>
+
+                    <button
+                        onClick={() => navigate('/pricing')}
+                        className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity"
+                    >
+                        View Active Plan
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    // Default case: NOT_PROCESSED or null - show payment form
     return (
         <div className="relative h-fit text-white overflow-hidden min-h-screen">
             <div className="relative max-w-6xl mx-auto space-y-9">
@@ -333,28 +404,34 @@ const MakePayment = () => {
                     <div className="lg:col-span-2 flex justify-center mt-1 py-2">
                         <button
                             onClick={handleSubmit}
-                            disabled={!uploadedImage || !imageUrl || isUploading}
-                            className={`w-full lg:w-auto font-semibold py-4 px-8 rounded-lg text-lg uppercase tracking-wide transition-all duration-200 ${
-                                (!uploadedImage || !imageUrl || isUploading)
+                            disabled={!uploadedImage || !imageUrl || isUploading || isSubmitting}
+                            className={`w-full lg:w-auto font-semibold py-4 px-8 rounded-lg text-lg uppercase tracking-wide transition-all duration-200 
+                                ${(!uploadedImage || !imageUrl || isUploading || isSubmitting)
                                     ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white cursor-not-allowed opacity-50'
                                     : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:opacity-90'
-                            }`}
+                                }`}
                         >
-                            {isUploading 
-                                ? 'Uploading Image...' 
-                                : (!uploadedImage || !imageUrl) 
-                                    ? 'Upload Screenshot' 
-                                    : 'Submit Payment Verification'
-                            }
+                            {isSubmitting ? (
+                                <div className="flex items-center justify-center space-x-2">
+                                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                                    <span>Submitting...</span>
+                                </div>
+                            ) : isUploading ? (
+                                'Uploading Image...'
+                            ) : (!uploadedImage || !imageUrl) ? (
+                                'Upload Screenshot'
+                            ) : (
+                                'Submit Payment Verification'
+                            )}
                         </button>
                     </div>
                 </div>
             </div>
 
             {/* Success Modal */}
-            <SuccessModal 
-                isOpen={showSuccessModal} 
-                onClose={handleCloseModal} 
+            <SuccessModal
+                isOpen={showSuccessModal}
+                onClose={handleCloseModal}
             />
         </div>
     );

@@ -135,7 +135,7 @@ const Queries = () => {
 
           <button
             type="submit"
-            className="w-full px-4 py-3 bg-purple-700 text-white rounded-lg font-semibold text-lg hover:bg-purple-800 transition-all"
+            className="w-1/5 px-4 py-3 bg-purple-700 text-white rounded-lg font-semibold text-lg hover:bg-purple-800 transition-all"
             disabled={loading}
           >
             {loading ? 'Sending...' : 'Submit'}

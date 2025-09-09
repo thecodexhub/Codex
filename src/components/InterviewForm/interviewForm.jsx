@@ -292,7 +292,10 @@ function InterviewForm() {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to submit experience.");
+        if (!formData.companyId) {
+          throw new Error("Please select a valid company from the list or add it.");
+        }
+        throw new Error("Failed to submit interview experience. Please try again.");
       }
 
       setIsSubmitted(true);
@@ -580,7 +583,7 @@ function InterviewForm() {
                           Aptitude
                         </option>
                         <option
-                          value="Technical 1"
+                          value="`Technical"
                           className="bg-gray-900 text-white"
                         >
                           Technical

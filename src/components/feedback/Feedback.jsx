@@ -257,7 +257,7 @@ const Feedback = () => {
             ) : (
               <>
                 <h2 className="text-xl font-semibold text-white mb-4">Queries</h2>
-                <form onSubmit={handleSupportSubmit} className="space-y-6">
+                <form onSubmit={handleSupportSubmit} className="space-y-6 flex flex-col">
                   <div>
                     <label className="block text-gray-300 mb-2 font-semibold">Subject</label>
                     <input
@@ -295,7 +295,7 @@ const Feedback = () => {
                   </div>
                   <button
                     type="submit"
-                    className="w-full px-4 py-3 bg-purple-700 text-white rounded-lg font-semibold text-lg hover:bg-purple-800 transition-all"
+                    className="w-3/5 px-4 py-3 mx-auto bg-purple-700 text-white rounded-lg font-semibold text-lg hover:bg-purple-800 transition-all"
                     disabled={loading}
                   >
                     {loading ? 'Sending...' : 'Submit'}
