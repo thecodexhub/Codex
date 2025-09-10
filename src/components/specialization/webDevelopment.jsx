@@ -9,7 +9,7 @@ import { BASE_URL,DOCUMENTATION } from "../../config"
 const API_BASE = `${BASE_URL}${DOCUMENTATION}`;
 const MODULE_ID = "S1"
 
-const HTML = () => {
+const webDevelopment = () => {
   const [expandedTopic, setExpandedTopic] = useState(null)
   const [completedByChapter, setCompletedByChapter] = useState({})
 
@@ -153,4 +153,4 @@ const HTML = () => {
   )
 }
 
-export default HTML
+export default webDevelopment ;

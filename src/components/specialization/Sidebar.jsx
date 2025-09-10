@@ -54,7 +54,7 @@ const Sidebar = ({
             <BookOpen className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-white">C Programming</h2>
+            <h2 className="text-lg font-semibold text-white">Programming</h2>
             <p className="text-gray-400 text-sm">Course Navigation</p>
           </div>
         </div>
