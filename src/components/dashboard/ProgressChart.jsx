@@ -13,13 +13,13 @@ import {
 
 const ProgressChart = () => {
   const weeklyData = [
-    { day: 'Mon', problems: 5, hours: 2.5 },
-    { day: 'Tue', problems: 7, hours: 3.2 },
-    { day: 'Wed', problems: 4, hours: 2.0 },
-    { day: 'Thu', problems: 9, hours: 4.1 },
-    { day: 'Fri', problems: 6, hours: 2.8 },
-    { day: 'Sat', problems: 12, hours: 5.5 },
-    { day: 'Sun', problems: 8, hours: 3.7 },
+    { day: 'Mon', problems: 0, hours: 0 },
+    { day: 'Tue', problems: 0, hours: 0 },
+    { day: 'Wed', problems: 0, hours: 0 },
+    { day: 'Thu', problems: 0, hours: 0 },
+    { day: 'Fri', problems: 0, hours: 0 },
+    { day: 'Sat', problems: 0, hours: 0 },
+    { day: 'Sun', problems: 0, hours: 0 },
   ];
 
   return (
