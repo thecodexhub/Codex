@@ -180,9 +180,7 @@ const Contests = () => {
               </button>
             </div> */}
 
-            <p className="text-gray-400 mt-6 sm:mt-8 text-sm sm:text-base">
-              Expected launch: Q2 2024
-            </p>
+            
           </div>
         </div>) : showPremiumOverlay ? (
           /* Premium Component - Full Width */
