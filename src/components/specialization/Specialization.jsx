@@ -81,7 +81,7 @@ const Specialization = () => {
                   onClick={() => setShowPremiumModal(false)}
                   className="px-3 py-2 sm:px-4 sm:py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                 >
-                  I am excited too!
+                  I am excited too !
                 </button>
               </div>
             </div>

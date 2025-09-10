@@ -41,9 +41,10 @@ export default function CompanyExperiences() {
   const [experiences, setExperiences] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showSubscribeDialog, setShowSubscribeDialog] = useState(false);
 
-  const { user } = useAuth();
-  const isSubscribed = user?.subscription || false;
+  const { user, paymentStatus } = useAuth();
+  const isSubscribed = paymentStatus === 'VERIFIED' || paymentStatus === 'DONE';
   useEffect(() => {
     const fetchExperiences = async () => {
       try {
@@ -136,6 +137,7 @@ export default function CompanyExperiences() {
     navigate(`/company/${id}/interview-experience`, { state: { experience } });
 
   const goBack = () => navigate(-1);
+  const goToPricing = () => navigate('/pricing');
 
   return (
     <div className="min-h-screen bg-black text-slate-100">
@@ -228,7 +230,7 @@ export default function CompanyExperiences() {
                   <button
                     onClick={() => {
                       if (!isSubscribed && id !== '789') {
-                        alert("Subscribe to unlock this experience!");
+                        setShowSubscribeDialog(true);
                         return;
                       }
                       openExperience(exp);
@@ -296,6 +298,35 @@ export default function CompanyExperiences() {
           </ul>
         )}
       </div>
+      {showSubscribeDialog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+          <div className="bg-gray-900 border border-gray-700 rounded-2xl p-6 sm:p-8 w-[90%] max-w-md text-slate-100">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2.5 rounded-xl bg-white/5 border border-white/10">
+                <Lock className="w-5 h-5 text-yellow-400" />
+              </div>
+              <h3 className="text-xl font-bold">Premium content</h3>
+            </div>
+            <p className="text-slate-300 mb-6">
+              Subscribe to unlock all interview experiences for this company.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
+              <button
+                onClick={() => setShowSubscribeDialog(false)}
+                className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
+              >
+                Not now
+              </button>
+              <button
+                onClick={goToPricing}
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:opacity-90 transition-opacity font-semibold"
+              >
+                View plans
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

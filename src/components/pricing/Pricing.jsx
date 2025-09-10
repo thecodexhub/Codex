@@ -121,10 +121,10 @@ const Pricing = () => {
                       </div>
                     </div>
                   </div>
-                  <button className="sm:w-fit sm:px-10 bg-red-700 hover:bg-red-800 text-white font-semibold py-3 rounded-lg flex items-center justify-center space-x-2">
+                  {/* <button className="sm:w-fit sm:px-10 bg-red-700 hover:bg-red-800 text-white font-semibold py-3 rounded-lg flex items-center justify-center space-x-2">
                     <AlertTriangle className="w-5 h-5" />
                     <span>End Plan</span>
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
