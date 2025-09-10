@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { User, Camera, Mail, MapPin, Calendar, Edit3, Save, X, Github, ExternalLink, Trophy, Target, Globe, ArrowLeft } from 'lucide-react';
-import { BASE_URL, USERPROFILE } from '../../config';
+import { BASE_URL, CLOUDINARY_URL, USERPROFILE } from '../../config';
 import { useAuth } from "../../context/AuthContext";
 import axios from 'axios';
+import { updateFirebaseName } from '../../config/firebase';
 // import {uploadImageToCloudinary} from '../../utils/cloudinary';
 const ProfilePage = () => {
     const [isEditing, setIsEditing] = useState(false);
@@ -42,7 +43,7 @@ const ProfilePage = () => {
                         location: 'KKWIEER, Nashik',
                         bio: res.data.data.aboutUser || '--',
                         githubUrl: res.data.data.githubUrl || '-',
-                        profilePicture: res.data.data.profilePic|| '',
+                        profilePicture: res.data.data.profilePic || '',
                         currentStreak: 22,
                         dailyProblemsSolved: 5,
                     };
@@ -74,7 +75,7 @@ const ProfilePage = () => {
 
         try {
             const res = await fetch(
-                `https://api.cloudinary.com/v1_1/drkhfntxp/image/upload`,
+                `${CLOUDINARY_URL}`,
                 {
                     method: "POST",
                     body: formData,
@@ -83,10 +84,10 @@ const ProfilePage = () => {
 
             const data = await res.json();
             if (data.secure_url) {
-                setImageUrl(data.secure_url); 
+                setImageUrl(data.secure_url);
                 setEditProfile((prev) => ({
                     ...prev,
-                    profilePicture: data.secure_url, 
+                    profilePicture: data.secure_url,
                     profilePicId: data.public_id,
                 }));
             }
@@ -117,7 +118,10 @@ const ProfilePage = () => {
                     "Authorization": `Bearer ${token}`,
                 },
             });
-
+            const updateFirebaseDisplayName = await updateFirebaseName(getFullName(editProfile.firstName,editProfile.lastName));
+            if (updateFirebaseDisplayName) {
+                console.log("username updated in firebase");
+            }
             setProfile(editProfile);
             setIsEditing(false);
         } catch (error) {

@@ -8,6 +8,7 @@ import {
   sendEmailVerification,
   sendPasswordResetEmail,
   signOut,
+  updateProfile,
   onAuthStateChanged,
 } from "firebase/auth";
 
@@ -168,5 +169,25 @@ export const sendVerificationEmail = async (user) => {
   // const user = auth.currentUser;
   if (user) {
     await sendEmailVerification(user);
+  }
+};
+
+//update firebase name
+export const updateFirebaseName = async (newName) => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  if (!user) {
+    throw new Error("No authenticated user found");
+  }
+
+  try {
+    await updateProfile(user, {
+      displayName: newName,
+    });
+    console.log("Display name updated successfully!");
+  } catch (error) {
+    console.error("Error updating display name:", error);
+    throw error;
   }
 };

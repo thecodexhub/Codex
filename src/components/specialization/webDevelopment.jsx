@@ -5,11 +5,11 @@ import specalization_data from "./data/specalization_data"
 import { BookOpen, Code, Terminal, Settings } from "lucide-react"
 import TopicItem from "./TopicItem"
 import { useAuth } from "../../context/AuthContext"
-
-const API_BASE = "https://codex-test-server.onrender.com/api/documentation"
+import { BASE_URL,DOCUMENTATION } from "../../config"
+const API_BASE = `${BASE_URL}${DOCUMENTATION}`;
 const MODULE_ID = "S1"
 
-const HTML = () => {
+const webDevelopment = () => {
   const [expandedTopic, setExpandedTopic] = useState(null)
   const [completedByChapter, setCompletedByChapter] = useState({})
 
@@ -27,7 +27,6 @@ const HTML = () => {
     Settings,
   }
 
-  // ✅ pick HTML module from modules array
   const module = specalization_data.modules.find((m) => m.module_id === MODULE_ID)
 
   const baseTopics = useMemo(() => {
@@ -154,4 +153,4 @@ const HTML = () => {
   )
 }
 
-export default HTML
+export default webDevelopment ;

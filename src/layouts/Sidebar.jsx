@@ -19,10 +19,10 @@ const Sidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     // localStorage.removeItem("Auth");
     await logout();
-    navigate("/login"); 
+    navigate("/login");
   };
   const menuItems = [
     { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -69,18 +69,25 @@ const Sidebar = ({ isOpen, onClose }) => {
           if (path === '/contests') {
             isActive = location.pathname.startsWith('/contests');
           }
-          
+          if (path === '/pricing') {
+            isActive = location.pathname.startsWith('/pricing') || location.pathname.startsWith('/make-payment');
+          }
+          if (path === '/courses') {
+            isActive = location.pathname.startsWith('/courses');
+          }
+          if (path === '/specialization') {
+            isActive = location.pathname.startsWith('/specialization');
+          }          
 
           return (
             <Link
               to={path}
               key={path}
               onClick={onClose}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-                isActive
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${isActive
                   ? 'bg-purple-800 text-white shadow-lg'
                   : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-              }`}
+                }`}
             >
               <Icon className="w-5 h-5 flex-shrink-0" />
               <span className="font-medium truncate flex-1 text-left">{label}</span>
@@ -96,9 +103,9 @@ const Sidebar = ({ isOpen, onClose }) => {
         <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-colors">
           <LogOut
             className="w-5 h-5 flex-shrink-0"
-            />
+          />
           <span className="font-medium truncate"
-          onClick={handleLogout} >Logout</span>
+            onClick={handleLogout} >Logout</span>
         </button>
       </div>
     </div>

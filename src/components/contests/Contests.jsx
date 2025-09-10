@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Trophy, 
-  Code2, 
-  Users, 
-  CalendarDays, 
-  TrendingUp, 
-  Clock, 
-  ChevronRight, 
+import {
+  Trophy,
+  Code2,
+  Users,
+  CalendarDays,
+  TrendingUp,
+  Clock,
+  ChevronRight,
   Crown,
   Star,
   Construction,
   Rocket,
-  Zap
+  Zap,
+  Check
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const StatCard = ({ icon: Icon, iconClassName, value, label }) => {
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-lg p-5 flex items-center">
-      <div className={`w-10 h-10 rounded-lg flex items-center justify-center mr-4 ${iconClassName}`}> 
+      <div className={`w-10 h-10 rounded-lg flex items-center justify-center mr-4 ${iconClassName}`}>
         <Icon className="w-5 h-5" />
       </div>
       <div>
@@ -41,17 +42,27 @@ const Badge = ({ children, color = 'purple' }) => {
 };
 
 const Contests = () => {
-  // Control overlay states
-  const [overlayMode, setOverlayMode] = useState('premium'); // 'none', 'premium', 'coming-soon'
-  
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const hasSubscription = user?.subscription || false;
 
-  // Determine which overlay to show
-  const showPremiumOverlay = (!hasSubscription && overlayMode !== 'coming-soon');
-  const showComingSoonOverlay = overlayMode === 'coming-soon';
-  const showOverlay = showPremiumOverlay || showComingSoonOverlay;
+  const { paymentStatus } = useAuth();
+  const navigate = useNavigate()
+  // Control overlay states
+  const overlayMode = paymentStatus || 'NOT_PROCESSED'; // get from user
+  // possible values: 'NOT_PROCESSED', 'IN_VERIFICATION', 'VERIFIED', 'DONE', 'COMING_SOON'
+  console.log("overlayMode:", overlayMode);
+  // const hasSubscription = user?.subscription || false;
+  // ✅ Determine which overlay to show
+  const showVerifiedOverlay = overlayMode === "VERIFIED";
+  const showComingSoonOverlay = overlayMode === "COMING_SOON";
+  const showPremiumOverlay = overlayMode === "NOT_PROCESSED" || overlayMode === "IN_VERIFICATION";
+  const showFeatureOverlay = overlayMode === "DONE";
+  const showOverlay = showVerifiedOverlay || showComingSoonOverlay || showPremiumOverlay;
+
+  // overlayMode meaning:
+  // "NOT_PROCESSED"  → user has not made payment
+  // "IN_VERIFICATION"  → user's payment is in verification
+  // "VERIFIED" → user made payment, verified but access will start after a few days
+  // "DONE" → user payment verified and plan is active (started)
+  // "COMING_SOON" → feature not ready yet, regardless of payment status
 
   const handleUpgradeClick = () => {
     navigate('/pricing');
@@ -67,9 +78,9 @@ const Contests = () => {
           <p className="mt-3 text-gray-300 max-w-3xl text-sm sm:text-base">
             Your journey to programming excellence starts here. Practice, compete, and grow with our comprehensive coding platform.
           </p>
-          
+
           {/* Only show buttons if feature is available and user has subscription */}
-          {!showComingSoonOverlay && hasSubscription && (
+          {showFeatureOverlay && (
             <div className="mt-6 flex flex-wrap gap-3">
               <button className="inline-flex items-center px-4 py-2 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-sm font-medium transition-colors">
                 <Trophy className="w-4 h-4 mr-2" />
@@ -85,27 +96,40 @@ const Contests = () => {
       </div>
 
       {/* Content Area - Show overlay components instead of blurred content */}
-      {showComingSoonOverlay ? (
+      {showComingSoonOverlay || showVerifiedOverlay ? (
         /* Coming Soon Component - Full Width */
         <div className="bg-gray-900 rounded-xl border border-gray-800 p-6 sm:p-8 lg:p-12 flex-1 min-h-0">
           <div className="text-center max-w-6xl mx-auto h-full flex flex-col justify-center">
             {/* Coming Soon Icon */}
-            <div className="w-16 sm:w-20 lg:w-24 h-16 sm:h-20 lg:h-24 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-6 sm:mb-8 relative">
-              <Construction className="w-8 sm:w-10 lg:w-12 h-8 sm:h-10 lg:h-12 text-white"/>
+            {showComingSoonOverlay ? <div className="w-16 sm:w-20 lg:w-24 h-16 sm:h-20 lg:h-24 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-6 sm:mb-8 relative">
+              <Construction className="w-8 sm:w-10 lg:w-12 h-8 sm:h-10 lg:h-12 text-white" />
               <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2">
                 <div className="w-6 sm:w-8 h-6 sm:h-8 bg-orange-400 rounded-full flex items-center justify-center animate-pulse">
                   <Rocket className="w-3 sm:w-4 h-3 sm:h-4 text-white" />
                 </div>
               </div>
-            </div>
+            </div> :
+              // Check mark icon
+              <div className="w-16 sm:w-20 lg:w-24 h-16 sm:h-20 lg:h-24 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6 sm:mb-8 relative animate-bounce">
+                <Check className="w-8 sm:w-10 lg:w-12 h-8 sm:h-10 lg:h-12 text-white" />
+              </div>}
 
-            {/* Coming Soon Message */}
+            {/* Coming Soon or Verification Message */}
             <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
-              Coming Soon!
+              {showComingSoonOverlay ? "Coming Soon!" : "Subscription Verified"}
             </h3>
             <p className="text-gray-300 mb-8 sm:mb-12 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto">
-              We're working hard to bring you an amazing contest experience that will revolutionize how you practice competitive programming.
+              {showComingSoonOverlay ? (
+                "We're working hard to bring you an amazing contest experience that will revolutionize how you practice competitive programming."
+              ) : (
+                <>
+                  Your subscription has been verified! 🎉
+                  <br />
+                  Your learning journey will be starting soon. We are truly excited and happy for you!
+                </>
+              )}
             </p>
+
 
             {/* Feature Preview Grid - Single Row */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12 max-w-5xl mx-auto">
@@ -116,7 +140,7 @@ const Contests = () => {
                 </div>
                 <p className="text-gray-400 text-xs">Real-time competitive programming with instant feedback</p>
               </div>
-              
+
               <div className="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
                 <div className="flex items-center justify-center gap-2 mb-3">
                   <div className="w-3 h-3 bg-cyan-400 rounded-full"></div>
@@ -124,7 +148,7 @@ const Contests = () => {
                 </div>
                 <p className="text-gray-400 text-xs">Compete with programmers worldwide</p>
               </div>
-              
+
               <div className="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
                 <div className="flex items-center justify-center gap-2 mb-3">
                   <div className="w-3 h-3 bg-green-400 rounded-full"></div>
@@ -132,7 +156,7 @@ const Contests = () => {
                 </div>
                 <p className="text-gray-400 text-xs">Collaborate with friends in special events</p>
               </div>
-              
+
               <div className="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
                 <div className="flex items-center justify-center gap-2 mb-3">
                   <div className="w-3 h-3 bg-purple-400 rounded-full"></div>
@@ -155,86 +179,85 @@ const Contests = () => {
                 Notify Me When Ready
               </button>
             </div> */}
-            
+
             <p className="text-gray-400 mt-6 sm:mt-8 text-sm sm:text-base">
               Expected launch: Q2 2024
             </p>
           </div>
-        </div>
-      ) : showPremiumOverlay ? (
-        /* Premium Component - Full Width */
-        <div className="bg-gray-900 rounded-xl border border-gray-800 p-6 sm:p-8 lg:p-10 flex-1 min-h-0">
-          <div className="text-center max-w-6xl mx-auto h-full flex flex-col justify-center">
-            {/* Premium Icon */}
-            <div className="w-16 sm:w-20 lg:w-24 h-16 sm:h-20 lg:h-24 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 sm:mb-8 relative">
-              <Crown className="w-8 sm:w-10 lg:w-12 h-8 sm:h-10 lg:h-12 text-yellow-400"/>
-              <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2">
-                <div className="w-6 sm:w-8 h-6 sm:h-8 bg-yellow-400 rounded-full flex items-center justify-center">
-                  <Star className="w-3 sm:w-4 h-3 sm:h-4 text-purple-600" />
+        </div>) : showPremiumOverlay ? (
+          /* Premium Component - Full Width */
+          <div className="bg-gray-900 rounded-xl border border-gray-800 p-6 sm:p-8 lg:p-10 flex-1 min-h-0">
+            <div className="text-center max-w-6xl mx-auto h-full flex flex-col justify-center">
+              {/* Premium Icon */}
+              <div className="w-16 sm:w-20 lg:w-24 h-16 sm:h-20 lg:h-24 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 sm:mb-8 relative">
+                <Crown className="w-8 sm:w-10 lg:w-12 h-8 sm:h-10 lg:h-12 text-yellow-400" />
+                <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2">
+                  <div className="w-6 sm:w-8 h-6 sm:h-8 bg-yellow-400 rounded-full flex items-center justify-center">
+                    <Star className="w-3 sm:w-4 h-3 sm:h-4 text-purple-600" />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Premium Message */}
-            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
-              Premium Feature
-            </h3>
-            <p className="text-gray-300 mb-8 sm:mb-12 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto">
-              Unlock competitive programming contests and climb the global rankings with our premium features!
-            </p>
+              {/* Premium Message */}
+              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
+                Premium Feature
+              </h3>
+              <p className="text-gray-300 mb-8 sm:mb-12 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto">
+                Unlock competitive programming contests and climb the global rankings with our premium features!
+              </p>
 
-            {/* Feature List Grid - Single Row */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12 max-w-5xl mx-auto">
-              <div className="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
-                <div className="flex items-center justify-center gap-2 mb-3">
-                  <Trophy className="w-4 h-4 text-purple-400" />
-                  <h4 className="text-white font-semibold text-sm">Live Contests</h4>
+              {/* Feature List Grid - Single Row */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12 max-w-5xl mx-auto">
+                <div className="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
+                  <div className="flex items-center justify-center gap-2 mb-3">
+                    <Trophy className="w-4 h-4 text-purple-400" />
+                    <h4 className="text-white font-semibold text-sm">Live Contests</h4>
+                  </div>
+                  <p className="text-gray-400 text-xs">Join live contests with thousands of participants worldwide</p>
                 </div>
-                <p className="text-gray-400 text-xs">Join live contests with thousands of participants worldwide</p>
-              </div>
-              
-              <div className="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
-                <div className="flex items-center justify-center gap-2 mb-3">
-                  <TrendingUp className="w-4 h-4 text-purple-400" />
-                  <h4 className="text-white font-semibold text-sm">Global Leaderboards</h4>
-                </div>
-                <p className="text-gray-400 text-xs">Access global leaderboards and track your ranking progress</p>
-              </div>
-              
-              <div className="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
-                <div className="flex items-center justify-center gap-2 mb-3">
-                  <Star className="w-4 h-4 text-purple-400" />
-                  <h4 className="text-white font-semibold text-sm">Premium Problems</h4>
-                </div>
-                <p className="text-gray-400 text-xs">Solve exclusive premium contest problems with detailed solutions</p>
-              </div>
-              
-              <div className="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
-                <div className="flex items-center justify-center gap-2 mb-3">
-                  <Zap className="w-4 h-4 text-purple-400" />
-                  <h4 className="text-white font-semibold text-sm">Advanced Analytics</h4>
-                </div>
-                <p className="text-gray-400 text-xs">Get detailed performance analytics and improvement suggestions</p>
-              </div>
-            </div>
 
-            {/* Upgrade Button */}
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-              <button
-                onClick={handleUpgradeClick}
-                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-500 hover:to-purple-600 transition-all duration-200 font-semibold text-base sm:text-lg flex items-center justify-center gap-3"
-              >
-                <Crown className="w-5 sm:w-6 h-5 sm:h-6" />
-                Upgrade to Premium
-              </button>
+                <div className="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
+                  <div className="flex items-center justify-center gap-2 mb-3">
+                    <TrendingUp className="w-4 h-4 text-purple-400" />
+                    <h4 className="text-white font-semibold text-sm">Global Leaderboards</h4>
+                  </div>
+                  <p className="text-gray-400 text-xs">Access global leaderboards and track your ranking progress</p>
+                </div>
+
+                <div className="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
+                  <div className="flex items-center justify-center gap-2 mb-3">
+                    <Star className="w-4 h-4 text-purple-400" />
+                    <h4 className="text-white font-semibold text-sm">Premium Problems</h4>
+                  </div>
+                  <p className="text-gray-400 text-xs">Solve exclusive premium contest problems with detailed solutions</p>
+                </div>
+
+                <div className="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
+                  <div className="flex items-center justify-center gap-2 mb-3">
+                    <Zap className="w-4 h-4 text-purple-400" />
+                    <h4 className="text-white font-semibold text-sm">Advanced Analytics</h4>
+                  </div>
+                  <p className="text-gray-400 text-xs">Get detailed performance analytics and improvement suggestions</p>
+                </div>
+              </div>
+
+              {/* Upgrade Button */}
+              <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+                <button
+                  onClick={handleUpgradeClick}
+                  className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-500 hover:to-purple-600 transition-all duration-200 font-semibold text-base sm:text-lg flex items-center justify-center gap-3"
+                >
+                  <Crown className="w-5 sm:w-6 h-5 sm:h-6" />
+                  Upgrade to Premium
+                </button>
+              </div>
+
+              <p className="text-gray-400 mt-6 sm:mt-8 text-sm sm:text-base">
+                Start your premium journey today and unlock your full potential!
+              </p>
             </div>
-            
-            <p className="text-gray-400 mt-6 sm:mt-8 text-sm sm:text-base">
-              Start your premium journey today and unlock your full potential!
-            </p>
           </div>
-        </div>
-      ) : (
+        ) : (
         /* Regular Content - Only show when user has access */
         <div className="space-y-6">
           {/* Stats */}

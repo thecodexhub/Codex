@@ -4,6 +4,7 @@ import { useAuth } from "../../../context/AuthContext";
 import axios from "axios";
 import { BASE_URL, USERPROFILE } from "../../../config";
 import { useNavigate } from 'react-router-dom';
+import { updateFirebaseName } from '../../../config/firebase';
 
 const UserOnboarding = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -124,8 +125,8 @@ const UserOnboarding = () => {
     setIsSubmitting(true);
 
     try {
-      console.log("MongoDB User ID:", mongodbId);
-      console.log("Firebase User ID:", user.uid);
+      // console.log("MongoDB User ID:", mongodbId);
+      // console.log("Firebase User ID:", user.uid);
       if (!mongodbId || !user.uid) {
         alert('No ID found! Please Login')
         navigate('/login');
@@ -133,7 +134,11 @@ const UserOnboarding = () => {
       }
       const token = await user.getIdToken?.();
       if (!token) throw new Error("Failed to get token.");
-
+      //update user name in firebase 
+      const updateFirebaseDisplayName = await updateFirebaseName(formData.firstName + " " + formData.lastName);
+      if (updateFirebaseDisplayName) {
+        console.log("username updated successfully");
+      }
       const patchData = {
         uid: user.uid,
         firstName: formData.firstName,
@@ -170,7 +175,7 @@ const UserOnboarding = () => {
   };
 
   const getStepIcon = (step) => {
-    const icons = [User, GraduationCap, Calendar, User, Code]; // Updated icons array
+    const icons = [User, GraduationCap, Calendar, User, Code]; 
     const Icon = icons[step];
     return <Icon className="w-6 h-6" />;
   };

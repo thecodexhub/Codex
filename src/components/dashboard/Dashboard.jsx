@@ -12,13 +12,13 @@ const Dashboard = () => {
   const cardData = [
     {
       title: 'DSA Progress',
-      progress: 68,
+      progress: 0,
       current: 'Dynamic Programming',
       onClick: () => navigate('/')
      },
     {
       title: 'Specialization',
-      progress: 45,
+      progress: 0,
       current: 'React Advanced Patterns',
       onClick: () => navigate('/'),
      },

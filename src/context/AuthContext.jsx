@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import axios from 'axios';
-import { BASE_URL } from '../config';
+import { BASE_URL, PAYMENT_STATUS } from '../config';
 
 const AuthContext = createContext();
 
@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
     if (mongodbId) {
       try {
         localStorage.setItem('mongodbId', mongodbId);
-        const res = await axios.get(`${BASE_URL}/api/payments/user/${mongodbId}`);
+        const res = await axios.get(`${BASE_URL}${PAYMENT_STATUS}/${mongodbId}`);
         console.log("Payment status response", res.data.paymentStatus);
         setPaymentStatus(res.data.paymentStatus);
       } catch (err) {

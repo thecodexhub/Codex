@@ -7,13 +7,13 @@ const LeaderboardPreview = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   
-  const hasSubscription = user?.subscription || false;
+  const hasSubscription = user?.subscription || true;
 
   const topUsers = [
-    { name: 'Alex Chen', score: 2847, rank: 1 },
-    { name: 'Sarah Kim', score: 2756, rank: 2 },
-    { name: 'Mike Johnson', score: 2689, rank: 3 },
-    { name: 'You', score: 2234, rank: 42 },
+    { name: 'Aaditi Pawar', score: 0, rank: 0 },
+    { name: 'Tanmai Bagade', score: 0, rank: 0 },
+    { name: 'Shlok Chitare', score: 0, rank: 0 },
+    { name: 'You', score: 0, rank: 0 },
   ];
 
   const getRankIcon = (rank) => {

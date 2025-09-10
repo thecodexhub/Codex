@@ -21,7 +21,7 @@ import UserProfile from './components/profile/UserProfile';
 import Courses from './components/Courses/Courses';
 import CProgramming from './components/Courses/CProgramming';
 import Documentation from './components/Courses/Documentation';
-import HTML from './components/specialization/HTML';
+import webDevelopment from './components/specialization/webDevelopment';
 import CSS from './components/specialization/CSS';
 import Specialization from './components/specialization/Specialization';
 import DocumentationSpecialization from './components/specialization/DocumentationSpecialization';
@@ -53,7 +53,7 @@ function App() {
           <Route path="/courses/c-programming" element={<CProgramming />} />
           <Route path="dsa" element={<DSA />} />
           <Route path="/specialization" element={<Specialization />} /> {/* new route */}
-          <Route path="/specialization/html" element={<HTML />} />
+          <Route path="/specialization/web-development" element={<webDevelopment />} />
           <Route path="/specialization/css" element={<CSS />} />
           <Route path="placement" element={<PlacementPrep />} />
           <Route path="leaderboard" element={<Leaderboard />} />
@@ -73,7 +73,6 @@ function App() {
         <Route element={<FullPageLayout />}>
           <Route path="useronboarding" element={<UserOnboarding />} />
           <Route path="userprofile" element={<UserProfile />} />
-
         </Route>
       </Routes>
     </Router>

@@ -3,7 +3,7 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
   BASE_URL,
-  INTERVIEW_EXP_BY_COMPANYID, // ensure this exists in your config
+  INTERVIEW_EXP_BY_COMPANYID, 
 } from '../../config';
 import {
   ArrowLeft,
