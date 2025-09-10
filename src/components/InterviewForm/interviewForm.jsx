@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { Send, Users, CheckCircle, Plus, Upload, X, Image } from "lucide-react";
 import "react-datepicker/dist/react-datepicker.css";
-import { FETCH_COMPANY_BY_QUERY } from "../../config";
 
 function InterviewForm() {
   const [formData, setFormData] = useState({
@@ -95,12 +94,12 @@ function InterviewForm() {
   const fetchCompanySuggestions = async (query) => {
     try {
       const { data } = await axios.get(
-        `${BASE_URL}${FETCH_COMPANY_BY_QUERY}?query=${query}`,
+        `https://codex-test-server.onrender.com/api/company/search?query=${query}`,
       );
       setCompanySuggestions(data || []);
       setShowAddOption(
         query &&
-          data.every((comp) => comp.name.toLowerCase() !== query.toLowerCase()),
+        data.every((comp) => comp.name.toLowerCase() !== query.toLowerCase()),
       );
     } catch (err) {
       console.error("Error fetching companies", err);
@@ -114,7 +113,7 @@ function InterviewForm() {
       const actualName = selectedName.replace("ADD::", "");
       try {
         const res = await axios.post(
-          `${BASE_URL}${ADD_COMPANY}`,
+          "https://codex-test-server.onrender.com/api/company/add",
           {
             name: actualName,
           },
@@ -174,50 +173,50 @@ function InterviewForm() {
   };
 
   const uploadImage = async () => {
-  if (!selectedFile) return;
+    if (!selectedFile) return;
 
-  setIsUploading(true);
-  const formDataUpload = new FormData();
-  formDataUpload.append("file", selectedFile);
-  formDataUpload.append("upload_preset", "image_upload"); 
-  formDataUpload.append("cloud_name", "drkhfntxp");       
+    setIsUploading(true);
+    const formDataUpload = new FormData();
+    formDataUpload.append("file", selectedFile);
+    formDataUpload.append("upload_preset", "image_upload"); // your unsigned preset
+    formDataUpload.append("cloud_name", "drkhfntxp");       // your cloud name
 
     try {
       const res = await fetch(
-       ` ${CLOUDINARY_URL}`,
-      {
-        method: "POST",
-        body: formDataUpload,
+        "https://api.cloudinary.com/v1_1/drkhfntxp/image/upload",
+        {
+          method: "POST",
+          body: formDataUpload,
+        }
+      );
+
+      const data = await res.json();
+
+      // Cloudinary returns `secure_url` and `public_id`
+      if (data.secure_url) {
+        setFormData((prev) => ({
+          ...prev,
+          image: data.secure_url, // same as before
+        }));
+
+        setSelectedFile(null);
+        setIsImageUploaded(true); // ✅ mark uploaded
+      } else {
+        throw new Error("Cloudinary upload failed");
       }
-    );
-
-    const data = await res.json();
-
-    
-    if (data.secure_url) {
-      setFormData((prev) => ({
-        ...prev,
-        image: data.secure_url,
-      }));
-
-      setSelectedFile(null);
-      setIsImageUploaded(true); 
-    } else {
-      throw new Error("Cloudinary upload failed");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Failed to upload image. Please try again.");
+    } finally {
+      setIsUploading(false);
     }
-  } catch (error) {
-    console.error("Error uploading image:", error);
-    alert("Failed to upload image. Please try again.");
-  } finally {
-    setIsUploading(false);
-  }
-};
+  };
 
   const removeImage = () => {
     setSelectedFile(null);
     setUploadPreview(null);
     setFormData((prev) => ({ ...prev, image: "" }));
-    setIsImageUploaded(false); 
+    setIsImageUploaded(false); // ✅ mark removed
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -282,7 +281,7 @@ function InterviewForm() {
 
     try {
       const response = await fetch(
-        `${BASE_URL}${INTERVIEW_EXP_BY_COMPANYID}`,
+        "https://codex-test-server.onrender.com/api/interviewExperience",
         {
           method: "POST",
           headers: {
@@ -293,10 +292,7 @@ function InterviewForm() {
       );
 
       if (!response.ok) {
-        if (!formData.companyId) {
-          throw new Error("Please select a valid company from the list or add it.");
-        }
-        throw new Error("Failed to submit interview experience. Please try again.");
+        throw new Error("Failed to submit experience.");
       }
 
       setIsSubmitted(true);
@@ -584,7 +580,7 @@ function InterviewForm() {
                           Aptitude
                         </option>
                         <option
-                          value="`Technical"
+                          value="Technical 1"
                           className="bg-gray-900 text-white"
                         >
                           Technical
@@ -884,19 +880,17 @@ function InterviewForm() {
                       internshipMonths: "",
                     })
                   }
-                  className={`relative inline-flex h-6 w-12 items-center rounded-full transition-colors focus:outline-none ${
-                    formData.internshipOffered
+                  className={`relative inline-flex h-6 w-12 items-center rounded-full transition-colors focus:outline-none ${formData.internshipOffered
                       ? "bg-gradient-to-r from-sky-500 to-sky-600"
                       : "bg-gradient-to-r from-gray-600 to-gray-700"
-                  } shadow-inner`}
+                    } shadow-inner`}
                   aria-pressed={formData.internshipOffered}
                 >
                   <span
-                    className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow-lg ${
-                      formData.internshipOffered
+                    className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow-lg ${formData.internshipOffered
                         ? "translate-x-6"
                         : "translate-x-1"
-                    }`}
+                      }`}
                   />
                 </button>
                 <span className="text-sm text-slate-200">
@@ -953,11 +947,10 @@ function InterviewForm() {
                 <button
                   type="submit"
                   disabled={isLoading || isUploading}
-                  className={`bg-gradient-to-r from-sky-500 via-sky-600 to-sky-700 hover:from-sky-400 hover:via-sky-500 hover:to-sky-600 text-white px-6 py-2 sm:px-8 sm:py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 flex items-center gap-2 text-sm sm:text-base shadow-xl shadow-sky-900/30 hover:shadow-sky-800/40 border border-sky-400/20 ${
-                    isLoading || isUploading
+                  className={`bg-gradient-to-r from-sky-500 via-sky-600 to-sky-700 hover:from-sky-400 hover:via-sky-500 hover:to-sky-600 text-white px-6 py-2 sm:px-8 sm:py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 flex items-center gap-2 text-sm sm:text-base shadow-xl shadow-sky-900/30 hover:shadow-sky-800/40 border border-sky-400/20 ${isLoading || isUploading
                       ? "opacity-50 cursor-not-allowed"
                       : ""
-                  }`}
+                    }`}
                 >
                   {isLoading ? (
                     <>
