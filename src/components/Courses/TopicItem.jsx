@@ -1,4 +1,5 @@
 "use client"
+
 import { ChevronDown, ChevronRight, CheckCircle, Circle, Lock } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 
@@ -22,7 +23,7 @@ const TopicItem = ({ topic, isExpanded, onToggle, moduleId }) => {
   const progressPercent = topic.subtopics.length ? (completedCount / topic.subtopics.length) * 100 : 0
 
   const handleTopicClick = () => {
-    navigate(`/documentation/${moduleId}`)
+    navigate(`/documentation/${moduleId}/${topic.id}`)
   }
 
   const getBadgeLabel = (sub) => {
@@ -88,7 +89,7 @@ const TopicItem = ({ topic, isExpanded, onToggle, moduleId }) => {
                 className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-lg bg-gray-800 hover:bg-gray-700 cursor-pointer"
                 onClick={(e) => {
                   e.stopPropagation()
-                  navigate(`/documentation/${moduleId}/${topic.id}`)
+                  navigate(`/documentation/${moduleId}/${topic.id}?subtopic=${index}`)
                 }}
               >
                 {getStatusIcon(subtopic.status)}

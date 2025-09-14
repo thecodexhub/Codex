@@ -1,5 +1,6 @@
 "use client"
-import { ChevronRight, Layers, Star, Lock, Crown, X, CreditCard,CheckCircle } from "lucide-react"
+
+import { ChevronRight, Layers, Star, Lock, Crown, X, CreditCard, CheckCircle } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { useAuth } from "../../context/AuthContext"
@@ -57,7 +58,7 @@ const Courses = () => {
   // ✅ Modal defined as a child component
   const PremiumModal = () => {
     const isVerified = paymentStatus === "VERIFIED"
-  
+
     return (
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div className="bg-gray-900 rounded-2xl p-6 max-w-md w-full border border-gray-700">
@@ -79,18 +80,17 @@ const Courses = () => {
               <X className="w-6 h-6" />
             </button>
           </div>
-  
+
           {isVerified ? (
             // ✅ Verified state
             <div className="space-y-4">
               <p className="text-gray-300 text-sm sm:text-base">
-                Your subscription has been{" "}
-                <span className="font-semibold text-green-400">verified</span>! 🎉
+                Your subscription has been <span className="font-semibold text-green-400">verified</span>! 🎉
               </p>
               <p className="text-gray-300 text-sm sm:text-base">
                 Your learning journey will be starting soon. We are truly excited and happy for you!
               </p>
-  
+
               <div className="flex justify-end mt-6">
                 <button
                   onClick={() => setShowPremiumModal(false)}
@@ -106,7 +106,7 @@ const Courses = () => {
               <p className="text-gray-300 text-sm sm:text-base">
                 This course is part of our premium collection. Upgrade now to access:
               </p>
-  
+
               <ul className="space-y-2 text-xs sm:text-sm text-gray-300">
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>
@@ -125,7 +125,7 @@ const Courses = () => {
                   Priority support and mentorship
                 </li>
               </ul>
-  
+
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={() => {
@@ -151,19 +151,14 @@ const Courses = () => {
     )
   }
 
-
   // ✅ Final return
   return (
     <>
       <div className="space-y-6">
         {/* Welcome Section */}
         <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:px-6 text-white">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-2">
-            Your Learning Journey Starts Here
-          </h1>
-          <p className="text-purple-100 text-base sm:text-lg">
-            Pick a course and unlock your coding potential.
-          </p>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">Your Learning Journey Starts Here</h1>
+          <p className="text-purple-100 text-base sm:text-lg">Pick a course and unlock your coding potential.</p>
         </div>
 
         {/* Progress Overview Cards */}
@@ -203,10 +198,7 @@ const Courses = () => {
 
                 {/* Description */}
                 <div className="mt-3 text-sm text-purple-300">
-                  Description:{" "}
-                  <span className="font-semibold text-gray-300">
-                    {card.description}
-                  </span>
+                  Description: <span className="font-semibold text-gray-300">{card.description}</span>
                 </div>
               </div>
             )

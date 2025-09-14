@@ -24,9 +24,23 @@ const Sidebar = ({
     setExpandedChapters(newExpanded)
   }
 
+  const handleChapterClick = (chapterIndex) => {
+    toggleChapter(chapterIndex)
+    // Don't navigate immediately, let user select subtopic
+  }
+
   const handleSubtopicClick = (chapterIndex, subtopicIndex) => {
-    onChapterSelect(chapterIndex)
-    onSubtopicSelect(subtopicIndex)
+    const targetChapter = chapters[chapterIndex]
+    if (targetChapter) {
+      // Use navigate directly to ensure proper chapter and subtopic selection
+      const navigate = window.location.pathname.includes("/documentation")
+        ? (path) => window.history.pushState({}, "", path)
+        : null
+
+      // Call the parent handlers to update state
+      onChapterSelect(chapterIndex)
+      onSubtopicSelect(chapterIndex, subtopicIndex) // Updated to include chapterIndex
+    }
     if (onClose) onClose() // Close mobile sidebar when item is selected
   }
 
@@ -54,7 +68,7 @@ const Sidebar = ({
             <BookOpen className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-white">Programming</h2>
+            <h2 className="text-lg font-semibold text-white">C Programming</h2>
             <p className="text-gray-400 text-sm">Course Navigation</p>
           </div>
         </div>
@@ -63,7 +77,7 @@ const Sidebar = ({
           {chapters.map((chapter, chapterIndex) => (
             <div key={chapter.id} className="border border-gray-800 rounded-lg overflow-hidden">
               <button
-                onClick={() => toggleChapter(chapterIndex)}
+                onClick={() => handleChapterClick(chapterIndex)}
                 className={`w-full p-3 text-left flex items-center justify-between transition-colors ${
                   currentChapter === chapterIndex
                     ? "bg-purple-900 text-white"
