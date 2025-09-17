@@ -1417,221 +1417,221 @@ export const cModule = {
             ]
           },
           {
-  topic_id: "P1-C3-T4",
-  topic_name: "Arrays in C Programming",
-  show_compiler: true,
-  isCompleted: false,
-  theory: [
-    {
-      type: "heading",
-      content: "Definition – What is an Array?"
-    },
-    {
-      type: "paragraph",
-      content: "An array is a collection of similar data items stored at consecutive memory locations. All elements in an array are of the same data type (e.g., all integers, all floats, etc.). Each element can be accessed using an index (like a seat number in a row)."
-    },
-    {
-      type: "paragraph",
-      content: "👉 In short: An array is like a list of values under one common name."
-    },
+            topic_id: "P1-C3-T4",
+            topic_name: "Arrays in C Programming",
+            show_compiler: true,
+            isCompleted: false,
+            theory: [
+              {
+                type: "heading",
+                content: "Definition – What is an Array?"
+              },
+              {
+                type: "paragraph",
+                content: "An array is a collection of similar data items stored at consecutive memory locations. All elements in an array are of the same data type (e.g., all integers, all floats, etc.). Each element can be accessed using an index (like a seat number in a row)."
+              },
+              {
+                type: "paragraph",
+                content: "👉 In short: An array is like a list of values under one common name."
+              },
 
-    {
-      type: "heading",
-      content: "Why are Arrays Needed?"
-    },
-    {
-      type: "paragraph",
-      content: "Imagine you want to store the marks of 50 students."
-    },
-    {
-      type: "bulletpoints",
-      content: [
-        "Without arrays → You’d need 50 variables: mark1, mark2, mark3… mark50. (Messy and hard to manage!)",
-        "With arrays → Just one variable name (e.g., marks[50]) can hold all 50 values."
-      ]
-    },
-    {
-      type: "paragraph",
-      content: "✅ Arrays make the program: Shorter, Easier to read, Easier to manage and process data."
-    },
+              {
+                type: "heading",
+                content: "Why are Arrays Needed?"
+              },
+              {
+                type: "paragraph",
+                content: "Imagine you want to store the marks of 50 students."
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Without arrays → You’d need 50 variables: mark1, mark2, mark3… mark50. (Messy and hard to manage!)",
+                  "With arrays → Just one variable name (e.g., marks[50]) can hold all 50 values."
+                ]
+              },
+              {
+                type: "paragraph",
+                content: "✅ Arrays make the program: Shorter, Easier to read, Easier to manage and process data."
+              },
 
-    {
-      type: "heading",
-      content: "Syntax of Arrays in C"
-    },
-    {
-      type: "example_code",
-      content: "data_type array_name[size];\n\n// Example:\nint marks[5];   // can store 5 integers"
-    },
-    {
-      type: "bulletpoints",
-      content: [
-        "data_type → type of elements (int, float, char, etc.)",
-        "array_name → name of the array",
-        "size → number of elements it can store"
-      ]
-    },
+              {
+                type: "heading",
+                content: "Syntax of Arrays in C"
+              },
+              {
+                type: "example_code",
+                content: "data_type array_name[size];\n\n// Example:\nint marks[5];   // can store 5 integers"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "data_type → type of elements (int, float, char, etc.)",
+                  "array_name → name of the array",
+                  "size → number of elements it can store"
+                ]
+              },
 
-    {
-      type: "heading",
-      content: "Explanation with Example"
-    },
-    {
-      type: "example_code",
-      content: "Example 1: Storing and printing marks\n#include <stdio.h>\nint main() {\n    int marks[5] = {85, 90, 78, 92, 88};\n\n    for(int i=0; i<5; i++) {\n        printf(\"Marks of student %d = %d\\\\n\", i+1, marks[i]);\n    }\n    return 0;\n}"
-    },
-    {
-      type: "output",
-      content: "Marks of student 1 = 85\nMarks of student 2 = 90\nMarks of student 3 = 78\nMarks of student 4 = 92\nMarks of student 5 = 88"
-    },
-    {
-      type: "example_code",
-      content: "Example 2: Taking input from user\n#include <stdio.h>\nint main() {\n    int numbers[3];\n\n    printf(\"Enter 3 numbers: \");\n    for(int i=0; i<3; i++) {\n        scanf(\"%d\", &numbers[i]);\n    }\n\n    printf(\"You entered: \");\n    for(int i=0; i<3; i++) {\n        printf(\"%d \", numbers[i]);\n    }\n    return 0;\n}"
-    },
+              {
+                type: "heading",
+                content: "Explanation with Example"
+              },
+              {
+                type: "example_code",
+                content: "Example 1: Storing and printing marks\n#include <stdio.h>\nint main() {\n    int marks[5] = {85, 90, 78, 92, 88};\n\n    for(int i=0; i<5; i++) {\n        printf(\"Marks of student %d = %d\\\\n\", i+1, marks[i]);\n    }\n    return 0;\n}"
+              },
+              {
+                type: "output",
+                content: "Marks of student 1 = 85\nMarks of student 2 = 90\nMarks of student 3 = 78\nMarks of student 4 = 92\nMarks of student 5 = 88"
+              },
+              {
+                type: "example_code",
+                content: "Example 2: Taking input from user\n#include <stdio.h>\nint main() {\n    int numbers[3];\n\n    printf(\"Enter 3 numbers: \");\n    for(int i=0; i<3; i++) {\n        scanf(\"%d\", &numbers[i]);\n    }\n\n    printf(\"You entered: \");\n    for(int i=0; i<3; i++) {\n        printf(\"%d \", numbers[i]);\n    }\n    return 0;\n}"
+              },
 
-    {
-      type: "heading",
-      content: "Real-Life Analogy"
-    },
-    {
-      type: "paragraph",
-      content: "Think of an array like lockers in a hostel:\n- All lockers are arranged side by side (consecutive memory).\n- Each locker stores only one type of item (like all books, or all clothes).\n- Each locker has a number (index).\n- To access an item, you don’t need to search randomly — you just use the locker number."
-    },
-    {
-      type: "paragraph",
-      content: "👉 Example: marks[2] is like saying “Open locker number 2 and check the item inside.”"
-    },
+              {
+                type: "heading",
+                content: "Real-Life Analogy"
+              },
+              {
+                type: "paragraph",
+                content: "Think of an array like lockers in a hostel:\n- All lockers are arranged side by side (consecutive memory).\n- Each locker stores only one type of item (like all books, or all clothes).\n- Each locker has a number (index).\n- To access an item, you don’t need to search randomly — you just use the locker number."
+              },
+              {
+                type: "paragraph",
+                content: "👉 Example: marks[2] is like saying “Open locker number 2 and check the item inside.”"
+              },
 
-    {
-      type: "heading",
-      content: "Mini Practice Ideas"
-    },
-    {
-      type: "bulletpoints",
-      content: [
-        "Create an array of 10 integers and print their values in reverse order.",
-        "Take 5 numbers from the user and find their sum using an array.",
-        "Store 7 days of the week in a char array and print them.",
-        "Write a program to find the largest number in an array of 10 integers."
-      ]
-    }
-  ]
-},
-{
-  topic_id: "P1-C3-T5",
-  topic_name: "Arrays in C: One-Dimensional & Multi-Dimensional",
-  show_compiler: true,
-  isCompleted: false,
-  theory: [
-    {
-      type: "heading",
-      content: "Definition"
-    },
-    {
-      type: "subheading",
-      content: "One-Dimensional Array (1D Array)"
-    },
-    {
-      type: "paragraph",
-      content: "A linear list of elements of the same type. All elements are stored in a single row in memory and accessed using one index."
-    },
-    {
-      type: "paragraph",
-      content: "👉 Example: Marks of 5 students → marks[5]"
-    },
-    {
-      type: "subheading",
-      content: "Multi-Dimensional Array (2D, 3D, etc.)"
-    },
-    {
-      type: "paragraph",
-      content: "An array of arrays (like a table or matrix). The most common is a 2D array where elements are stored in rows and columns, accessed using two indexes: row and column."
-    },
-    {
-      type: "paragraph",
-      content: "👉 Example: A 3×3 matrix → matrix[3][3]"
-    },
+              {
+                type: "heading",
+                content: "Mini Practice Ideas"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Create an array of 10 integers and print their values in reverse order.",
+                  "Take 5 numbers from the user and find their sum using an array.",
+                  "Store 7 days of the week in a char array and print them.",
+                  "Write a program to find the largest number in an array of 10 integers."
+                ]
+              }
+            ]
+          },
+          {
+            topic_id: "P1-C3-T5",
+            topic_name: "Arrays in C: One-Dimensional & Multi-Dimensional",
+            show_compiler: true,
+            isCompleted: false,
+            theory: [
+              {
+                type: "heading",
+                content: "Definition"
+              },
+              {
+                type: "subheading",
+                content: "One-Dimensional Array (1D Array)"
+              },
+              {
+                type: "paragraph",
+                content: "A linear list of elements of the same type. All elements are stored in a single row in memory and accessed using one index."
+              },
+              {
+                type: "paragraph",
+                content: "👉 Example: Marks of 5 students → marks[5]"
+              },
+              {
+                type: "subheading",
+                content: "Multi-Dimensional Array (2D, 3D, etc.)"
+              },
+              {
+                type: "paragraph",
+                content: "An array of arrays (like a table or matrix). The most common is a 2D array where elements are stored in rows and columns, accessed using two indexes: row and column."
+              },
+              {
+                type: "paragraph",
+                content: "👉 Example: A 3×3 matrix → matrix[3][3]"
+              },
 
-    {
-      type: "heading",
-      content: "Why are they Needed?"
-    },
-    {
-      type: "bulletpoints",
-      content: [
-        "1D Arrays: For storing linear data like marks, roll numbers, salaries.",
-        "2D Arrays: For tabular data like student marks in multiple subjects, matrices, chessboards.",
-        "3D Arrays: For higher-dimensional data like 3D graphics, cube representation."
-      ]
-    },
-    {
-      type: "paragraph",
-      content: "✅ They make handling large, structured data organized and simple."
-    },
+              {
+                type: "heading",
+                content: "Why are they Needed?"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "1D Arrays: For storing linear data like marks, roll numbers, salaries.",
+                  "2D Arrays: For tabular data like student marks in multiple subjects, matrices, chessboards.",
+                  "3D Arrays: For higher-dimensional data like 3D graphics, cube representation."
+                ]
+              },
+              {
+                type: "paragraph",
+                content: "✅ They make handling large, structured data organized and simple."
+              },
 
-    {
-      type: "heading",
-      content: "Syntax"
-    },
-    {
-      type: "example_code",
-      content: "// 1D Array\nint marks[5];   // stores 5 integers\n\n// 2D Array\nint matrix[3][3];   // 3 rows × 3 columns"
-    },
+              {
+                type: "heading",
+                content: "Syntax"
+              },
+              {
+                type: "example_code",
+                content: "// 1D Array\nint marks[5];   // stores 5 integers\n\n// 2D Array\nint matrix[3][3];   // 3 rows × 3 columns"
+              },
 
-    {
-      type: "heading",
-      content: "Explanation with Example"
-    },
-    {
-      type: "example_code",
-      content: "Example 1: One-Dimensional Array\n#include <stdio.h>\nint main() {\n    int marks[5] = {85, 90, 78, 92, 88};\n\n    for(int i=0; i<5; i++) {\n        printf(\"Student %d = %d\\\\n\", i+1, marks[i]);\n    }\n    return 0;\n}"
-    },
-    {
-      type: "output",
-      content: "Student 1 = 85\nStudent 2 = 90\nStudent 3 = 78\nStudent 4 = 92\nStudent 5 = 88"
-    },
-    {
-      type: "example_code",
-      content: "Example 2: Two-Dimensional Array\n#include <stdio.h>\nint main() {\n    int matrix[2][3] = {\n        {1, 2, 3},\n        {4, 5, 6}\n    };\n\n    for(int i=0; i<2; i++) {\n        for(int j=0; j<3; j++) {\n            printf(\"%d \", matrix[i][j]);\n        }\n        printf(\"\\\\n\");\n    }\n    return 0;\n}"
-    },
-    {
-      type: "output",
-      content: "1 2 3\n4 5 6"
-    },
-    {
-      type: "example_code",
-      content: "Example 3: User Input in 2D Array\n#include <stdio.h>\nint main() {\n    int marks[2][3];  // 2 students, 3 subjects\n\n    printf(\"Enter marks for 2 students (3 subjects each):\\\\n\");\n    for(int i=0; i<2; i++) {\n        for(int j=0; j<3; j++) {\n            scanf(\"%d\", &marks[i][j]);\n        }\n    }\n\n    printf(\"Marks Table:\\\\n\");\n    for(int i=0; i<2; i++) {\n        for(int j=0; j<3; j++) {\n            printf(\"%d \", marks[i][j]);\n        }\n        printf(\"\\\\n\");\n    }\n    return 0;\n}"
-    },
+              {
+                type: "heading",
+                content: "Explanation with Example"
+              },
+              {
+                type: "example_code",
+                content: "Example 1: One-Dimensional Array\n#include <stdio.h>\nint main() {\n    int marks[5] = {85, 90, 78, 92, 88};\n\n    for(int i=0; i<5; i++) {\n        printf(\"Student %d = %d\\\\n\", i+1, marks[i]);\n    }\n    return 0;\n}"
+              },
+              {
+                type: "output",
+                content: "Student 1 = 85\nStudent 2 = 90\nStudent 3 = 78\nStudent 4 = 92\nStudent 5 = 88"
+              },
+              {
+                type: "example_code",
+                content: "Example 2: Two-Dimensional Array\n#include <stdio.h>\nint main() {\n    int matrix[2][3] = {\n        {1, 2, 3},\n        {4, 5, 6}\n    };\n\n    for(int i=0; i<2; i++) {\n        for(int j=0; j<3; j++) {\n            printf(\"%d \", matrix[i][j]);\n        }\n        printf(\"\\\\n\");\n    }\n    return 0;\n}"
+              },
+              {
+                type: "output",
+                content: "1 2 3\n4 5 6"
+              },
+              {
+                type: "example_code",
+                content: "Example 3: User Input in 2D Array\n#include <stdio.h>\nint main() {\n    int marks[2][3];  // 2 students, 3 subjects\n\n    printf(\"Enter marks for 2 students (3 subjects each):\\\\n\");\n    for(int i=0; i<2; i++) {\n        for(int j=0; j<3; j++) {\n            scanf(\"%d\", &marks[i][j]);\n        }\n    }\n\n    printf(\"Marks Table:\\\\n\");\n    for(int i=0; i<2; i++) {\n        for(int j=0; j<3; j++) {\n            printf(\"%d \", marks[i][j]);\n        }\n        printf(\"\\\\n\");\n    }\n    return 0;\n}"
+              },
 
-    {
-      type: "heading",
-      content: "Real-Life Analogy"
-    },
-    {
-      type: "bulletpoints",
-      content: [
-        "1D Array: Like a row of lockers in a school corridor – each locker (index) stores one student’s book.",
-        "2D Array: Like a classroom seating chart – rows and columns (roll numbers arranged in a table).",
-        "3D Array: Like a Rubik’s cube – multiple layers of rows and columns."
-      ]
-    },
+              {
+                type: "heading",
+                content: "Real-Life Analogy"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "1D Array: Like a row of lockers in a school corridor – each locker (index) stores one student’s book.",
+                  "2D Array: Like a classroom seating chart – rows and columns (roll numbers arranged in a table).",
+                  "3D Array: Like a Rubik’s cube – multiple layers of rows and columns."
+                ]
+              },
 
-    {
-      type: "heading",
-      content: "Mini Practice Ideas"
-    },
-    {
-      type: "bulletpoints",
-      content: [
-        "Store 10 integers in an array and print the largest number.",
-        "Reverse the elements of an array.",
-        "Print a 3×3 multiplication table using a 2D array.",
-        "Write a program to add two 2×2 matrices.",
-        "Take marks of 3 students in 3 subjects (2D array), and print each student’s total marks."
-      ]
-    }
-  ]
-},
+              {
+                type: "heading",
+                content: "Mini Practice Ideas"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Store 10 integers in an array and print the largest number.",
+                  "Reverse the elements of an array.",
+                  "Print a 3×3 multiplication table using a 2D array.",
+                  "Write a program to add two 2×2 matrices.",
+                  "Take marks of 3 students in 3 subjects (2D array), and print each student’s total marks."
+                ]
+              }
+            ]
+          },
 
         ],
       },
