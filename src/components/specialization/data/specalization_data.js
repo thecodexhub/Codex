@@ -4,8 +4,8 @@ export const specalization_data = {
     chapters: [
       // Chapter 1
       {
-        chapter_id: "s1-C1",
-        chapter_name: "Introduction to HTML ",
+        chapter_id: "S1-C1",
+        chapter_name: "HTML ",
         chapter_description: "",
         icon: "BookOpen",
         subtopics: [
