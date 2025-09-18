@@ -39,7 +39,12 @@ import {
  * @param {Function} props.onComplete - Callback when code execution completes
  */
 const CodeEditor = ({
-  initialCode = `#include <stdio.h>\n\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}`,
+initialCode = `#include <stdio.h>
+
+int main() {
+    printf("Hello, World!\n");
+    return 0;
+}`,
   language = "c",
   title = "Code Editor",
   expectedOutput,
@@ -106,21 +111,21 @@ const CodeEditor = ({
       let consoleOut = ""
 
       // Mirror your original, stylized console
-      consoleOut += `🚀 Compiling C code...\n` 
-      consoleOut += `gcc -o program program.c\n`
+      // consoleOut += `🚀 Compiling C code...\n` 
+      // consoleOut += `gcc -o program program.c\n`
       consoleOut += result.exitCode === 0 && !result.compile_error ? `✅ Compilation successful!\n\n` : `❌ Compilation failed!\n\n`
 
       // Running section
-      if (result.exitCode === 0) {
-        consoleOut += `🏃‍♂️ Running program...\n./program\n\n`
-      }
+      // if (result.exitCode === 0) {
+      //   consoleOut += `🏃‍♂️ Running program...\n./program\n\n`
+      // }
 
       consoleOut += `📤 Output:\n`
 
       if (result.exitCode === 0) {
         consoleOut += `${result.stdout || ""}\n\n`
-        consoleOut += `🎉 Program executed successfully!\n`
-        consoleOut += `Exit code: 0`
+        // consoleOut += `🎉 Program executed successfully!\n`
+        // consoleOut += `Exit code: 0`
       } else {
         const err = result.compile_error || result.stderr || "Unknown error"
         consoleOut += `❌ Compilation/Execution failed!\n\n${err}\n\n`

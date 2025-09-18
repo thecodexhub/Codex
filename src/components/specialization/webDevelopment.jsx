@@ -1,15 +1,16 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import specalization_data from "./data/specalization_data"
+import { specalization_data } from "./data/specalization_data"
 import { BookOpen, Code, Terminal, Settings } from "lucide-react"
 import TopicItem from "./TopicItem"
 import { useAuth } from "../../context/AuthContext"
-import { BASE_URL,DOCUMENTATION } from "../../config"
-const API_BASE = `${BASE_URL}${DOCUMENTATION}`;
+import { BASE_URL, DOCUMENTATION } from "../../config"
+
+const API_BASE = BASE_URL + DOCUMENTATION
 const MODULE_ID = "S1"
 
-const webDevelopment = () => {
+const WebDevelopment = () => {
   const [expandedTopic, setExpandedTopic] = useState(null)
   const [completedByChapter, setCompletedByChapter] = useState({})
 
@@ -27,10 +28,8 @@ const webDevelopment = () => {
     Settings,
   }
 
-  const module = specalization_data.modules.find((m) => m.module_id === MODULE_ID)
-
+  const { module } = specalization_data
   const baseTopics = useMemo(() => {
-    if (!module) return []
     const gradients = [
       "bg-gradient-to-r from-blue-500 to-cyan-500",
       "bg-gradient-to-r from-green-500 to-lime-500",
@@ -83,18 +82,19 @@ const webDevelopment = () => {
       const map = {}
       baseTopics.forEach((topic, i) => {
         const json = results[i]
-        map[topic.id] =
+        map[topic.id] = new Set(
           json && json.success && Array.isArray(json.topics)
-            ? new Set(json.topics.filter((t) => t.isComplete).map((t) => t.topicId))
-            : new Set()
+            ? json.topics.filter((t) => t.isComplete).map((t) => t.topicId)
+            : [],
+        )
       })
       setCompletedByChapter(map)
     }
-    if (baseTopics.length && USER_ID) fetchAll()
+    if (baseTopics.length) fetchAll()
     return () => {
       cancelled = true
     }
-  }, [baseTopics, USER_ID])
+  }, [baseTopics])
 
   const derivedTopics = useMemo(() => {
     return baseTopics.map((topic) => {
@@ -113,8 +113,10 @@ const webDevelopment = () => {
     <div className="min-h-screen bg-gray-950 py-6 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="bg-gradient-to-r from-purple-800 to-purple-900 rounded-2xl p-4 sm:p-6 text-white">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-2">{module?.module_name}</h1>
-          <p className="text-purple-100 text-base sm:text-lg">{module?.description}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">C Programming Language</h1>
+          <p className="text-purple-100 text-base sm:text-lg">
+            Begin your journey to master the C language with structured learning and practice.
+          </p>
         </div>
 
         {derivedTopics.length === 0 ? (
@@ -127,7 +129,7 @@ const webDevelopment = () => {
                 <TopicItem
                   key={topic.id}
                   topic={topic}
-                  moduleSlug={module.module_name.toLowerCase()} // ✅ "html" or "css"
+                  moduleId={topic._moduleId}
                   isExpanded={expandedTopic === topic.id}
                   onToggle={() => toggleTopic(topic.id)}
                 />
@@ -153,4 +155,4 @@ const webDevelopment = () => {
   )
 }
 
-export default webDevelopment ;
+export default WebDevelopment

@@ -2,728 +2,1639 @@ export const cModule = {
   module: {
     module_id: "P1",
     chapters: [
-      // C1 from user-provided schema (now with paragraph)
+      // Chapter 1
       {
-  chapter_id: "P1-C1",
-  chapter_name: "Chapter 1 : Introduction to C Programming",
-  chapter_description:
-    "This chapter introduces the C programming language, its history, features, and the basic structure of a C program.",
-  icon: "BookOpen",
-  subtopics: [
-    {
-      topic_id: "P1-C1-T1",
-      topic_name: "History of C",
-      show_compiler: false,
-      isCompleted: false,
-      theory: {
-        heading: "History of C Language",
-        paragraph:
-          "The C language was developed to provide a powerful and efficient tool for system programming. It has since become one of the most widely used programming languages in the world.",
-        bulletpoints: [
-          "C was developed in 1972 by Dennis Ritchie at Bell Labs.",
-          "It was designed as a successor to the B language.",
-          "C played a crucial role in the development of operating systems.",
-          "The UNIX operating system was one of the first major projects written in C."
-        ],
-        example_code: "",
-        output: "",
-        practise_problems: []
-      }
-    },
-    {
-      topic_id: "P1-C1-T2",
-      topic_name: "Features of C",
-      show_compiler: false,
-      isCompleted: false,
-      theory: {
-        heading: "Key Features of C",
-        paragraph:
-          "C provides a balance between low-level programming (close to hardware) and high-level structured programming. Its versatility and performance make it a foundation for many modern languages.",
-        bulletpoints: [
-          "Simple and efficient programming language.",
-          "Provides low-level access through pointers.",
-          "Supports structured programming and modularity.",
-          "Highly portable across platforms.",
-          "Rich library of built-in functions."
-        ],
-        example_code: "",
-        output: "",
-        practise_problems: []
-      }
-    },
-    {
-      topic_id: "P1-C1-T3",
-      topic_name: "Structure of a C Program",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Basic Structure of a C Program",
-        paragraph:
-          "A C program follows a well-defined structure that makes it easier to write, compile, and debug. Understanding this structure is essential for writing valid C code.",
-        bulletpoints: [
-          "Every C program starts with the `main()` function.",
-          "Header files are included using `#include`.",
-          "Code is grouped inside `{ }` braces.",
-          "Each statement must end with a semicolon `;`."
-        ],
-        example_code:
-          "#include <stdio.h>\n\nint main() {\n    printf(\"Hello, World!\\n\");\n    return 0;\n}",
-        output: "Hello, World!",
-        practise_problems: [
+        chapter_id: "P1-C1",
+        chapter_name: "Unit 1 : Introduction to Programming Languages ",
+        chapter_description: "",
+        icon: "BookOpen",
+        subtopics: [
           {
-            question: "Write a C program to print your full name.",
-            expected_output: "Your Full Name"
+            topic_id: "P1-C1-T1",
+            topic_name: "Computational Thinking (CT)",
+            show_compiler: false,
+            isCompleted: false,
+            theory: [
+              {
+                type: "heading",
+                content: "Definition – What is Computational Thinking (CT)?",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Computational Thinking (CT) is a way of solving problems step by step just like a computer would. It doesn’t mean you are programming right away; instead, you are thinking in a structured way so that your ideas can later be turned into a program (like in C).",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "In short: CT = Breaking down a problem into small steps → Writing them clearly → Solving them logically.",
+                ],
+              },
+
+              {
+                type: "heading",
+                content: "Why is CT Needed?",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Computers don’t think like humans.",
+                  'Humans understand natural language (“make tea”), but a computer needs clear instructions step by step (“boil water → add tea leaves → add sugar → pour milk → stir”).',
+                  "CT helps us: \n 1. Organize thoughts clearly. \n 2. Write correct code without confusion. \n 3. Solve big problems by dividing them into smaller, easier problems.",
+                ],
+              },
+
+              {
+                type: "heading",
+                content: "Main Parts of CT",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Decomposition – Breaking a big problem into small parts.\nExample: Making tea → (1) Boil water, (2) Add tea leaves, (3) Add sugar, (4) Pour milk, (5) Stir.",
+                  "Pattern Recognition – Finding similarities in problems.\nExample: Making tea, coffee, or soup all start with “boil water.”",
+                  "Abstraction – Ignoring unnecessary details and focusing only on what matters.\nExample: While making tea, you don’t need to know the shape of the kettle, only that it can boil water.",
+                  "Algorithms – Writing step-by-step instructions.\nExample:\nStep 1: Take 1 cup water\nStep 2: Boil for 5 mins\nStep 3: Add tea leaves\nStep 4: Add sugar and milk\nStep 5: Stir and serve",
+                ],
+              },
+
+              {
+                type: "heading",
+                content: "CT and Logical Thinking",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Logical Thinking means making decisions based on conditions. In C programming, we use if-else, loops, and functions to represent logical thinking.",
+              },
+              {
+                type: "example_code",
+                content:
+                  'if(raining) {\n    printf("Take umbrella");\n} else {\n    printf("Wear sunglasses");\n}',
+              },
+
+              {
+                type: "heading",
+                content: "CT and Problem-Solving Strategies",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Understand the problem clearly (What do I want to achieve?).",
+                  "Break it down into steps (Decomposition).",
+                  "Look for patterns (Have I solved something similar before?).",
+                  "Write step-by-step logic (Algorithm).",
+                  "Translate logic into C code.",
+                ],
+              },
+
+              {
+                type: "heading",
+                content: "CT Example in C",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Problem: Find the largest of two numbers.\n\nStep 1: CT Breakdown\nInput: Two numbers.\nProcess: Compare them.\nOutput: Print the larger number.\n\nStep 2: Algorithm\n1. Read number A.\n2. Read number B.\n3. If A > B → Print A.\n4. Otherwise → Print B.",
+              },
+              {
+                type: "example_code",
+                content:
+                  '#include <stdio.h>\n\nint main() {\n    int A, B;\n    printf("Enter two numbers: ");\n    scanf("%d %d", &A, &B);\n\n    if(A > B) {\n        printf("Largest number = %d", A);\n    } else {\n        printf("Largest number = %d", B);\n    }\n\n    return 0;\n}',
+              },
+
+              {
+                type: "heading",
+                content: "Real-Life Analogy",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Think of CT like planning a road trip:\n\n- Decomposition: Decide route, fuel, snacks, music, stops.\n- Pattern Recognition: Every trip needs route + fuel.\n- Abstraction: You don’t care about how petrol is refined, just that the car can run on it.\n- Algorithm: Step-by-step plan: Start car → Set GPS → Drive → Stop at hotel → Reach destination.",
+              },
+            ],
           },
           {
-            question: "Write a C program to print 'Welcome to C Programming'.",
-            expected_output: "Welcome to C Programming"
-          }
-        ]
-      }
-    },
-    {
-      topic_id: "P1-C1-T4",
-      topic_name: "Compilation and Execution",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Compilation and Execution Process",
-        paragraph:
-          "The process of running a C program involves writing source code, compiling it into object code, linking libraries, and executing the final program.",
-        bulletpoints: [
-          "Source code is saved in a `.c` file.",
-          "The compiler translates source code into object code.",
-          "The linker combines object code with libraries.",
-          "An executable file is generated and executed by the system."
-        ],
-        example_code: "gcc program.c -o program\n./program",
-        output: "",
-        practise_problems: [
-          {
-            question: "Write a C program that prints 'Compilation Successful'.",
-            expected_output: "Compilation Successful"
+            topic_id: "P1-C1-T2",
+            topic_name: "Program planning tools",
+            show_compiler: false,
+            isCompleted: false,
+            theory: [
+              {
+                type: "heading",
+                content: "Definition – What are Program Planning Tools?",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Before writing a C program, we need to plan how it will work. Program Planning Tools are methods that help us think, organize, and design our program before coding.",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "The three main tools are:\n- Algorithm\n- Flowchart\n- Pseudocode",
+                  "Additionally, we follow a method called Top-Down Structured Programming to organize our code properly.",
+                ],
+              },
+
+              {
+                type: "heading",
+                content: "Why are Program Planning Tools Needed?",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Writing a program directly without planning is like building a house without a blueprint.",
+                  "Planning ensures:\n1. Fewer errors.\n2. Easier debugging.\n3. Clearer understanding.\n4. Faster development.",
+                ],
+              },
+
+              {
+                type: "heading",
+                content: "Algorithms",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "An algorithm is a step-by-step set of instructions to solve a problem. No coding yet, just plain steps in human language.",
+              },
+              {
+                type: "example_code",
+                content:
+                  "Start\nRead two numbers A and B\nIf A > B → Print A\nElse → Print B\nStop",
+              },
+
+              {
+                type: "heading",
+                content: "Flowcharts",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "A flowchart is a diagram that shows the steps of an algorithm using symbols.",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Oval → Start/Stop",
+                  "Parallelogram → Input/Output",
+                  "Rectangle → Process/Calculation",
+                  "Diamond → Decision (Yes/No)",
+                ],
+              },
+              {
+                type: "example_code",
+                content:
+                  "[Start]\n   ↓\n[Input A,B]\n   ↓\n[A > B?] → Yes → [Print A] → [Stop]\n             ↓\n            No\n             ↓\n         [Print B]\n             ↓\n           [Stop]",
+              },
+
+              {
+                type: "heading",
+                content: "Pseudocode",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Pseudocode is a plain English version of code, which looks like programming but isn’t strict about syntax. It helps bridge the gap between algorithm and real C code.",
+              },
+              {
+                type: "example_code",
+                content:
+                  "Begin\n   Read A, B\n   If A > B then\n      Print \"A is largest\"\n   Else\n      Print \"B is largest\"\nEnd",
+              },
+
+              {
+                type: "heading",
+                content: "Top-Down Structured Programming",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Top-Down Structured Programming means breaking a big program into smaller, manageable parts (functions/modules). You start from the main problem and keep dividing into sub-problems until each part is easy to code.",
+              },
+              {
+                type: "example_code",
+                content:
+                  "Problem: Calculate the average of 5 marks.\n\nMain task: Find average.\nSubtasks:\n1. Input 5 marks.\n2. Add them.\n3. Divide by 5.\n4. Print average.\n\nFunctions in C:\ngetMarks();\ncalculateSum();\ncalculateAverage();\nprintResult();",
+              },
+
+              {
+                type: "heading",
+                content: "Real-Life Analogy",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Imagine planning a birthday party 🎉:\n\n- Algorithm: Make a step-by-step to-do list (book hall, invite friends, order cake, decorate, party).\n- Flowchart: Draw a diagram with arrows showing what happens first, next, and decision points (e.g., if cake is delivered → decorate, else → call bakery).\n- Pseudocode:\nBegin\n   Invite guests\n   If cake delivered then\n      Decorate\n   Else\n      Call bakery\n   Enjoy party\nEnd\n\n- Top-Down Approach: Divide into smaller tasks: Invitation team, Food team, Decoration team.",
+              },
+            ],
           },
           {
-            question: "Explain the role of a compiler and linker in C programming.",
-            expected_output:
-              "Compiler converts source code into object code, linker combines it with libraries to generate an executable."
-          }
-        ]
-      }
-    }
-  ]
-},
+            topic_id: "P1-C1-T3",
+            topic_name: "Types of Program Errors",
+            show_compiler: true,
+            isCompleted: false,
+            theory: [
+              {
+                type: "heading",
+                content: "Definition – What are Program Errors?",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "A program error (also called a bug) is a mistake in the program that prevents it from running correctly or giving the correct result. Errors are very common for beginners, and even expert programmers make them. The goal is to find and fix errors so that the program works properly. (Fixing errors = Debugging).",
+              },
+
+              {
+                type: "heading",
+                content: "Why Do We Need to Study Errors?",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "To understand why our program is not working.",
+                  "To save time while writing/debugging code.",
+                  "To improve problem-solving and debugging skills.",
+                  "Knowing error types helps us quickly guess whether the issue is in syntax, logic, or runtime.",
+                ],
+              },
+
+              {
+                type: "heading",
+                content: "Syntax Errors",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Definition: Mistakes in the grammar of the programming language. Just like English has grammar rules, C also has rules (e.g., every statement ends with ;). If you break these rules, the compiler will show an error. The program won’t even run until you fix it.",
+              },
+              {
+                type: "example_code",
+                content:
+                  "#include <stdio.h>\n\nint main() {\n    printf(\"Hello World\") // ❌ Missing semicolon\n    return 0;\n}",
+              },
+              {
+                type: "output",
+                content: "Compiler will show: expected ‘;’ before ‘return’",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Real-life analogy: It’s like writing a sentence without punctuation: 'I am eating lets go'. A teacher won’t accept it.",
+              },
+
+              {
+                type: "heading",
+                content: "Logical Errors",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Definition: The program runs but gives the wrong output because the logic (thinking) is wrong. The compiler cannot detect this — only the programmer can.",
+              },
+              {
+                type: "example_code",
+                content:
+                  "#include <stdio.h>\n\nint main() {\n    int a = 5, b = 3;\n    printf(\"Sum = %d\", a - b); // ❌ Used minus instead of plus\n    return 0;\n}",
+              },
+              {
+                type: "output",
+                content: "Sum = 2 (but we wanted 8)",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Real-life analogy: You know how to cook, but instead of adding sugar to tea, you added salt. The process was correct, but the logic was wrong.",
+              },
+
+              {
+                type: "heading",
+                content: "Runtime Errors",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Definition: Errors that happen while the program is running, not at compile time. Usually caused by illegal operations like dividing by zero, accessing invalid memory, etc. The program compiles successfully but crashes while running.",
+              },
+              {
+                type: "example_code",
+                content:
+                  "#include <stdio.h>\n\nint main() {\n    int a = 10, b = 0;\n    printf(\"Result = %d\", a / b); // ❌ Division by zero\n    return 0;\n}",
+              },
+              {
+                type: "output",
+                content: "Compiler won’t complain, but at runtime → Program crashes.",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Real-life analogy: It’s like planning a perfect trip, but your car breaks down while driving. The plan was correct, but a problem happened at runtime.",
+              },
+
+              {
+                type: "heading",
+                content: "Debugging",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Definition: The process of finding and fixing errors in a program. Tools like compiler error messages, debuggers, and even adding printf statements help in debugging.",
+              },
+              {
+                type: "example_code",
+                content:
+                  "#include <stdio.h>\n\nint main() {\n    int a = 5, b = 0;\n    printf(\"Before division\\n\"); // Debugging using print\n    printf(\"Result = %d\", a / b); // Problem occurs here\n    return 0;\n}",
+              },
+              {
+                type: "output",
+                content: "The extra printf helps us trace where the program is failing.",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Real-life analogy: It’s like a mechanic checking step by step which part of the car is broken before repairing it.",
+              },
+
+              {
+                type: "heading",
+                content: "Summary Table",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Syntax Error → At compile time → Example: Missing semicolon → Real-life analogy: Bad grammar in English",
+                  "Logical Error → At runtime (wrong output) → Example: Using + instead of * → Real-life analogy: Adding salt instead of sugar",
+                  "Runtime Error → During execution → Example: Division by zero → Real-life analogy: Car breakdown while driving",
+                  "Debugging → Fixing errors → Example: Using printf to trace → Real-life analogy: Mechanic finding issue",
+                ],
+              },
+
+              {
+                type: "heading",
+                content: "Mini Practice Ideas",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Write a program to add 2 numbers but intentionally forget a semicolon → Observe the syntax error.",
+                  "Write a program to calculate the area of a rectangle but use + instead of * → Logical error.",
+                  "Write a program to divide a number by zero → Observe the runtime error.",
+                  "Use printf statements before and after calculations to practice debugging.",
+                ],
+              },
+            ],
+          },
+
+        ],
+      },
+
+      // Chapter 02
+
+      {
+        chapter_id: "P1-C2",
+        chapter_name: "Unit 2 : Fundamentals of ‘C’ Programming and Conditional Algorithmic Constructs  ",
+        chapter_description: "",
+        icon: "BookOpen",
+        subtopics: [
+          {
+            topic_id: "P1-C2-T1",
+            topic_name: "Introduction to ‘C’ Programming:",
+            show_compiler: true,
+            isCompleted: false,
+            theory: [
+              {
+                type: "heading",
+                content: "Definition – What is C Programming?",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "C is a general-purpose programming language developed in the 1970s by Dennis Ritchie at Bell Labs. It’s called the 'mother of all modern languages' because most popular languages (like C++, Java, Python, etc.) are influenced by C.\n\nIn simple words: C is like the foundation of a building – once you understand it, learning other languages becomes much easier.",
+              },
+
+              {
+                type: "heading",
+                content: "Why Do We Need These Concepts?",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Name things → (Identifiers)",
+                  "Decide what kind of data we’re working with → (Data Types)",
+                  "Store information that can change → (Variables)",
+                  "Store fixed information that never changes → (Constants)",
+                  "Talk to the computer/user → (Input/Output)",
+                ],
+              },
+              {
+                type: "paragraph",
+                content:
+                  "💡 Example: Imagine running a small canteen billing system.\n- You need names (identifiers) for items.\n- You must know if an item price is a whole number or decimal (data type).\n- You’ll need to store customer’s ordered quantity (variable).\n- GST tax percentage is fixed (constant).\n- Finally, you must show the bill on screen (output) and ask the customer to enter quantity (input).",
+              },
+
+              {
+                type: "heading",
+                content: "Identifiers",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Definition: Names we give to different parts of a program (variables, constants, functions, etc.).",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Must start with a letter or underscore (_).",
+                  "Can contain letters, digits, and underscores.",
+                  "Cannot use spaces or special characters.",
+                  "Cannot be a C keyword (e.g., int, float).",
+                ],
+              },
+              {
+                type: "example_code",
+                content: "int age;\nfloat student_marks;",
+              },
+
+              {
+                type: "heading",
+                content: "Data Types",
+              },
+              {
+                type: "paragraph",
+                content: "Data types tell the computer what kind of data we are storing.",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "int → Whole numbers → Example: 10, -5",
+                  "float → Decimal numbers → Example: 3.14, -2.5",
+                  "char → Single character → Example: 'A', 'z'",
+                  "double → Large decimal numbers (higher precision) → Example: 22.5678",
+                ],
+              },
+              {
+                type: "example_code",
+                content:
+                  "int rollNumber = 25;\nfloat price = 10.5;\nchar grade = 'A';",
+              },
+
+              {
+                type: "heading",
+                content: "Variables",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Definition: A variable is a named storage that can hold data which may change during program execution. Think of it as a container with a label.",
+              },
+              {
+                type: "example_code",
+                content: "int age = 18;\nage = 19;   // value updated",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "💡 Real-life analogy: A water bottle is a variable → you can refill/change the water inside. The label on the bottle is the identifier.",
+              },
+
+              {
+                type: "heading",
+                content: "Constants",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Definition: A constant is a value that cannot be changed once assigned. In C, use const keyword.",
+              },
+              {
+                type: "example_code",
+                content: "const float PI = 3.14159;",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "💡 Real-life analogy: Your date of birth is a constant → it never changes. But your current age is a variable → it changes every year.",
+              },
+
+              {
+                type: "heading",
+                content: "Input and Output in C",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Input → Taking data from the user. (Use scanf())",
+                  "Output → Displaying data on screen. (Use printf())",
+                ],
+              },
+              {
+                type: "example_code",
+                content:
+                  "#include <stdio.h>\n\nint main() {\n    int age;\n    printf(\"Enter your age: \");   // Output\n    scanf(\"%d\", &age);           // Input\n    printf(\"You entered: %d\", age);\n    return 0;\n}",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "💡 Real-life analogy:\n- Input: Asking a customer → “How many samosas do you want?”\n- Output: Showing the bill → “Your total is ₹30.”",
+              },
+
+              {
+                type: "heading",
+                content: "Mini Practice Ideas",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Write a program to store your name’s first letter (char), age (int), and height (float), then print them.",
+                  "Define a constant PI = 3.14159 and calculate the area of a circle given radius.",
+                  "Take two integers from the user and display their sum.",
+                ],
+              },
+            ],
+          },
+          {
+            topic_id: "P1-C2-T2",
+            topic_name: "Operators in C",
+            show_compiler: true,
+            isCompleted: false,
+            theory: [
+              {
+                type: "heading",
+                content: "Definition – What are Operators in C?",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Operators are symbols that tell the computer to perform specific operations on data (operands).\nThey are like tools in a toolbox – each operator does a specific job (add, compare, check conditions, etc.).\n\n👉 Example: +, -, *, / are arithmetic operators.",
+              },
+
+              {
+                type: "heading",
+                content: "Why Do We Need Operators?",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Do calculations (like total bill, average marks).",
+                  "Compare values (who scored more in exams?).",
+                  "Decide conditions (is age > 18? Then allow voting).",
+                  "Work with data at the binary level (bitwise operations – used in compression, encryption, etc.).",
+                ],
+              },
+              {
+                type: "paragraph",
+                content:
+                  "💡 Just like in math, we use symbols (+ or >). In C, operators allow us to communicate actions to the computer.",
+              },
+
+              {
+                type: "heading",
+                content: "Arithmetic Operators",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "+ → Addition → Example: a + b",
+                  "- → Subtraction → Example: a - b",
+                  "* → Multiplication → Example: a * b",
+                  "/ → Division (integer division if both operands are int) → Example: a / b",
+                  "% → Modulus (remainder) → Example: a % b",
+                ],
+              },
+              {
+                type: "example_code",
+                content: "int a = 10, b = 3;\nprintf(\"%d\", a % b);  // Output: 1",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "💡 Analogy: Think of two friends sharing 10 chocolates among 3 people.\n- Each gets 3 chocolates → Division (/).\n- 1 chocolate left → Modulus (%).",
+              },
+
+              {
+                type: "heading",
+                content: "Relational Operators",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "== → Equal to",
+                  "!= → Not equal to",
+                  "> → Greater than",
+                  "< → Less than",
+                  ">= → Greater or equal",
+                  "<= → Less or equal",
+                ],
+              },
+              {
+                type: "example_code",
+                content: "if (a > b) {\n    printf(\"a is greater\");\n}",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "💡 Analogy: Comparing exam marks → \"Is Riya’s score greater than Raj’s?\" True/False answers help us decide outcomes.",
+              },
+
+              {
+                type: "heading",
+                content: "Logical Operators",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "&& → Logical AND → true if both are true",
+                  "|| → Logical OR → true if at least one is true",
+                  "! → Logical NOT → reverses truth",
+                ],
+              },
+              {
+                type: "example_code",
+                content:
+                  "if (age > 18 && marks > 40) {\n    printf(\"Eligible for college admission\");\n}",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "💡 Analogy:\n- AND: For admission → Must have age > 18 AND marks > 40.\n- OR: Buy ice cream → If you have cash OR Paytm, you can buy.\n- NOT: \"Not raining\" means → It’s clear weather.",
+              },
+
+              {
+                type: "heading",
+                content: "Bitwise Operators",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "& → Bitwise AND",
+                  "| → Bitwise OR",
+                  "^ → Bitwise XOR (different bits = 1)",
+                  "~ → Bitwise NOT (invert bits)",
+                  "<< → Left shift (multiply by 2)",
+                  ">> → Right shift (divide by 2)",
+                ],
+              },
+              {
+                type: "example_code",
+                content: "int a = 6, b = 3;\nprintf(\"%d\", a & b);  // Output: 2",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "💡 Analogy:\n- Bitwise AND (&) → Like checking two switches: light will turn ON only if both switches are ON.\n- Left shift (<<) → Like doubling numbers quickly (multiply by 2).\n- Right shift (>>) → Like halving numbers (divide by 2).",
+              },
+
+              {
+                type: "heading",
+                content: "Mini Practice Ideas",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Write a program to take two numbers from the user and print their sum, difference, product, and remainder.",
+                  "Write a program to check if a number is greater than 100 AND even.",
+                  "Use bitwise operators to find whether two numbers share common bits (& operation).",
+                  "Write a program using logical OR (||) to check if a student passed in math OR science.",
+                ],
+              },
+            ],
+          },
+          {
+            topic_id: "P1-C2-T3",
+            topic_name: "Expressions in C",
+            show_compiler: true,
+            isCompleted: false,
+            theory: [
+              {
+                type: "heading",
+                content: "Definition – What are Expressions in C?",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "An expression in C is a combination of operands (values/variables) and operators that produces a result.\n\nSimply put: data + operators = expression.",
+              },
+              {
+                type: "example_code",
+                content: "a + b * 5\n\n// Here:\n// a and b → operands\n// +, * → operators\n// Whole thing → expression",
+              },
+
+              {
+                type: "heading",
+                content: "Why Do We Need Expressions?",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Calculate results (marks percentage → (obtained / total) * 100).",
+                  "Check conditions (eligibility → (age >= 18 && marks > 40)).",
+                  "Update values (salary = salary + bonus).",
+                ],
+              },
+              {
+                type: "paragraph",
+                content:
+                  "💡 Think of expressions as mathematical formulas for computers.",
+              },
+
+              {
+                type: "heading",
+                content: "Syntax of Expressions",
+              },
+              {
+                type: "paragraph",
+                content: "General form: operand operator operand",
+              },
+              {
+                type: "example_code",
+                content:
+                  "int x = 10 + 5;     // Arithmetic expression\nint result = a > b;  // Relational expression\nif (age >= 18 && age <= 60) { ... } // Logical expression",
+              },
+
+              {
+                type: "heading",
+                content: "Precedence & Associativity",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "When an expression has multiple operators, C follows rules to decide which operator to apply first.",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "() → Parentheses",
+                  "*, /, % → Multiplication/Division/Modulus",
+                  "+, - → Addition/Subtraction",
+                  "Relational operators (<, >, <=, >=)",
+                  "Equality operators (==, !=)",
+                  "Logical AND (&&)",
+                  "Logical OR (||)",
+                  "Assignment (=, +=, -=)",
+                ],
+              },
+              {
+                type: "paragraph",
+                content:
+                  "🔁 Associativity tells us which direction to evaluate when two operators have the same precedence.\n- Most operators → Left to Right.\n- Assignment (=) → Right to Left.",
+              },
+              {
+                type: "example_code",
+                content:
+                  "int x = 10 + 5 * 2;  // Multiplication happens first\n// x = 10 + 10 → x = 20\n\nint y = 10 - 5 - 2;  // Left to right\n// (10 - 5) - 2 = 3",
+              },
+
+              {
+                type: "heading",
+                content: "Type Conversions in C",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "When you use different data types in an expression, C sometimes converts one type into another.",
+              },
+              {
+                type: "heading",
+                content: "Implicit Conversion (Type Promotion)",
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Done automatically by C. Smaller type → converted to bigger type to avoid data loss.",
+              },
+              {
+                type: "example_code",
+                content:
+                  "int x = 5;\nfloat y = 2.5;\nfloat result = x + y;  // int x is converted to float automatically",
+              },
+              {
+                type: "heading",
+                content: "Explicit Conversion (Type Casting)",
+              },
+              {
+                type: "paragraph",
+                content: "Done manually by the programmer using (datatype) expression.",
+              },
+              {
+                type: "example_code",
+                content:
+                  "int a = 5, b = 2;\nfloat result = (float) a / b;  // Output: 2.5 instead of 2",
+              },
+
+              {
+                type: "heading",
+                content: "Real-Life Analogies",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Expressions → Like cooking recipes: ingredients (operands) + actions (operators) = dish (result).",
+                  "Precedence → Just like exam marking rules: 'Maths marks count first, then English marks.'",
+                  "Associativity → Like reading direction: left-to-right in English, right-to-left in Arabic.",
+                  "Type Conversion → Pouring water into a bigger glass (int → float) vs. forcing it into a smaller bottle (float → int, some water spills).",
+                ],
+              },
+
+              {
+                type: "heading",
+                content: "Mini Practice Ideas",
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Write an expression to calculate the area of a triangle: (base * height) / 2.",
+                  "Evaluate this in C: int result = 10 + 20 * 3; → Predict before running.",
+                  "Take two integers, divide them, and print result as float (use type casting).",
+                  "Write an expression to check if a number is between 1 and 100 using relational + logical operators.",
+                ],
+              },
+            ],
+          },
+          {
+            topic_id: "P1-C2-T4",
+            topic_name: "Conditional Statements in C",
+            show_compiler: true,
+            isCompleted: false,
+            theory: [
+              {
+                type: "heading",
+                content: "Definition – What are Conditional Constructs?"
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Conditional constructs are decision-making tools in C. They allow the program to choose different paths depending on whether a condition is true or false. In simple words: If this happens → do this, else → do something else."
+              },
+
+              {
+                type: "heading",
+                content: "Why Do We Need Them?"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Without conditionals, programs would run in a straight line doing the same thing every time.",
+                  "They let programs make decisions (e.g., If marks ≥ 40 → student passes).",
+                  "Used for input validation and branching (e.g., ATM PIN check, eligibility checks).",
+                  "They add intelligence and interactivity to programs."
+                ]
+              },
+
+              {
+                type: "heading",
+                content: "if statement"
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Checks a condition. If the condition is true → executes the block; if false → does nothing."
+              },
+              {
+                type: "example_code",
+                content:
+                  "if (condition) {\n    // code runs only if condition is true\n}\n\n// Example:\nif (marks >= 40) {\n    printf(\"You passed the exam!\\n\");\n}"
+              },
+
+              {
+                type: "heading",
+                content: "if-else statement"
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Executes one block if the condition is true, another block if the condition is false (two-way decision)."
+              },
+              {
+                type: "example_code",
+                content:
+                  "if (condition) {\n    // runs if true\n} else {\n    // runs if false\n}\n\n// Example:\nif (marks >= 40) {\n    printf(\"You passed!\\n\");\n} else {\n    printf(\"You failed!\\n\");\n}"
+              },
+
+              {
+                type: "heading",
+                content: "nested if-else statement"
+              },
+              {
+                type: "paragraph",
+                content:
+                  "An if-else inside another if-else. Used for multiple levels of decision (decision within decision)."
+              },
+              {
+                type: "example_code",
+                content:
+                  "if (condition1) {\n    if (condition2) {\n        // code if both true\n    } else {\n        // code if condition1 true but condition2 false\n    }\n} else {\n    // code if condition1 false\n}\n\n// Example:\nif (marks >= 40) {\n    if (marks >= 75) {\n        printf(\"Passed with Distinction!\\n\");\n    } else {\n        printf(\"Passed!\\n\");\n    }\n} else {\n    printf(\"Failed!\\n\");\n}"
+              },
+
+              {
+                type: "heading",
+                content: "cascaded if-else (if-else-if ladder)"
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Used when there are multiple conditions to check one after another. Checks conditions in order until one is true; otherwise runs the final else."
+              },
+              {
+                type: "example_code",
+                content:
+                  "if (condition1) {\n    // runs if condition1 true\n} else if (condition2) {\n    // runs if condition2 true\n} else if (condition3) {\n    // runs if condition3 true\n} else {\n    // runs if none true\n}\n\n// Example:\nif (marks >= 90) {\n    printf(\"Grade A\\n\");\n} else if (marks >= 75) {\n    printf(\"Grade B\\n\");\n} else if (marks >= 40) {\n    printf(\"Grade C\\n\");\n} else {\n    printf(\"Fail\\n\");\n}"
+              },
+
+              {
+                type: "heading",
+                content: "Real-life Example Flow"
+              },
+              {
+                type: "paragraph",
+                content:
+                  "ATM example: If PIN is correct → proceed. Else → show 'Invalid PIN'. Then if balance ≥ requested amount → allow withdrawal. Else → show 'Insufficient Balance'. This combines if-else and nested checks."
+              },
+
+              {
+                type: "heading",
+                content: "Mini Practice Ideas"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Check if a number is positive, negative, or zero (use if-else-if ladder).",
+                  "Check if a number is even or odd (if-else).",
+                  "Check student result: failed, pass, distinction (nested if-else or cascaded ladder).",
+                  "Write a program to check voting eligibility (age >= 18) and print appropriate message."
+                ]
+              },
+
+              {
+                type: "heading",
+                content: "Quick Summary"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "if = single decision (one-way).",
+                  "if-else = two-way decision.",
+                  "nested if-else = decision inside decision (multiple levels).",
+                  "cascaded if-else = multiple conditions checked in sequence (if-else-if ladder)."
+                ]
+              }
+            ]
+          },
+          {
+            topic_id: "P1-C2-T5",
+            topic_name: "The switch Statement in C",
+            show_compiler: true,
+            isCompleted: false,
+            theory: [
+              {
+                type: "heading",
+                content: "Definition – What is a switch statement?"
+              },
+              {
+                type: "paragraph",
+                content:
+                  "The switch statement in C is a decision-making construct used when you have multiple possible values for a single variable or expression. Instead of writing a long chain of if-else-if, you can use switch for cleaner and easier-to-read code."
+              },
+              {
+                type: "paragraph",
+                content: "👉 In short: switch is like a menu card – you select one item, and it directly takes you to that choice."
+              },
+
+              {
+                type: "heading",
+                content: "Why Do We Need It?"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "When we need to compare the same variable with many possible values, if-else-if becomes messy.",
+                  "switch makes the code organized and efficient.",
+                  "Best used in menu-driven programs, calculators, ATM systems, restaurant menus, and handling modes/settings like fan speed."
+                ]
+              },
+
+              {
+                type: "heading",
+                content: "Syntax of switch"
+              },
+              {
+                type: "example_code",
+                content:
+                  "switch (expression) {\n    case value1:\n        // code if expression == value1\n        break;\n\n    case value2:\n        // code if expression == value2\n        break;\n\n    ...\n    default:\n        // code if no case matches\n}"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "The expression must be an integer or character type (not float/double).",
+                  "case values must be constant and unique.",
+                  "break stops execution after a case is matched. If missing, execution will 'fall through' to the next case.",
+                  "default is optional – it runs if no case matches."
+                ]
+              },
+
+              {
+                type: "heading",
+                content: "Example Program"
+              },
+              {
+                type: "example_code",
+                content:
+                  "#include <stdio.h>\n\nint main() {\n    int choice;\n    printf(\"Enter a number (1-3): \");\n    scanf(\"%d\", &choice);\n\n    switch (choice) {\n        case 1:\n            printf(\"You selected: Tea\");\n            break;\n        case 2:\n            printf(\"You selected: Coffee\");\n            break;\n        case 3:\n            printf(\"You selected: Juice\");\n            break;\n        default:\n            printf(\"Invalid choice\");\n    }\n    return 0;\n}"
+              },
+              {
+                type: "paragraph",
+                content: "👉 If user enters 2, output will be: You selected: Coffee"
+              },
+
+              {
+                type: "heading",
+                content: "Real-life Analogy"
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Imagine you go to a restaurant and the waiter gives you a menu card:\n1 → Tea\n2 → Coffee\n3 → Juice\n\nYou choose a number → waiter serves that specific item.\nIf you choose something not on the menu → waiter says 'Invalid choice.'\n👉 That’s exactly how switch works in C."
+              },
+
+              {
+                type: "heading",
+                content: "Mini Practice Ideas"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Day of the Week: Input a number (1-7) and print the corresponding weekday.",
+                  "Simple Calculator: Input two numbers and a choice (+, -, *, /) → perform operation using switch.",
+                  "Traffic Light System: Input color (R, G, Y) and print action (Stop, Go, Wait).",
+                  "Student Grade: Input grade character (A, B, C, F) and print message using switch."
+                ]
+              },
+
+              {
+                type: "heading",
+                content: "Quick Summary"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "if-else → good for range-based or logical conditions.",
+                  "switch → best for multiple fixed choices on a single variable."
+                ]
+              }
+            ]
+          },
 
 
-      // C2 new
-      {
-  chapter_id: "P1-C2",
-  chapter_name: "Chapter 2 : Variables, Constants, and Data Types",
-  chapter_description:
-    "This chapter explains how to define variables, constants, data types, and how to use input/output functions in C programming.",
-  icon: "Code",
-  subtopics: [
-    {
-      topic_id: "P1-C2-T1",
-      topic_name: "Identifiers and Keywords",
-      show_compiler: false,
-      isCompleted: false,
-      theory: {
-        heading: "Identifiers and Keywords",
-        paragraph:
-          "Identifiers are names given to variables, functions, and other entities in a program. Keywords are reserved words in C that have predefined meanings and cannot be used as identifiers.",
-        bulletpoints: [
-          "Identifiers must begin with a letter or underscore.",
-          "They can contain letters, digits, and underscores.",
-          "Keywords are predefined reserved words like `int`, `return`, `if`.",
-          "C has 32 standard keywords."
         ],
-        example_code:
-          "int age;\nfloat salary;\nchar name[20];\n// 'int', 'float', 'char' are keywords, while 'age', 'salary', 'name' are identifiers.",
-        output: "",
-        practise_problems: [
-          {
-            question: "Write a valid identifier for storing the roll number of a student.",
-            expected_output: "studentRollNo"
-          },
-          {
-            question: "List any 5 keywords in C.",
-            expected_output: "int, char, float, return, if"
-          }
-        ]
-      }
-    },
-    {
-      topic_id: "P1-C2-T2",
-      topic_name: "Constants and Literals",
-      show_compiler: false,
-      isCompleted: false,
-      theory: {
-        heading: "Constants and Literals",
-        paragraph:
-          "Constants are values that cannot be changed during program execution. Literals are fixed values written directly into the code.",
-        bulletpoints: [
-          "Integer constants: e.g., 10, -25",
-          "Floating-point constants: e.g., 3.14, -0.5",
-          "Character constants: e.g., 'a', 'Z'",
-          "String literals: e.g., \"Hello\"",
-          "Defined using `#define` or `const` keyword"
-        ],
-        example_code:
-          "#include <stdio.h>\n\n#define PI 3.14\n\nint main() {\n    const int MAX = 100;\n    printf(\"Value of PI: %f\\n\", PI);\n    printf(\"Max value: %d\\n\", MAX);\n    return 0;\n}",
-        output: "Value of PI: 3.140000\nMax value: 100",
-        practise_problems: [
-          {
-            question: "Define a constant named LIMIT with a value of 500.",
-            expected_output: "#define LIMIT 500"
-          },
-          {
-            question: "Write a program to print the value of a constant named RATE = 9.5.",
-            expected_output: "9.5"
-          }
-        ]
-      }
-    },
-    {
-      topic_id: "P1-C2-T3",
-      topic_name: "Variables and Data Types",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Variables and Data Types",
-        paragraph:
-          "Variables are used to store data in memory, and each variable has a data type that defines the kind of values it can hold.",
-        bulletpoints: [
-          "Basic data types: int, float, char, double",
-          "Variables must be declared before use",
-          "Variable syntax: data_type variable_name;",
-          "Initialization: assigning an initial value to a variable"
-        ],
-        example_code:
-          "#include <stdio.h>\n\nint main() {\n    int age = 20;\n    float salary = 35000.50;\n    char grade = 'A';\n\n    printf(\"Age: %d\\n\", age);\n    printf(\"Salary: %.2f\\n\", salary);\n    printf(\"Grade: %c\\n\", grade);\n    return 0;\n}",
-        output: "Age: 20\nSalary: 35000.50\nGrade: A",
-        practise_problems: [
-          {
-            question: "Declare a float variable 'temperature' and assign it the value 36.5.",
-            expected_output: "float temperature = 36.5;"
-          },
-          {
-            question: "Write a program to declare and print an integer and a character variable.",
-            expected_output: "Integer and Character values printed"
-          }
-        ]
-      }
-    },
-    {
-      topic_id: "P1-C2-T4",
-      topic_name: "printf and scanf",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Input and Output Functions: printf() and scanf()",
-        paragraph:
-          "C provides printf() for output and scanf() for input. These functions are defined in the stdio.h library.",
-        bulletpoints: [
-          "printf() is used to display output on the screen.",
-          "scanf() is used to take input from the user.",
-          "Format specifiers: %d (int), %f (float), %c (char), %s (string).",
-          "Multiple values can be printed or scanned in one statement."
-        ],
-        example_code:
-          "#include <stdio.h>\n\nint main() {\n    int age;\n    printf(\"Enter your age: \");\n    scanf(\"%d\", &age);\n    printf(\"You entered: %d\\n\", age);\n    return 0;\n}",
-        output: "Enter your age: 25\nYou entered: 25",
-        practise_problems: [
-          {
-            question: "Write a program to input two integers and print their sum.",
-            expected_output: "Sum of two integers"
-          },
-          {
-            question: "Write a program to read a character from the user and display it.",
-            expected_output: "Character entered by user"
-          }
-        ]
-      }
-    }
-  ]
-},
+      },
 
-      // C3 new
-      {
-  chapter_id: "P1-C3",
-  chapter_name: "Chapter 3 : Operators in C",
-  chapter_description:
-    "This chapter covers different types of operators in C such as arithmetic, relational, logical, assignment, increment/decrement, bitwise, and special operators that are used to perform operations on data.",
-  icon: "Calculator",
-  subtopics: [
-    {
-      topic_id: "P1-C3-T1",
-      topic_name: "Arithmetic Operators",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Arithmetic Operators in C",
-        paragraph:
-          "Arithmetic operators are used to perform mathematical operations on variables and constants in C.",
-        bulletpoints: [
-          "Addition (+): Adds two operands.",
-          "Subtraction (-): Subtracts right operand from left.",
-          "Multiplication (*): Multiplies two operands.",
-          "Division (/): Divides left operand by right.",
-          "Modulus (%): Returns the remainder after division."
-        ],
-        example_code:
-          "#include <stdio.h>\n\nint main() {\n    int a = 10, b = 3;\n    printf(\"Addition: %d\\n\", a + b);\n    printf(\"Subtraction: %d\\n\", a - b);\n    printf(\"Multiplication: %d\\n\", a * b);\n    printf(\"Division: %d\\n\", a / b);\n    printf(\"Modulus: %d\\n\", a % b);\n    return 0;\n}",
-        output:
-          "Addition: 13\nSubtraction: 7\nMultiplication: 30\nDivision: 3\nModulus: 1",
-        practise_problems: [
-          {
-            question: "Write a C program to input two numbers and print their product.",
-            expected_output: "Product of two numbers"
-          },
-          {
-            question: "Write a program to find the remainder when 29 is divided by 5.",
-            expected_output: "4"
-          }
-        ]
-      }
-    },
-    {
-      topic_id: "P1-C3-T2",
-      topic_name: "Relational & Logical Operators",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Relational and Logical Operators",
-        paragraph:
-          "Relational operators are used to compare values, while logical operators are used to combine multiple conditions.",
-        bulletpoints: [
-          "Relational: >, <, >=, <=, ==, !=",
-          "Logical AND (&&): true if both conditions are true.",
-          "Logical OR (||): true if at least one condition is true.",
-          "Logical NOT (!): reverses the result of a condition."
-        ],
-        example_code:
-          "#include <stdio.h>\n\nint main() {\n    int x = 10, y = 20;\n\n    printf(\"x > y: %d\\n\", x > y);\n    printf(\"x < y: %d\\n\", x < y);\n    printf(\"(x < y) && (y > 5): %d\\n\", (x < y) && (y > 5));\n    printf(\"(x > y) || (y > 5): %d\\n\", (x > y) || (y > 5));\n    printf(\"!(x == y): %d\\n\", !(x == y));\n    return 0;\n}",
-        output:
-          "x > y: 0\nx < y: 1\n(x < y) && (y > 5): 1\n(x > y) || (y > 5): 1\n!(x == y): 1",
-        practise_problems: [
-          {
-            question: "Write a program to check if a number is greater than 100 and even.",
-            expected_output: "True/False result"
-          },
-          {
-            question: "Write a program to check if a student has passed (marks >= 40) and grade is not 'F'.",
-            expected_output: "Pass/Fail result"
-          }
-        ]
-      }
-    },
-    {
-      topic_id: "P1-C3-T3",
-      topic_name: "Assignment & Increment/Decrement",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Assignment and Increment/Decrement Operators",
-        paragraph:
-          "Assignment operators are used to assign values to variables, while increment/decrement operators are used to increase or decrease values.",
-        bulletpoints: [
-          "Assignment (=): Assigns right value to left variable.",
-          "Compound assignment: +=, -=, *=, /=, %=",
-          "Increment (++) increases value by 1.",
-          "Decrement (--) decreases value by 1.",
-          "Can be used in prefix (++a, --a) or postfix (a++, a--) form."
-        ],
-        example_code:
-          "#include <stdio.h>\n\nint main() {\n    int a = 5;\n    a += 3;  // a = a + 3\n    printf(\"After += 3: %d\\n\", a);\n    a--;\n    printf(\"After decrement: %d\\n\", a);\n    ++a;\n    printf(\"After increment: %d\\n\", a);\n    return 0;\n}",
-        output: "After += 3: 8\nAfter decrement: 7\nAfter increment: 8",
-        practise_problems: [
-          {
-            question: "Write a program that increases a number by 10 using += operator.",
-            expected_output: "Number increased by 10"
-          },
-          {
-            question: "Demonstrate difference between prefix and postfix increment.",
-            expected_output: "Different values for prefix and postfix"
-          }
-        ]
-      }
-    },
-    {
-      topic_id: "P1-C3-T4",
-      topic_name: "Bitwise & Special Operators",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Bitwise and Special Operators",
-        paragraph:
-          "Bitwise operators operate at the binary level of integers. Special operators like sizeof and conditional operator provide additional functionality in C.",
-        bulletpoints: [
-          "Bitwise AND (&), OR (|), XOR (^), NOT (~), Left Shift (<<), Right Shift (>>).",
-          "sizeof: returns the size of a variable or data type.",
-          "Conditional operator (?:): shorthand for if-else.",
-          "Comma operator (,): evaluates multiple expressions.",
-          "Pointer operator (& for address, * for value at address)."
-        ],
-        example_code:
-          "#include <stdio.h>\n\nint main() {\n    int a = 5, b = 3;\n    printf(\"a & b: %d\\n\", a & b);\n    printf(\"a | b: %d\\n\", a | b);\n    printf(\"a ^ b: %d\\n\", a ^ b);\n    printf(\"~a: %d\\n\", ~a);\n    printf(\"a << 1: %d\\n\", a << 1);\n    printf(\"a >> 1: %d\\n\", a >> 1);\n\n    printf(\"Size of int: %lu bytes\\n\", sizeof(int));\n    int x = (a > b) ? a : b;\n    printf(\"Greater number: %d\\n\", x);\n    return 0;\n}",
-        output:
-          "a & b: 1\na | b: 7\na ^ b: 6\n~a: -6\na << 1: 10\na >> 1: 2\nSize of int: 4 bytes\nGreater number: 5",
-        practise_problems: [
-          {
-            question: "Write a program to check if a number is odd or even using bitwise operator.",
-            expected_output: "Odd/Even result"
-          },
-          {
-            question: "Use the conditional operator to find the largest of three numbers.",
-            expected_output: "Largest number"
-          }
-        ]
-      }
-    }
-  ]
-},
+      //chapter 03
 
-      // C4 new
       {
-  chapter_id: "P1-C4",
-  chapter_name: "Chapter 4 : Control Structures",
-  chapter_description:
-    "This chapter explains how to control the flow of execution in a C program using decision-making statements, switch-case, loops, and jump statements.",
-  icon: "GitBranch",
-  subtopics: [
-    {
-      topic_id: "P1-C4-T1",
-      topic_name: "if, if-else, nested if",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Decision Making using if, if-else, and nested if",
-        paragraph:
-          "C provides conditional statements to execute different blocks of code based on conditions. The if statement checks a condition, if-else allows two-way branching, and nested if enables multiple condition checks.",
-        bulletpoints: [
-          "`if`: Executes a block if condition is true.",
-          "`if-else`: Executes one block if condition is true, another if false.",
-          "`nested if`: An if inside another if for multiple conditions.",
-          "Conditions must return true (non-zero) or false (zero)."
-        ],
-        example_code:
-          "#include <stdio.h>\n\nint main() {\n    int marks = 85;\n\n    if (marks >= 90) {\n        printf(\"Grade: A\\n\");\n    } else if (marks >= 75) {\n        printf(\"Grade: B\\n\");\n    } else {\n        printf(\"Grade: C\\n\");\n    }\n\n    return 0;\n}",
-        output: "Grade: B",
-        practise_problems: [
+        chapter_id: "P1-C3",
+        chapter_name: "Unit 3 : Introduction to Programming Languages ",
+        chapter_description: "",
+        icon: "BookOpen",
+        subtopics: [
           {
-            question: "Write a program to check whether a number is positive, negative, or zero.",
-            expected_output: "Positive/Negative/Zero"
+            topic_id: "P1-C3-T1",
+            topic_name: "Iterative Algorithm Constructs in C",
+            show_compiler: true,
+            isCompleted: false,
+            theory: [
+              {
+                type: "heading",
+                content: "Definition – What are Iterative Constructs?"
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Iterative algorithm constructs are ways to repeat a set of instructions multiple times in a program. In simple words: Instead of writing the same code again and again, we tell the computer to loop through the code until a condition is met."
+              },
+              {
+                type: "paragraph",
+                content:
+                  "👉 Example: Printing numbers from 1 to 100. Without loops → you’d have to write 100 printf statements! With loops → just a few lines."
+              },
+
+              {
+                type: "heading",
+                content: "Why is it Needed?"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Saves time (no need to repeat code manually).",
+                  "Reduces errors (since logic is written once and repeated).",
+                  "Makes programs shorter, cleaner, and flexible.",
+                  "Many real-world tasks are repetitive (counting, checking, processing data)."
+                ]
+              },
+
+              {
+                type: "heading",
+                content: "Construction of Loops"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Initialization (starting point): Set a variable to start the loop. Example: int i = 1; (start counting from 1).",
+                  "Condition (when to stop): The loop will run as long as the condition is true. Example: i <= 10; (keep looping until i reaches 10).",
+                  "Updation (move to next step): After each loop cycle, update the variable. Example: i++ (increase i by 1 each time)."
+                ]
+              },
+              {
+                type: "paragraph",
+                content:
+                  "👉 If you forget any of these, the loop may not work correctly (e.g., forgetting update → infinite loop)."
+              },
+
+              {
+                type: "heading",
+                content: "Types of Loops in C"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "while loop → Checks the condition before executing the code.",
+                  "do-while loop → Executes the code at least once, then checks the condition.",
+                  "for loop → Compact form where initialization, condition, and update are written in one line."
+                ]
+              },
+              {
+                type: "example_code",
+                content:
+                  "while(condition) {\n    // code to repeat\n}\n\n\ndo {\n    // code to repeat\n} while(condition);\n\n\nfor(initialization; condition; update) {\n    // code to repeat\n}"
+              },
+
+              {
+                type: "heading",
+                content: "Explanation with Example"
+              },
+              {
+                type: "example_code",
+                content:
+                  "#include <stdio.h>\n\nint main() {\n    for(int i = 1; i <= 5; i++) {\n        printf(\"%d\\n\", i);\n    }\n    return 0;\n}"
+              },
+              {
+                type: "paragraph",
+                content:
+                  "How it works:\n- Start with i = 1.\n- Check condition → i <= 5 (true).\n- Print i.\n- Increase i by 1 (i++).\n- Repeat until condition becomes false."
+              },
+              {
+                type: "output",
+                content: "1\n2\n3\n4\n5"
+              },
+
+              {
+                type: "heading",
+                content: "Real-Life Analogy"
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Think of loops like brushing your teeth every morning.\n\nInitialization → You wake up (starting point).\nCondition → You brush daily as long as you are alive.\nUpdate → Next day comes, and you repeat.\n\nInstead of saying \"I brush on Monday, I brush on Tuesday, I brush on Wednesday…\", you just say: 👉 \"I brush every day.\" That’s exactly what a loop does."
+              },
+
+              {
+                type: "heading",
+                content: "Mini Practice Ideas"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Write a program to print numbers from 1 to 10 using a loop.",
+                  "Write a program to print the multiplication table of 5 using a loop.",
+                  "Write a program that asks the user for a number and prints whether it is positive or negative until the user enters 0 (hint: use while).",
+                  "Write a program that calculates the sum of first 100 natural numbers using a loop."
+                ]
+              }
+            ]
           },
           {
-            question: "Write a program to find the largest of three numbers using nested if.",
-            expected_output: "Largest number"
-          }
-        ]
-      }
-    },
-    {
-      topic_id: "P1-C4-T2",
-      topic_name: "switch-case",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Switch-Case Statement",
-        paragraph:
-          "The switch-case statement allows multi-way branching based on the value of a variable or expression. It is an alternative to multiple if-else statements.",
-        bulletpoints: [
-          "Expression inside switch must be integer or character type.",
-          "Each case is followed by a value and a colon.",
-          "`break` is used to exit the switch after a case executes.",
-          "The `default` case executes if no match is found."
-        ],
-        example_code:
-          "#include <stdio.h>\n\nint main() {\n    int day = 3;\n\n    switch (day) {\n        case 1: printf(\"Monday\\n\"); break;\n        case 2: printf(\"Tuesday\\n\"); break;\n        case 3: printf(\"Wednesday\\n\"); break;\n        default: printf(\"Invalid day\\n\");\n    }\n\n    return 0;\n}",
-        output: "Wednesday",
-        practise_problems: [
-          {
-            question: "Write a program to display the name of a month using switch-case.",
-            expected_output: "Month name"
+            topic_id: "P1-C3-T2",
+            topic_name: "Loops in C Programming",
+            show_compiler: true,
+            isCompleted: false,
+            theory: [
+              {
+                type: "heading",
+                content: "Definition – What are Loops?"
+              },
+              {
+                type: "paragraph",
+                content:
+                  "A loop is a way to tell the computer: 👉 'Repeat this set of instructions again and again until a certain condition is met.' Instead of writing the same code multiple times, we put it inside a loop and let the computer handle the repetition."
+              },
+
+              {
+                type: "heading",
+                content: "Why are Loops Needed?"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Saves time → less code to write.",
+                  "Reduces mistakes → you don’t have to copy-paste.",
+                  "Makes programs flexible → change one condition, and all repetitions adjust automatically.",
+                  "Many real-life tasks are repetitive → counting, checking attendance, going through items in a list."
+                ]
+              },
+
+              {
+                type: "heading",
+                content: "Types of Loops in C"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "for loop → Best when you know in advance how many times you want to repeat something.",
+                  "while loop → Best when you don’t know beforehand how many times it will run, but it depends on a condition.",
+                  "do-while loop → Similar to while, but the code runs at least once (because the condition is checked at the end)."
+                ]
+              },
+              {
+                type: "example_code",
+                content:
+                  "for(initialization; condition; update) {\n    // code to repeat\n}\n\nwhile(condition) {\n    // code to repeat\n}\n\ndo {\n    // code to repeat\n} while(condition);"
+              },
+
+              {
+                type: "heading",
+                content: "Explanation with Example"
+              },
+              {
+                type: "example_code",
+                content:
+                  "#include <stdio.h>\nint main() {\n    for(int i = 1; i <= 5; i++) {\n        printf(\"%d\\n\", i);\n    }\n    return 0;\n}"
+              },
+              {
+                type: "example_code",
+                content:
+                  "#include <stdio.h>\nint main() {\n    int i = 1;\n    while(i <= 5) {\n        printf(\"%d\\n\", i);\n        i++;\n    }\n    return 0;\n}"
+              },
+              {
+                type: "example_code",
+                content:
+                  "#include <stdio.h>\nint main() {\n    int i = 1;\n    do {\n        printf(\"%d\\n\", i);\n        i++;\n    } while(i <= 5);\n    return 0;\n}"
+              },
+              {
+                type: "output",
+                content: "1\n2\n3\n4\n5"
+              },
+
+              {
+                type: "heading",
+                content: "Real-Life Analogy"
+              },
+              {
+                type: "paragraph",
+                content:
+                  "Think of brushing your teeth:\n\nfor loop → You say: 'I’ll brush my teeth every day for 30 days.' (You already know the exact number of times).\n\nwhile loop → You say: 'I’ll keep brushing daily until my toothpaste finishes.' (You don’t know how many days exactly).\n\ndo-while loop → You say: 'I’ll brush at least once today, and then continue brushing daily until toothpaste finishes.' (At least one time guaranteed)."
+              },
+
+              {
+                type: "heading",
+                content: "Mini Practice Ideas"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Write a program using a for loop to print the multiplication table of 7.",
+                  "Write a program using a while loop to keep asking the user for a number until they enter 0.",
+                  "Write a program using a do-while loop that asks the user to enter their password and keeps asking until they enter the correct one.",
+                  "Write a program that calculates the sum of numbers from 1 to 100 using a for loop."
+                ]
+              }
+            ]
           },
           {
-            question: "Write a program to implement a simple calculator using switch-case.",
-            expected_output: "Addition, subtraction, etc."
-          }
-        ]
-      }
-    },
-    {
-      topic_id: "P1-C4-T3",
-      topic_name: "Loops (for, while, do-while)",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Loops in C",
-        paragraph:
-          "Loops allow executing a block of code repeatedly until a condition is met. C provides three main types of loops: for, while, and do-while.",
-        bulletpoints: [
-          "`for` loop: Best for known number of iterations.",
-          "`while` loop: Repeats as long as condition is true.",
-          "`do-while` loop: Executes block at least once before checking condition.",
-          "Loops reduce redundancy and improve efficiency."
-        ],
-        example_code:
-          "#include <stdio.h>\n\nint main() {\n    int i;\n\n    printf(\"For Loop: \");\n    for (i = 1; i <= 5; i++) {\n        printf(\"%d \", i);\n    }\n\n    printf(\"\\nWhile Loop: \");\n    i = 1;\n    while (i <= 5) {\n        printf(\"%d \", i);\n        i++;\n    }\n\n    printf(\"\\nDo-While Loop: \");\n    i = 1;\n    do {\n        printf(\"%d \", i);\n        i++;\n    } while (i <= 5);\n\n    return 0;\n}",
-        output: "For Loop: 1 2 3 4 5 \nWhile Loop: 1 2 3 4 5 \nDo-While Loop: 1 2 3 4 5",
-        practise_problems: [
-          {
-            question: "Write a program to print the first 10 natural numbers using a for loop.",
-            expected_output: "1 2 3 4 5 6 7 8 9 10"
+            topic_id: "P1-C3-T3",
+            topic_name: "Nested Loops, break, and continue in C",
+            show_compiler: true,
+            isCompleted: false,
+            theory: [
+              {
+                type: "heading",
+                content: "Definition"
+              },
+              {
+                type: "paragraph",
+                content: "a) Nested Loops → A nested loop is a loop inside another loop. The inner loop runs completely for every single iteration of the outer loop. Used when you need to repeat tasks in a matrix or multi-level structure."
+              },
+              {
+                type: "paragraph",
+                content: "b) break statement → break is used to exit a loop immediately, even if the loop condition is still true."
+              },
+              {
+                type: "paragraph",
+                content: "c) continue statement → continue is used to skip the rest of the current iteration and move to the next iteration of the loop."
+              },
+
+              {
+                type: "heading",
+                content: "Why are they needed?"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Nested Loops → Useful for tables, patterns, and multi-dimensional structures. Example: Printing a multiplication table for numbers 1–5.",
+                  "break and continue → Control the flow of loops to avoid unnecessary iterations, making code more efficient and logical."
+                ]
+              },
+              {
+                type: "paragraph",
+                content: "💡 Analogy: break → Like leaving a queue immediately when your friend calls you. continue → Like skipping a turn in a game and going to the next player."
+              },
+
+              {
+                type: "heading",
+                content: "Syntax"
+              },
+              {
+                type: "example_code",
+                content: "a) Nested Loop\nfor(initialization; condition; update) {\n    for(initialization; condition; update) {\n        // inner loop code\n    }\n}"
+              },
+              {
+                type: "example_code",
+                content: "b) break\nfor(int i=1; i<=10; i++) {\n    if(i == 5) {\n        break; // exit loop when i=5\n    }\n    printf(\"%d\\\\n\", i);\n}"
+              },
+              {
+                type: "example_code",
+                content: "c) continue\nfor(int i=1; i<=10; i++) {\n    if(i % 2 == 0) {\n        continue; // skip even numbers\n    }\n    printf(\"%d\\\\n\", i);\n}"
+              },
+
+              {
+                type: "heading",
+                content: "Explanation with Example"
+              },
+              {
+                type: "example_code",
+                content: "a) Nested Loops – Print a 3x3 matrix of *\n#include <stdio.h>\nint main() {\n    for(int i=1; i<=3; i++) {\n        for(int j=1; j<=3; j++) {\n            printf(\"* \");\n        }\n        printf(\"\\n\");\n    }\n    return 0;\n}"
+              },
+              {
+                type: "output",
+                content: "* * * \n* * * \n* * *"
+              },
+              {
+                type: "example_code",
+                content: "b) break Example – Stop when number is 5\n#include <stdio.h>\nint main() {\n    for(int i=1; i<=10; i++) {\n        if(i == 5) {\n            break;\n        }\n        printf(\"%d\\\\n\", i);\n    }\n    return 0;\n}"
+              },
+              {
+                type: "output",
+                content: "1\n2\n3\n4"
+              },
+              {
+                type: "example_code",
+                content: "c) continue Example – Skip even numbers\n#include <stdio.h>\nint main() {\n    for(int i=1; i<=10; i++) {\n        if(i % 2 == 0) {\n            continue;\n        }\n        printf(\"%d\\\\n\", i);\n    }\n    return 0;\n}"
+              },
+              {
+                type: "output",
+                content: "1\n3\n5\n7\n9"
+              },
+
+              {
+                type: "heading",
+                content: "Real-Life Analogy"
+              },
+              {
+                type: "paragraph",
+                content: "Nested Loops → Like a theater seating chart: Outer loop → rows, Inner loop → seats in each row.\nbreak → Leaving a queue immediately when your order is ready.\ncontinue → Skipping a specific step in a routine, e.g., skipping brushing teeth for a day and moving to the next day."
+              },
+
+              {
+                type: "heading",
+                content: "Mini Practice Ideas"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Use nested loops to print a 5x5 number pattern like:\n1 1 1 1 1\n2 2 2 2 2\n3 3 3 3 3\n4 4 4 4 4\n5 5 5 5 5",
+                  "Write a program using break to stop taking numbers from the user if a negative number is entered.",
+                  "Write a program using continue to print all numbers from 1 to 20 except multiples of 3.",
+                  "Nested loops: Print a right-angled triangle of *:\n*\n* *\n* * *\n* * * *\n* * * * *"
+                ]
+              }
+            ]
           },
           {
-            question: "Write a program to calculate the sum of digits of a number using a while loop.",
-            expected_output: "Sum of digits"
-          }
-        ]
-      }
-    },
-    {
-      topic_id: "P1-C4-T4",
-      topic_name: "break and continue",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Jump Statements: break and continue",
-        paragraph:
-          "break and continue are jump statements used inside loops and switch-case. They alter the normal flow of execution.",
-        bulletpoints: [
-          "`break`: Immediately exits from the loop or switch.",
-          "`continue`: Skips the current iteration and moves to the next.",
-          "Useful for controlling loop execution efficiently.",
-          "Can be combined with conditions for flexible control."
-        ],
-        example_code:
-          "#include <stdio.h>\n\nint main() {\n    int i;\n    for (i = 1; i <= 5; i++) {\n        if (i == 3) continue;\n        if (i == 5) break;\n        printf(\"%d \", i);\n    }\n    return 0;\n}",
-        output: "1 2 4",
-        practise_problems: [
-          {
-            question: "Write a program that prints numbers from 1 to 10 but skips 5 using continue.",
-            expected_output: "1 2 3 4 6 7 8 9 10"
+            topic_id: "P1-C3-T4",
+            topic_name: "Arrays in C Programming",
+            show_compiler: true,
+            isCompleted: false,
+            theory: [
+              {
+                type: "heading",
+                content: "Definition – What is an Array?"
+              },
+              {
+                type: "paragraph",
+                content: "An array is a collection of similar data items stored at consecutive memory locations. All elements in an array are of the same data type (e.g., all integers, all floats, etc.). Each element can be accessed using an index (like a seat number in a row)."
+              },
+              {
+                type: "paragraph",
+                content: "👉 In short: An array is like a list of values under one common name."
+              },
+
+              {
+                type: "heading",
+                content: "Why are Arrays Needed?"
+              },
+              {
+                type: "paragraph",
+                content: "Imagine you want to store the marks of 50 students."
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Without arrays → You’d need 50 variables: mark1, mark2, mark3… mark50. (Messy and hard to manage!)",
+                  "With arrays → Just one variable name (e.g., marks[50]) can hold all 50 values."
+                ]
+              },
+              {
+                type: "paragraph",
+                content: "✅ Arrays make the program: Shorter, Easier to read, Easier to manage and process data."
+              },
+
+              {
+                type: "heading",
+                content: "Syntax of Arrays in C"
+              },
+              {
+                type: "example_code",
+                content: "data_type array_name[size];\n\n// Example:\nint marks[5];   // can store 5 integers"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "data_type → type of elements (int, float, char, etc.)",
+                  "array_name → name of the array",
+                  "size → number of elements it can store"
+                ]
+              },
+
+              {
+                type: "heading",
+                content: "Explanation with Example"
+              },
+              {
+                type: "example_code",
+                content: "Example 1: Storing and printing marks\n#include <stdio.h>\nint main() {\n    int marks[5] = {85, 90, 78, 92, 88};\n\n    for(int i=0; i<5; i++) {\n        printf(\"Marks of student %d = %d\\\\n\", i+1, marks[i]);\n    }\n    return 0;\n}"
+              },
+              {
+                type: "output",
+                content: "Marks of student 1 = 85\nMarks of student 2 = 90\nMarks of student 3 = 78\nMarks of student 4 = 92\nMarks of student 5 = 88"
+              },
+              {
+                type: "example_code",
+                content: "Example 2: Taking input from user\n#include <stdio.h>\nint main() {\n    int numbers[3];\n\n    printf(\"Enter 3 numbers: \");\n    for(int i=0; i<3; i++) {\n        scanf(\"%d\", &numbers[i]);\n    }\n\n    printf(\"You entered: \");\n    for(int i=0; i<3; i++) {\n        printf(\"%d \", numbers[i]);\n    }\n    return 0;\n}"
+              },
+
+              {
+                type: "heading",
+                content: "Real-Life Analogy"
+              },
+              {
+                type: "paragraph",
+                content: "Think of an array like lockers in a hostel:\n- All lockers are arranged side by side (consecutive memory).\n- Each locker stores only one type of item (like all books, or all clothes).\n- Each locker has a number (index).\n- To access an item, you don’t need to search randomly — you just use the locker number."
+              },
+              {
+                type: "paragraph",
+                content: "👉 Example: marks[2] is like saying “Open locker number 2 and check the item inside.”"
+              },
+
+              {
+                type: "heading",
+                content: "Mini Practice Ideas"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Create an array of 10 integers and print their values in reverse order.",
+                  "Take 5 numbers from the user and find their sum using an array.",
+                  "Store 7 days of the week in a char array and print them.",
+                  "Write a program to find the largest number in an array of 10 integers."
+                ]
+              }
+            ]
           },
           {
-            question: "Write a program that prints numbers from 1 to 20 but stops when it reaches 12.",
-            expected_output: "1 2 3 ... 12"
-          }
-        ]
-      }
-    }
-  ]
-},
-{
-  chapter_id: "P1-C5",
-  chapter_name: "Chapter 5 : Functions in C",
-  chapter_description: "Functions in C help in modular programming by breaking down code into reusable blocks. This chapter covers declaration, definition, arguments, return types, recursion, and storage classes.",
-  icon: "FunctionSquare",
-  subtopics: [
-    {
-      topic_id: "P1-C5-T1",
-      topic_name: "Function Declaration & Definition",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Function Declaration & Definition",
-        paragraph: "A function in C is a block of code that performs a specific task. Functions can be declared before they are used and defined later. The declaration tells the compiler about the function's name, return type, and parameters, while the definition provides the actual body of the function.",
-        bulletpoints: [
-          "Declaration: Specifies the function's return type, name, and parameters.",
-          "Definition: Provides the body of the function with actual code.",
-          "Return type can be void if the function does not return a value.",
-          "Functions help in reusability and modularity."
-        ],
-        example_code: "#include <stdio.h>\n\n// Function Declaration\nint add(int, int);\n\nint main() {\n    int result = add(5, 10);\n    printf(\"Sum = %d\", result);\n    return 0;\n}\n\n// Function Definition\nint add(int a, int b) {\n    return a + b;\n}",
-        output: "Sum = 15",
-        practise_problems: [
-          {
-            question: "Write a function multiply(int a, int b) that returns the product of two numbers.",
-            expected_output: "If inputs are 4 and 5, output should be 20."
-          }
-        ]
-      }
-    },
-    {
-      topic_id: "P1-C5-T2",
-      topic_name: "Function Arguments & Return Types",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Function Arguments & Return Types",
-        paragraph: "Functions in C can accept input values called arguments (or parameters) and may return a value using the return statement. Depending on the situation, a function can have arguments, return a value, both, or neither.",
-        bulletpoints: [
-          "Arguments provide input data to functions.",
-          "The return type specifies what type of value a function will return.",
-          "Functions can return only one value at a time.",
-          "Functions can also have no return type (void)."
-        ],
-        example_code: "#include <stdio.h>\n\nint square(int n) {\n    return n * n;\n}\n\nint main() {\n    int num = 6;\n    printf(\"Square = %d\", square(num));\n    return 0;\n}",
-        output: "Square = 36",
-        practise_problems: [
-          {
-            question: "Write a function that takes two integers and returns the larger one.",
-            expected_output: "If inputs are 7 and 10, output should be 10."
-          }
-        ]
-      }
-    },
-    {
-      topic_id: "P1-C5-T3",
-      topic_name: "Recursion",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Recursion",
-        paragraph: "Recursion is the process in which a function calls itself either directly or indirectly. Recursive functions are often used to solve problems that can be broken down into smaller subproblems of the same type.",
-        bulletpoints: [
-          "A recursive function must have a base case to avoid infinite recursion.",
-          "Commonly used for problems like factorial, Fibonacci, and tree traversal.",
-          "Recursion uses the function call stack for execution.",
-          "Without a base case, recursion leads to stack overflow."
-        ],
-        example_code: "#include <stdio.h>\n\nint factorial(int n) {\n    if (n == 0)\n        return 1;\n    else\n        return n * factorial(n - 1);\n}\n\nint main() {\n    int num = 5;\n    printf(\"Factorial = %d\", factorial(num));\n    return 0;\n}",
-        output: "Factorial = 120",
-        practise_problems: [
-          {
-            question: "Write a recursive function to find the nth Fibonacci number.",
-            expected_output: "If input is 6, output should be 8."
-          }
-        ]
-      }
-    },
-    {
-      topic_id: "P1-C5-T4",
-      topic_name: "Storage Classes",
-      show_compiler: false,
-      isCompleted: false,
-      theory: {
-        heading: "Storage Classes",
-        paragraph: "Storage classes in C define the scope (visibility), lifetime, and linkage of variables or functions. They help determine how and where variables are stored and accessed during program execution.",
-        bulletpoints: [
-          "auto: Default storage class for local variables.",
-          "static: Retains the value of a variable between function calls.",
-          "extern: Used to declare a global variable defined in another file.",
-          "register: Requests the compiler to store the variable in CPU registers for faster access."
-        ],
-        example_code: "#include <stdio.h>\n\nvoid demo() {\n    static int count = 0;\n    count++;\n    printf(\"Count = %d\\n\", count);\n}\n\nint main() {\n    demo();\n    demo();\n    demo();\n    return 0;\n}",
-        output: "Count = 1\nCount = 2\nCount = 3",
-        practise_problems: [
-          {
-            question: "Write a program using a static variable to count how many times a function is called.",
-            expected_output: "Each call should increment and display the counter value."
-          }
-        ]
-      }
-    }
-  ]
-},
-{
-  chapter_id: "P1-C6",
-  chapter_name: "Chapter 6 : Arrays in C",
-  chapter_description: "Arrays in C allow storing multiple values of the same data type under a single variable name. They provide an efficient way to organize and process data in bulk.",
-  icon: "Layers",
-  subtopics: [
-    {
-      topic_id: "P1-C6-T1",
-      topic_name: "One-Dimensional Arrays",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Introduction to One-Dimensional Arrays",
-        paragraph: "A one-dimensional array is a linear list of elements stored in contiguous memory locations. It is the simplest form of an array.",
-        bulletpoints: [
-          "An array holds elements of the same type.",
-          "Array elements are accessed using their index (starting at 0).",
-          "The size of an array must be defined before use."
-        ],
-        example_code: "#include <stdio.h>\nint main() {\n    int arr[5] = {1, 2, 3, 4, 5};\n    for(int i=0; i<5; i++) {\n        printf(\"%d \", arr[i]);\n    }\n    return 0;\n}",
-        output: "1 2 3 4 5",
-        practise_problems: [
-          {
-            question: "Declare an array of size 10 and print all its elements.",
-            expected_output: "Elements printed in order"
-          }
-        ]
-      }
-    },
-    {
-      topic_id: "P1-C6-T2",
-      topic_name: "Two-Dimensional Arrays",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Introduction to Two-Dimensional Arrays",
-        paragraph: "Two-dimensional arrays are used to represent data in rows and columns, similar to a matrix or a table.",
-        bulletpoints: [
-          "Declared using two sizes: rows and columns.",
-          "Accessed using two indices: arr[row][column].",
-          "Commonly used in mathematical and tabular data processing."
-        ],
-        example_code: "#include <stdio.h>\nint main() {\n    int arr[2][3] = {{1, 2, 3}, {4, 5, 6}};\n    for(int i=0; i<2; i++) {\n        for(int j=0; j<3; j++) {\n            printf(\"%d \", arr[i][j]);\n        }\n        printf(\"\\n\");\n    }\n    return 0;\n}",
-        output: "1 2 3\n4 5 6",
-        practise_problems: [
-          {
-            question: "Create a 3x3 matrix and print it.",
-            expected_output: "Matrix elements in 3 rows and 3 columns"
-          }
-        ]
-      }
-    },
-    {
-      topic_id: "P1-C6-T3",
-      topic_name: "Multi-Dimensional Arrays",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Introduction to Multi-Dimensional Arrays",
-        paragraph: "Multi-dimensional arrays extend beyond two dimensions and are often used in advanced applications like 3D graphics and simulations.",
-        bulletpoints: [
-          "Declared with more than two dimensions.",
-          "Commonly used for 3D matrices or higher-order data.",
-          "Accessed using multiple indices."
-        ],
-        example_code: "#include <stdio.h>\nint main() {\n    int arr[2][2][2] = {{{1,2},{3,4}},{{5,6},{7,8}}};\n    for(int i=0; i<2; i++) {\n        for(int j=0; j<2; j++) {\n            for(int k=0; k<2; k++) {\n                printf(\"%d \", arr[i][j][k]);\n            }\n            printf(\"\\n\");\n        }\n        printf(\"\\n\");\n    }\n    return 0;\n}",
-        output: "1 2\n3 4\n\n5 6\n7 8",
-        practise_problems: [
-          {
-            question: "Declare a 3x3x3 array and initialize it with numbers 1–27. Print the cube layer by layer.",
-            expected_output: "Cube printed layer by layer"
-          }
-        ]
-      }
-    },
-    {
-      topic_id: "P1-C6-T4",
-      topic_name: "Array Operations",
-      show_compiler: true,
-      isCompleted: false,
-      theory: {
-        heading: "Operations on Arrays",
-        paragraph: "Array operations include traversal, insertion, deletion, searching, and sorting. They help manage and process array elements effectively.",
-        bulletpoints: [
-          "Traversal: Accessing and displaying elements.",
-          "Insertion: Adding new elements at specific positions.",
-          "Deletion: Removing elements from an array.",
-          "Searching: Finding an element in an array.",
-          "Sorting: Arranging elements in order (ascending/descending)."
-        ],
-        example_code: "#include <stdio.h>\nint main() {\n    int arr[5] = {10, 20, 30, 40, 50};\n    int search = 30, found = 0;\n    for(int i=0; i<5; i++) {\n        if(arr[i] == search) {\n            printf(\"Element %d found at index %d\\n\", search, i);\n            found = 1;\n            break;\n        }\n    }\n    if(!found) printf(\"Element not found\");\n    return 0;\n}",
-        output: "Element 30 found at index 2",
-        practise_problems: [
-          {
-            question: "Write a program to insert an element at the end of an array.",
-            expected_output: "Array with new element inserted"
+            topic_id: "P1-C3-T5",
+            topic_name: "Arrays in C: One-Dimensional & Multi-Dimensional",
+            show_compiler: true,
+            isCompleted: false,
+            theory: [
+              {
+                type: "heading",
+                content: "Definition"
+              },
+              {
+                type: "subheading",
+                content: "One-Dimensional Array (1D Array)"
+              },
+              {
+                type: "paragraph",
+                content: "A linear list of elements of the same type. All elements are stored in a single row in memory and accessed using one index."
+              },
+              {
+                type: "paragraph",
+                content: "👉 Example: Marks of 5 students → marks[5]"
+              },
+              {
+                type: "subheading",
+                content: "Multi-Dimensional Array (2D, 3D, etc.)"
+              },
+              {
+                type: "paragraph",
+                content: "An array of arrays (like a table or matrix). The most common is a 2D array where elements are stored in rows and columns, accessed using two indexes: row and column."
+              },
+              {
+                type: "paragraph",
+                content: "👉 Example: A 3×3 matrix → matrix[3][3]"
+              },
+
+              {
+                type: "heading",
+                content: "Why are they Needed?"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "1D Arrays: For storing linear data like marks, roll numbers, salaries.",
+                  "2D Arrays: For tabular data like student marks in multiple subjects, matrices, chessboards.",
+                  "3D Arrays: For higher-dimensional data like 3D graphics, cube representation."
+                ]
+              },
+              {
+                type: "paragraph",
+                content: "✅ They make handling large, structured data organized and simple."
+              },
+
+              {
+                type: "heading",
+                content: "Syntax"
+              },
+              {
+                type: "example_code",
+                content: "// 1D Array\nint marks[5];   // stores 5 integers\n\n// 2D Array\nint matrix[3][3];   // 3 rows × 3 columns"
+              },
+
+              {
+                type: "heading",
+                content: "Explanation with Example"
+              },
+              {
+                type: "example_code",
+                content: "Example 1: One-Dimensional Array\n#include <stdio.h>\nint main() {\n    int marks[5] = {85, 90, 78, 92, 88};\n\n    for(int i=0; i<5; i++) {\n        printf(\"Student %d = %d\\\\n\", i+1, marks[i]);\n    }\n    return 0;\n}"
+              },
+              {
+                type: "output",
+                content: "Student 1 = 85\nStudent 2 = 90\nStudent 3 = 78\nStudent 4 = 92\nStudent 5 = 88"
+              },
+              {
+                type: "example_code",
+                content: "Example 2: Two-Dimensional Array\n#include <stdio.h>\nint main() {\n    int matrix[2][3] = {\n        {1, 2, 3},\n        {4, 5, 6}\n    };\n\n    for(int i=0; i<2; i++) {\n        for(int j=0; j<3; j++) {\n            printf(\"%d \", matrix[i][j]);\n        }\n        printf(\"\\\\n\");\n    }\n    return 0;\n}"
+              },
+              {
+                type: "output",
+                content: "1 2 3\n4 5 6"
+              },
+              {
+                type: "example_code",
+                content: "Example 3: User Input in 2D Array\n#include <stdio.h>\nint main() {\n    int marks[2][3];  // 2 students, 3 subjects\n\n    printf(\"Enter marks for 2 students (3 subjects each):\\\\n\");\n    for(int i=0; i<2; i++) {\n        for(int j=0; j<3; j++) {\n            scanf(\"%d\", &marks[i][j]);\n        }\n    }\n\n    printf(\"Marks Table:\\\\n\");\n    for(int i=0; i<2; i++) {\n        for(int j=0; j<3; j++) {\n            printf(\"%d \", marks[i][j]);\n        }\n        printf(\"\\\\n\");\n    }\n    return 0;\n}"
+              },
+
+              {
+                type: "heading",
+                content: "Real-Life Analogy"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "1D Array: Like a row of lockers in a school corridor – each locker (index) stores one student’s book.",
+                  "2D Array: Like a classroom seating chart – rows and columns (roll numbers arranged in a table).",
+                  "3D Array: Like a Rubik’s cube – multiple layers of rows and columns."
+                ]
+              },
+
+              {
+                type: "heading",
+                content: "Mini Practice Ideas"
+              },
+              {
+                type: "bulletpoints",
+                content: [
+                  "Store 10 integers in an array and print the largest number.",
+                  "Reverse the elements of an array.",
+                  "Print a 3×3 multiplication table using a 2D array.",
+                  "Write a program to add two 2×2 matrices.",
+                  "Take marks of 3 students in 3 subjects (2D array), and print each student’s total marks."
+                ]
+              }
+            ]
           },
-          {
-            question: "Write a program to sort an array in ascending order.",
-            expected_output: "Array elements printed in ascending order"
-          }
-        ]
-      }
-    }
-  ]
-}
+
+        ],
+      },
 
 
 
