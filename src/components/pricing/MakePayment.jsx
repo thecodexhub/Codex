@@ -127,10 +127,14 @@ const MakePayment = () => {
     const handleSubmit = async () => {
         if (uploadedImage && imageUrl) {
             setIsSubmitting(true);
+            const nameParts = (user?.displayName || '').trim().split(/\s+/).filter(Boolean);
+            const resolvedFirstName = nameParts[0] || 'User';
+            const resolvedLastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : 'NA';
+
             const paymentData = {
                 user_id: mongodbId,
-                firstName: user.displayName.split(' ')[0],
-                lastName: user.displayName.split(' ')[1] || '',
+                firstName: resolvedFirstName,
+                lastName: resolvedLastName,
                 amount: 499,
                 screenshotUrl: imageUrl
             };
