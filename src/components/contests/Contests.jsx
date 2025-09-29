@@ -43,7 +43,8 @@ const Badge = ({ children, color = 'purple' }) => {
 
 const Contests = () => {
 
-  const { paymentStatus } = useAuth();
+  // const { paymentStatus } = useAuth();
+  const paymentStatus = "DONE";
   const navigate = useNavigate()
   // Control overlay states
   const overlayMode = paymentStatus || 'NOT_PROCESSED'; // get from user
@@ -82,7 +83,8 @@ const Contests = () => {
           {/* Only show buttons if feature is available and user has subscription */}
           {showFeatureOverlay && (
             <div className="mt-6 flex flex-wrap gap-3">
-              <button className="inline-flex items-center px-4 py-2 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-sm font-medium transition-colors">
+              <button onClick={()=>navigate('./contest-problems')}
+                className="inline-flex items-center px-4 py-2 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-sm font-medium transition-colors">
                 <Trophy className="w-4 h-4 mr-2" />
                 Join Contest
               </button>
