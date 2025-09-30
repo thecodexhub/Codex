@@ -205,7 +205,7 @@ const MakePayment = () => {
     }
 
     // Handle VERIFIED status - redirect to pricing page showing active plan
-    if (paymentStatus === 'VERIFIED') {
+    if (paymentStatus === 'VERIFIED' || paymentStatus === 'DONE') {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen bg-gray-950 text-white">
                 <div className="bg-gray-900 border border-gray-700 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl text-center">
