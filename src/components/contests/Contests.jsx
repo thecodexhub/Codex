@@ -43,15 +43,15 @@ const Badge = ({ children, color = 'purple' }) => {
 
 const Contests = () => {
 
-  // const { paymentStatus } = useAuth();
-  const paymentStatus = "DONE";
+  const { paymentStatus } = useAuth();
+  // const paymentStatus = "DONE";
   const navigate = useNavigate()
   // Control overlay states
   const overlayMode = paymentStatus || 'NOT_PROCESSED'; // get from user
   // possible values: 'NOT_PROCESSED', 'IN_VERIFICATION', 'VERIFIED', 'DONE', 'COMING_SOON'
   console.log("overlayMode:", overlayMode);
   // const hasSubscription = user?.subscription || false;
-  // ✅ Determine which overlay to show
+  // Determine which overlay to show
   const showVerifiedOverlay = overlayMode === "VERIFIED";
   const showComingSoonOverlay = overlayMode === "COMING_SOON";
   const showPremiumOverlay = overlayMode === "NOT_PROCESSED" || overlayMode === "IN_VERIFICATION";
@@ -83,7 +83,7 @@ const Contests = () => {
           {/* Only show buttons if feature is available and user has subscription */}
           {showFeatureOverlay && (
             <div className="mt-6 flex flex-wrap gap-3">
-              <button onClick={()=>navigate('./contest-problems')}
+              <button onClick={()=>navigate('/contests/details')}
                 className="inline-flex items-center px-4 py-2 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-sm font-medium transition-colors">
                 <Trophy className="w-4 h-4 mr-2" />
                 Join Contest
@@ -272,7 +272,7 @@ const Contests = () => {
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6">
             <div className="flex items-center gap-2">
               <Badge color="purple">Upcoming</Badge>
-              <Badge color="gray">Contest #48</Badge>
+              <Badge color="gray">Contest #01</Badge>
             </div>
 
             <div className="mt-4 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -284,12 +284,12 @@ const Contests = () => {
                 <div className="mt-4 flex flex-wrap items-center gap-4 text-gray-400 text-sm">
                   <div className="inline-flex items-center">
                     <Clock className="w-4 h-4 mr-2 text-gray-400" />
-                    Starts in 2d 14h 23m
+                    Starting soon!
                   </div>
-                  <div className="inline-flex items-center">
+                  {/* <div className="inline-flex items-center">
                     <Users className="w-4 h-4 mr-2 text-gray-400" />
                     1,247 registered
-                  </div>
+                  </div> */}
                 </div>
               </div>
 

@@ -1,34 +1,34 @@
-import React from 'react';
+import { useState,useEffect } from 'react';
 import {
   Trophy,
-  CalendarDays,
   Clock,
-  Users,
-  ChevronRight,
-  Star,
   CheckCircle2,
   ShieldAlert,
   Target,
   BookOpen,
   ListChecks,
-  Lightbulb,
   Code2,
+  Rocket,
+  TrendingUp,
 } from 'lucide-react';
-
+import { useAuth } from '../../context/AuthContext';
 const Badge = ({ children, className = '' }) => (
   <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${className}`}>{children}</span>
 );
 
-const ProgressBar = ({ value }) => (
-  <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
-    <div
-      className="h-full bg-purple-700"
-      style={{ width: `${Math.min(Math.max(value, 0), 100)}%` }}
-    />
-  </div>
-);
 
 const ContestDetails = () => {
+  const { paymentStatus } = useAuth();
+  const [showStartingSoonOverlay, setShowStartingSoonOverlay] = useState(false);
+  useEffect(() => {
+    if (paymentStatus === 'DONE') {
+      setShowStartingSoonOverlay(true);
+    }
+  }, [paymentStatus]);
+  const handleButtonClick = () => {
+    setShowStartingSoonOverlay(true);
+  };
+
   return (
     <div className="p-4 sm:p-6 space-y-6">
       {/* Hero */}
@@ -41,15 +41,24 @@ const ContestDetails = () => {
                 Test your programming skills in our weekly coding contest. Solve challenging problems and climb the leaderboard!
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <button className="inline-flex items-center px-4 py-2 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-sm font-medium transition-colors">
+                <button
+                  onClick={handleButtonClick}
+                  className="inline-flex items-center px-4 py-2 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-sm font-medium transition-colors"
+                >
                   <Trophy className="w-4 h-4 mr-2" />
                   Register for Contest
                 </button>
-                <button className="inline-flex items-center px-4 py-2 rounded-lg border border-gray-700 text-gray-200 hover:bg-gray-800 text-sm font-medium transition-colors">
+                <button
+                  onClick={handleButtonClick}
+                  className="inline-flex items-center px-4 py-2 rounded-lg border border-gray-700 text-gray-200 hover:bg-gray-800 text-sm font-medium transition-colors"
+                >
                   <Clock className="w-4 h-4 mr-2" />
                   View Past Contests
                 </button>
-                <button className="inline-flex items-center px-4 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800 text-sm font-medium transition-colors">
+                <button
+                  onClick={handleButtonClick}
+                  className="inline-flex items-center px-4 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800 text-sm font-medium transition-colors"
+                >
                   <Code2 className="w-4 h-4 mr-2" />
                   Practice Problems
                 </button>
@@ -57,7 +66,7 @@ const ContestDetails = () => {
             </div>
 
             {/* Next contest card */}
-            <div className="flex-shrink-0 w-full lg:w-auto">
+            {/* <div className="flex-shrink-0 w-full lg:w-auto">
               <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 sm:p-5 w-full lg:min-w-[320px]">
                 <div className="flex items-start gap-3">
                   <div className="w-9 h-9 rounded-lg bg-purple-800/40 text-purple-300 flex items-center justify-center">
@@ -73,7 +82,7 @@ const ContestDetails = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -117,10 +126,8 @@ const ContestDetails = () => {
           </div>
         </div>
       </div>
-
       {/* Results + Rankers */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Previous Results */}
+      {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="bg-gray-900 border border-gray-800 rounded-lg p-5">
           <div className="flex items-center gap-2 text-gray-200">
             <span className="w-2 h-2 rounded-full bg-purple-600" />
@@ -174,7 +181,6 @@ const ContestDetails = () => {
           </div>
         </div>
 
-        {/* Top Rankers */}
         <div className="bg-gray-900 border border-gray-800 rounded-lg p-5">
           <div className="flex items-center gap-2 text-gray-200">
             <span className="w-2 h-2 rounded-full bg-purple-600" />
@@ -203,8 +209,7 @@ const ContestDetails = () => {
             ))}
           </div>
         </div>
-      </div>
-
+      </div> */}
       {/* How to Solve + Terms */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* How to Solve */}
@@ -274,9 +279,63 @@ const ContestDetails = () => {
           </div>
         </div>
       </div>
+
+      {/* Starting Soon Overlay Modal */}
+      {showStartingSoonOverlay && (
+        <div
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setShowStartingSoonOverlay(false)}
+        >
+          <div
+            className="bg-gray-900 border border-gray-800 rounded-xl p-6 max-w-md w-full text-center relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button - Top Right */}
+            <button
+              onClick={() => setShowStartingSoonOverlay(false)}
+              className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-800 text-gray-400 hover:text-white transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 relative">
+              <Rocket className="w-8 h-8 text-white" />
+            </div>
+
+            {/* Message */}
+            <h3 className="text-2xl font-bold text-yellow-500 mb-3">
+              Starting Soon!
+            </h3>
+            <p className="text-gray-300 mb-6 text-base">
+              We're preparing an amazing experience for you. The contests and practice features will be available very soon!
+            </p>
+
+            {/* Features Preview */}
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
+                <Trophy className="w-5 h-5 text-purple-400 mx-auto mb-2" />
+                <p className="text-gray-300 text-xs font-medium">Live Contests</p>
+              </div>
+              <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
+                <TrendingUp className="w-5 h-5 text-purple-400 mx-auto mb-2" />
+                <p className="text-gray-300 text-xs font-medium">Global Rankings</p>
+              </div>
+            </div>
+
+            {/* Close Button */}
+            <button
+              onClick={() => setShowStartingSoonOverlay(false)}
+              className="w-full px-6 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-500 hover:to-purple-600 transition-all duration-200 font-semibold text-sm"
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default ContestDetails;
-
