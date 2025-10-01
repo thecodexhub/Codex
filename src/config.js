@@ -30,6 +30,9 @@ export const INSTAGRAM_LINK = "https://www.instagram.com/the_codex_hub/"
 //feedback
 export const FEEDBACK = "/api/feedback"
 
+//dashboard
+export const DASHBOARD = "/api/dashboard"
+
 //payments
 export const PAYMENT = "/api/payments"
 export const PAYMENT_STATUS = "/api/payments/user"

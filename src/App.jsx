@@ -21,13 +21,13 @@ import UserProfile from './components/profile/UserProfile';
 import Courses from './components/Courses/Courses';
 import CProgramming from './components/Courses/CProgramming';
 import Documentation from './components/Courses/Documentation';
-import webDevelopment from './components/specialization/webDevelopment';
-import CSS from './components/specialization/CSS';
+import WebDevelopment from './components/specialization/webDevelopment';
 import Specialization from './components/specialization/Specialization';
 import DocumentationSpecialization from './components/specialization/DocumentationSpecialization';
 import TermsAndConditions from './components/FAQ/TermsAndConditions';
 import MakePayment from './components/pricing/MakePayment';
 import InterviewForm from './components/InterviewForm/interviewForm';
+import ProblemDisplay from './components/contests/ProblemDisplay';
 
 // Wrap the Layout with authentication
 const ProtectedLayout = AuthWrapper(Layout);
@@ -40,9 +40,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/documentation/:topicId/:chapterId?" element={<Documentation />} />
-        <Route path="/documentation-specialization/:module" element={<DocumentationSpecialization />} />
-        <Route path="/documentation-specialization/:module/:chapterId" element={<DocumentationSpecialization />} />
-        <Route path="*" element={<Navigate to="/specialization" replace />} />
+        <Route path="/documentation-specialization/:topicId/:chapterId?" element={<DocumentationSpecialization />} />
         <Route path="/experience-form" element={<InterviewForm />} />
 
         {/* Protected Layout */}
@@ -53,8 +51,7 @@ function App() {
           <Route path="/courses/c-programming" element={<CProgramming />} />
           <Route path="dsa" element={<DSA />} />
           <Route path="/specialization" element={<Specialization />} /> {/* new route */}
-          <Route path="/specialization/web-development" element={<webDevelopment />} />
-          <Route path="/specialization/css" element={<CSS />} />
+          <Route path="/specialization/web-development" element={<WebDevelopment />} />
           <Route path="placement" element={<PlacementPrep />} />
           <Route path="leaderboard" element={<Leaderboard />} />
           <Route path="feedback" element={<Feedback />} />
@@ -73,6 +70,7 @@ function App() {
         <Route element={<FullPageLayout />}>
           <Route path="useronboarding" element={<UserOnboarding />} />
           <Route path="userprofile" element={<UserProfile />} />
+          <Route path='contests/contest-problems' element={ <ProblemDisplay/>} />
         </Route>
       </Routes>
     </Router>

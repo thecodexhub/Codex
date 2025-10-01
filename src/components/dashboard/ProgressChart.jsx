@@ -11,16 +11,15 @@ import {
   Legend
 } from 'recharts';
 
-const ProgressChart = () => {
-  const weeklyData = [
-    { day: 'Mon', problems: 0, hours: 0 },
-    { day: 'Tue', problems: 0, hours: 0 },
-    { day: 'Wed', problems: 0, hours: 0 },
-    { day: 'Thu', problems: 0, hours: 0 },
-    { day: 'Fri', problems: 0, hours: 0 },
-    { day: 'Sat', problems: 0, hours: 0 },
-    { day: 'Sun', problems: 0, hours: 0 },
-  ];
+const ProgressChart = ({ weeklyData = [
+  { day: 'Mon', problems: 0, hours: 0 },
+  { day: 'Tue', problems: 0, hours: 0 },
+  { day: 'Wed', problems: 0, hours: 0 },
+  { day: 'Thu', problems: 0, hours: 0 },
+  { day: 'Fri', problems: 0, hours: 0 },
+  { day: 'Sat', problems: 0, hours: 0 },
+  { day: 'Sun', problems: 0, hours: 0 },
+] }) => {
 
   return (
     <div className="bg-gray-900 rounded-xl p-4 sm:p-6 border border-gray-800">

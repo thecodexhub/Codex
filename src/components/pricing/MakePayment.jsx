@@ -127,10 +127,14 @@ const MakePayment = () => {
     const handleSubmit = async () => {
         if (uploadedImage && imageUrl) {
             setIsSubmitting(true);
+            const nameParts = (user?.displayName || '').trim().split(/\s+/).filter(Boolean);
+            const resolvedFirstName = nameParts[0] || 'User';
+            const resolvedLastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : 'NA';
+
             const paymentData = {
                 user_id: mongodbId,
-                firstName: user.displayName.split(' ')[0],
-                lastName: user.displayName.split(' ')[1] || '',
+                firstName: resolvedFirstName,
+                lastName: resolvedLastName,
                 amount: 499,
                 screenshotUrl: imageUrl
             };
@@ -201,7 +205,7 @@ const MakePayment = () => {
     }
 
     // Handle VERIFIED status - redirect to pricing page showing active plan
-    if (paymentStatus === 'VERIFIED') {
+    if (paymentStatus === 'VERIFIED' || paymentStatus === 'DONE') {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen bg-gray-950 text-white">
                 <div className="bg-gray-900 border border-gray-700 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl text-center">

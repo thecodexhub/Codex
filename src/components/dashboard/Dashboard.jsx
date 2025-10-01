@@ -1,24 +1,124 @@
 import React from 'react';
+import axios from 'axios';
 import ProgressChart from './ProgressChart';
 import LeaderboardPreview from './LeaderBoardPreview';
 import { ChevronRight, Layers, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { BASE_URL, DASHBOARD } from '../../config';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user, } = useAuth();
+  const { user, mongodbId } = useAuth();
+
+  const [weeklyData, setWeeklyData] = React.useState([
+    { day: 'Mon', problems: 0, hours: 0 },
+    { day: 'Tue', problems: 0, hours: 0 },
+    { day: 'Wed', problems: 0, hours: 0 },
+    { day: 'Thu', problems: 0, hours: 0 },
+    { day: 'Fri', problems: 0, hours: 0 },
+    { day: 'Sat', problems: 0, hours: 0 },
+    { day: 'Sun', problems: 0, hours: 0 },
+  ]);
+  const [dsaProgressTotal, setDsaProgressTotal] = React.useState(0);
+  const [specProgressTotal, setSpecProgressTotal] = React.useState(0);
+
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const getWeekBounds = (referenceDate = new Date()) => {
+    const today = new Date(referenceDate);
+    // JS getDay: 0=Sun,...,6=Sat; We want Monday as start
+    const dayOfWeek = today.getDay();
+    const daysSinceMonday = (dayOfWeek + 6) % 7; // Mon->0, Tue->1, ..., Sun->6
+    const monday = new Date(today);
+    monday.setHours(0, 0, 0, 0);
+    monday.setDate(today.getDate() - daysSinceMonday);
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    sunday.setHours(23, 59, 59, 999);
+    return { monday, sunday };
+  };
+
+  const buildWeekTemplate = () => ([
+    { day: 'Mon', problems: 0, hours: 0 },
+    { day: 'Tue', problems: 0, hours: 0 },
+    { day: 'Wed', problems: 0, hours: 0 },
+    { day: 'Thu', problems: 0, hours: 0 },
+    { day: 'Fri', problems: 0, hours: 0 },
+    { day: 'Sat', problems: 0, hours: 0 },
+    { day: 'Sun', problems: 0, hours: 0 },
+  ]);
+
+  const applySeriesToWeek = (template, series, field) => {
+    const dayIndexToKey = {
+      1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat', 0: 'Sun',
+    };
+    const keyToIndex = { Mon: 0, Tue: 1, Wed: 2, Thu: 3, Fri: 4, Sat: 5, Sun: 6 };
+    const result = [...template];
+    (series || []).forEach((item) => {
+      if (!item || !item.day) return;
+      const date = new Date(item.day);
+      const jsDay = date.getDay();
+      const label = dayIndexToKey[jsDay];
+      const idx = keyToIndex[label];
+      if (idx !== undefined) {
+        result[idx] = {
+          ...result[idx],
+          [field]: (Number(item.count) || 0),
+        };
+      }
+    });
+    return result;
+  };
+
+  React.useEffect(() => {
+    const fetchDashboard = async () => {
+      if (!mongodbId) return;
+      try {
+        const { monday, sunday } = getWeekBounds(new Date());
+        const startDate = formatDate(monday);
+        const endDate = formatDate(sunday);
+        const res = await axios.get(`${BASE_URL}${DASHBOARD}`, {
+          params: {
+            user_id: mongodbId,
+            startDate,
+            endDate,
+          },
+        });
+
+        const data = res?.data || {};
+        const weekTemplate = buildWeekTemplate();
+        let merged = applySeriesToWeek(weekTemplate, data.prog_progress, 'problems');
+        merged = applySeriesToWeek(merged, data.specialisation_prog, 'hours');
+        setWeeklyData(merged);
+        setDsaProgressTotal(Number(data.prog_progress_total) || 0);
+        setSpecProgressTotal(Number(data.specialisation_prog_total) || 0);
+      } catch (err) {
+        console.error('Failed to fetch dashboard data', err);
+        setWeeklyData(buildWeekTemplate());
+        setDsaProgressTotal(0);
+        setSpecProgressTotal(0);
+      }
+    };
+
+    fetchDashboard();
+  }, [mongodbId]);
   
   const cardData = [
     {
       title: 'DSA Progress',
-      progress: 0,
+      progress: Math.min(100, dsaProgressTotal),
       current: 'Dynamic Programming',
       onClick: () => navigate('/')
      },
     {
       title: 'Specialization',
-      progress: 0,
+      progress: Math.min(100, specProgressTotal),
       current: 'React Advanced Patterns',
       onClick: () => navigate('/'),
      },
@@ -93,7 +193,7 @@ const Dashboard = () => {
       {/* Charts and Leaderboard Section */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
         <div className="xl:col-span-2">
-          <ProgressChart />
+          <ProgressChart weeklyData={weeklyData} />
         </div>
         <div>
           <LeaderboardPreview />
