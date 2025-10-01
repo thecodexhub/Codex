@@ -54,7 +54,7 @@ export default function renderTheoryContent(theory) {
       return (
         <div key={index} className="mb-6">
           <div className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
-            <img src={src || "/placeholder.svg"} alt={alt} className="w-full h-auto object-cover" loading="lazy" />
+            <img src={src || "/placeholder.svg"} alt={alt} className="w-full sm:max-w-md lg:max-w-2xl mx-auto h-auto object-contain" loading="lazy" />
             {caption && (
               <div className="p-3 bg-gray-900">
                 <p className="text-gray-400 text-sm text-center italic">{caption}</p>
