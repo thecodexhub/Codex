@@ -8,7 +8,7 @@ const Pricing = () => {
   const { paymentStatus } = useAuth();
   
   // Only show Active Plan view for VERIFIED status
-  const isSubscribedUser = paymentStatus === 'VERIFIED';
+  const isSubscribedUser = paymentStatus === 'VERIFIED' || paymentStatus === 'DONE';
   
   const features = [
     {

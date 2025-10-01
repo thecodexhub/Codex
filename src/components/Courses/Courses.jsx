@@ -95,13 +95,62 @@ const Courses = () => {
     </div>
   )
 
-  // ✅ Premium Modal (unchanged)
+  // ✅ Premium Modal with payment status messages
   const PremiumModal = () => {
-    const isVerified = paymentStatus === "VERIFIED"
+    const isVerified = paymentStatus === "VERIFIED" || paymentStatus === "DONE"
+    const isInVerification = paymentStatus === "IN_VERIFICATION"
+    const [isOpen, setIsOpen] = useState(!isVerified)
+
+    if (!isOpen || isVerified) return null // don't render if closed or verified
+
     return (
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-        <div className="bg-gray-900 rounded-2xl p-6 max-w-md w-full border border-gray-700">
-          {/* ... keep your existing Premium Modal code here ... */}
+        <div className="relative bg-gray-900 rounded-2xl p-6 max-w-md w-full border border-gray-700 text-center">
+          {/* Close button */}
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute top-3 right-3 text-gray-400 hover:text-white"
+          >
+            <X size={20} />
+          </button>
+
+          {isInVerification ? (
+            <>
+              <div className="flex items-center justify-center mb-4">
+                <Clock className="w-12 h-12 text-yellow-500" />
+              </div>
+              <h2 className="text-xl font-semibold text-white mb-3">
+                Payment Under Verification
+              </h2>
+              <p className="text-gray-300 mb-6">
+                Your payment is currently being verified. You can access the content once payment is verified.
+              </p>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="px-6 py-2 rounded-xl bg-yellow-600 hover:bg-yellow-700 text-white font-medium transition"
+              >
+                Okay, Got it!
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center justify-center mb-4">
+                <CheckCircle className="w-12 h-12 text-green-500" />
+              </div>
+              <h2 className="text-xl font-semibold text-white mb-3">
+                Payment Verified!
+              </h2>
+              <p className="text-gray-300 mb-6">
+                Payment verified! Hold tight, we will be starting soon.
+              </p>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="px-6 py-2 rounded-xl bg-green-600 hover:bg-green-700 text-white font-medium transition"
+              >
+                Excited to Start!
+              </button>
+            </>
+          )}
         </div>
       </div>
     )
