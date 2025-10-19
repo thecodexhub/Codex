@@ -111,16 +111,16 @@ const Dashboard = () => {
   
   const cardData = [
     {
-      title: 'DSA Progress',
+      title: 'Programming',
       progress: Math.min(100, dsaProgressTotal),
       current: 'Dynamic Programming',
-      onClick: () => navigate('/')
+      onClick: () => navigate('/courses')
      },
     {
       title: 'Specialization',
       progress: Math.min(100, specProgressTotal),
       current: 'React Advanced Patterns',
-      onClick: () => navigate('/'),
+      onClick: () => navigate('/specialization'),
      },
   ];
 

@@ -146,6 +146,14 @@ export const specalization_data = {
                 content: "<h1>My College</h1>\n<h2>Departments</h2>\n<h3>Computer Science</h3>"
               },
               {
+                type: "image",
+                content: {
+                  src: "https://res.cloudinary.com/dcxxiwmdo/image/upload/v1758459418/html-heading-tags_avvmvj.jpg",
+                  alt: "HTML Heading Tags",
+                  caption: "HTML Heading Tags",
+                },
+              },
+              {
                 type: "paragraph",
                 content: "Analogy: Think of a newspaper – the front-page headline is <h1>, section titles (Sports, Business, etc.) are <h2>, and smaller subtitles within articles are <h3> to <h6>."
               },
@@ -178,6 +186,14 @@ export const specalization_data = {
                 content: "<p>My name is Rahul. I am a first-year engineering student and I love coding.</p>"
               },
               {
+                type: "image",
+                content: {
+                  src: "https://res.cloudinary.com/drkhfntxp/image/upload/v1758460352/html_element_iz2ct1.png",
+                  alt: "HTML Paragraph Tag",
+                  caption: "HTML Paragraph Tag",
+                },
+              },
+              {
                 type: "paragraph",
                 content: "Analogy: Just like in your notebook, you don’t write everything in one line — you separate thoughts into paragraphs."
               },
@@ -203,12 +219,28 @@ export const specalization_data = {
               },
               {
                 type: "example_code",
-                content: "<p>This is line one.<br>This is line two.</p>\n<hr>\n<p>Next section starts here.</p>"
+                content: "<p>This is line one.<br>This is line two."
+              },
+              {
+                type: "image",
+                content: {
+                  src: "https://res.cloudinary.com/drkhfntxp/image/upload/v1758460352/659d2043d932d_D_09_01_2024_T_10_30_27am_vjsa6k.jpg",
+                  alt: "HTML Line Break Tag",
+                  caption: "HTML Line Break Tag",
+                },
               },
               {
                 type: "example_code",
                 content: "<p>My hobbies are:<br>Reading<br>Coding<br>Cricket</p>\n<hr>\n<p>Thank you for visiting my page!</p>"
+              },{
+                type: "image",
+                content: {
+                  src: "https://res.cloudinary.com/drkhfntxp/image/upload/v1758460352/659d2031ddba9_D_09_01_2024_T_10_30_09am_v2gbhy.jpg",
+                  alt: "HTML Horizontal Rules Tag",
+                  caption: "HTML Horizontal Rules Tag",
+                },
               },
+
               {
                 type: "paragraph",
                 content: "Analogy: <br> = pressing Enter in WhatsApp when you type a new line. <hr> = a divider line in your notebook to separate answers."
@@ -270,6 +302,14 @@ export const specalization_data = {
                 ]
               },
               {
+                type: "image",
+                content: {
+                  src: "https://res.cloudinary.com/drkhfntxp/image/upload/v1759316428/bold_c22sab.jpg",
+                  alt: "HTML Bold Italic UnderLine Tag",
+                  caption: "HTML Bold Italic UnderLine Tag",
+                },
+              },
+              {
                 type: "example_code",
                 content: "<b>Bold Text</b>\n<i>Italic Text</i>\n<u>Underlined Text</u>"
               },
@@ -300,6 +340,14 @@ export const specalization_data = {
                   "Used in mathematical formulas.",
                   "Used in chemical equations."
                 ]
+              },
+              {
+                type: "image",
+                content: {
+                  src: "https://res.cloudinary.com/drkhfntxp/image/upload/v1759316570/download_3_ki5n4a.png",
+                  alt: "HTML sup Tag",
+                  caption: "HTML sup Tag",
+                },
               },
               {
                 type: "example_code",
@@ -400,6 +448,14 @@ export const specalization_data = {
               {
                 type: "paragraph",
                 content: "Without links, websites would just be isolated pages. Hyperlinks make the web interactive and interconnected."
+              },
+              {
+                type: "image",
+                content: {
+                  src: "https://res.cloudinary.com/drkhfntxp/image/upload/v1759044548/anchor_naifo1.png",
+                  alt: "HTML Horizontal Rules Tag",
+                  caption: "HTML Anchor Tag",
+                },
               },
               {
                 type: "example_code",
@@ -511,6 +567,15 @@ export const specalization_data = {
                   "Displays logos, banners, product pictures, diagrams, etc."
                 ]
               },
+              {
+                type: "image",
+                content: {
+                  src: "https://res.cloudinary.com/drkhfntxp/image/upload/v1759044549/images_dgybvw.png",
+                  alt: "HTML Image Tag",
+                  caption: "HTML Image Tag",
+                },
+              },
+              
               {
                 type: "example_code",
                 content: "<img src=\"image.jpg\" alt=\"Description of image\">"
@@ -697,6 +762,14 @@ export const specalization_data = {
                 content: "Items are numbered (1, 2, 3… or A, B, C…). Used when order matters (e.g., steps in a procedure)."
               },
               {
+                type: "image",
+                content: {
+                  src: "https://res.cloudinary.com/drkhfntxp/image/upload/v1759316709/orderedList_opfyqk.png",
+                  alt: "HTML Ordered List Tag",
+                  caption: "HTML Ordered List Tag",
+                },
+              },
+              {
                 type: "example_code",
                 content: "<ol>\n  <li>Wake up</li>\n  <li>Brush your teeth</li>\n  <li>Have breakfast</li>\n</ol>"
               },
@@ -708,6 +781,14 @@ export const specalization_data = {
               {
                 type: "paragraph",
                 content: "Items are marked with bullets (•, ○, etc.). Used when order doesn’t matter (e.g., shopping list)."
+              },
+              {
+                type: "image",
+                content: {
+                  src: "https://res.cloudinary.com/drkhfntxp/image/upload/v1759316710/unordered_mcbzlk.png",
+                  alt: "HTML Unordered List Tag",
+                  caption: "HTML Unrdered List Tag",
+                },
               },
               {
                 type: "example_code",
@@ -723,6 +804,14 @@ export const specalization_data = {
                 content: "Used for terms and their definitions. Helpful for glossaries or FAQs."
               },
               {
+                type: "image",
+                content: {
+                  src: "https://res.cloudinary.com/drkhfntxp/image/upload/v1759044311/DescriptionList_avhmss.jpg",
+                  alt: "HTML Description List Tag",
+                  caption: "HTML Description List Tag",
+                },
+              },
+              {
                 type: "example_code",
                 content: "<dl>\n  <dt>HTML</dt>\n  <dd>HyperText Markup Language, used for creating webpages.</dd>\n\n  <dt>CSS</dt>\n  <dd>Cascading Style Sheets, used for designing webpages.</dd>\n</dl>"
               },
@@ -730,6 +819,14 @@ export const specalization_data = {
               {
                 type: "subheading",
                 content: "D) Nested Lists"
+              },
+              {
+                type: "image",
+                content: {
+                  src: "https://res.cloudinary.com/drkhfntxp/image/upload/v1759044311/Nested_qi9cvv.png",
+                  alt: "HTML Nested List Tag",
+                  caption: "HTML Nested List Tag",
+                },
               },
               {
                 type: "paragraph",
@@ -816,6 +913,8 @@ export const specalization_data = {
                   "Comparing data (e.g., features of different phones)."
                 ]
               },
+             
+              
               {
                 type: "paragraph",
                 content: "Without tables, presenting such organized information would be messy."
@@ -830,9 +929,18 @@ export const specalization_data = {
                 type: "subheading",
                 content: "A) Basic Table Structure"
               },
+               
               {
                 type: "example_code",
                 content: "<table border=\"1\">\n  <tr>\n    <th>Name</th>\n    <th>Subject</th>\n    <th>Marks</th>\n  </tr>\n  <tr>\n    <td>Alice</td>\n    <td>Math</td>\n    <td>90</td>\n  </tr>\n  <tr>\n    <td>Bob</td>\n    <td>Science</td>\n    <td>85</td>\n  </tr>\n</table>"
+              },
+              {
+                type: "image",
+                content: {
+                  src: "https://res.cloudinary.com/drkhfntxp/image/upload/v1759044311/Table_basic_uzkzvx.webp",
+                  alt: "HTML Basic Table Tag",
+                  caption: "HTML Basic Table Tag",
+                },
               },
 
               {
@@ -851,6 +959,14 @@ export const specalization_data = {
               {
                 type: "example_code",
                 content: "<table border=\"1\">\n  <caption>Student Marks</caption>\n  <thead>\n    <tr>\n      <th>Name</th>\n      <th>Subject</th>\n      <th>Marks</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>Alice</td>\n      <td>Math</td>\n      <td>90</td>\n    </tr>\n    <tr>\n      <td>Bob</td>\n      <td>Science</td>\n      <td>85</td>\n    </tr>\n  </tbody>\n  <tfoot>\n    <tr>\n      <td colspan=\"2\">Average</td>\n      <td>87.5</td>\n    </tr>\n  </tfoot>\n</table>"
+              },
+              {
+                type: "image",
+                content: {
+                  src: "https://res.cloudinary.com/drkhfntxp/image/upload/v1759044314/table_fxyclm.jpg",
+                  alt: "HTML Table Tag",
+                  caption: "HTML Table Tag",
+                },
               },
 
               {
@@ -952,7 +1068,6 @@ export const specalization_data = {
                 type: "paragraph",
                 content: "👉 Without forms, websites would only show information but never take input back from users."
               },
-
               {
                 type: "heading",
                 content: "Why It’s Needed?"
@@ -973,6 +1088,14 @@ export const specalization_data = {
               {
                 type: "heading",
                 content: "Syntax & Explanation"
+              },
+              {
+                type: "image",
+                content: {
+                  src: "https://res.cloudinary.com/drkhfntxp/image/upload/v1759044311/form-html_wt67kd.webp",
+                  alt: "HTML Form",
+                  caption: "HTML Form",
+                },
               },
 
               {

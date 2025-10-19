@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Upload, CheckCircle, QrCode, Smartphone, CreditCard, User, IndianRupee, X, Clock, Shield } from 'lucide-react';
-import qrImage from '../../assets/payment.png';
+import qrImage from '../../assets/payment.jpg';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL, CLOUDINARY_URL,PAYMENT } from '../../config';
@@ -135,7 +135,7 @@ const MakePayment = () => {
                 user_id: mongodbId,
                 firstName: resolvedFirstName,
                 lastName: resolvedLastName,
-                amount: 499,
+                amount: 399,
                 screenshotUrl: imageUrl
             };
             try {
@@ -295,7 +295,7 @@ const MakePayment = () => {
                                             <span className="text-lg font-semibold">Total Amount</span>
                                             <div className="flex items-center text-2xl font-bold">
                                                 <IndianRupee className="w-6 h-6" />
-                                                <span>499</span>
+                                                <span>399</span>
                                             </div>
                                         </div>
                                     </div>
@@ -389,7 +389,7 @@ const MakePayment = () => {
                                         <div className="text-sm text-gray-400">Amount to Pay</div>
                                         <div className="text-3xl font-bold flex items-center justify-center">
                                             <IndianRupee className="w-6 h-6" />
-                                            <span>499</span>
+                                            <span>399</span>
                                         </div>
                                     </div>
                                 </div>
@@ -397,7 +397,7 @@ const MakePayment = () => {
                                 {/* Compact Instructions inside same div */}
                                 <div className="text-xs text-gray-400 leading-relaxed mt-6">
                                     1. Scan the QR code with any UPI app. <br />
-                                    2. Pay ₹499 and take a screenshot. <br />
+                                    2. Pay ₹399 and take a screenshot. <br />
                                     3. Upload the screenshot above - your plan activates within 2-3 days.
                                 </div>
                             </div>

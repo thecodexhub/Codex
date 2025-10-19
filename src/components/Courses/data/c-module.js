@@ -1091,7 +1091,7 @@ export const cModule = {
 
       {
         chapter_id: "P1-C3",
-        chapter_name: "Unit 3 : Introduction to Programming Languages ",
+        chapter_name: "Unit 3 : Iterative Algorithmic Constructs and Arrays",
         chapter_description: "",
         icon: "BookOpen",
         subtopics: [
