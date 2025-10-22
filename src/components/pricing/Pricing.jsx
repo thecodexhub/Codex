@@ -53,7 +53,7 @@ const Pricing = () => {
     const calculateTimeRemaining = () => {
       // Offer: Oct 19, 2025 5:00 PM to Oct 21, 2025 5:00 PM
       const offerStart = new Date("2025-10-19T14:00:00").getTime()
-      const offerEnd = new Date("2025-10-22T14:00:00").getTime()
+      const offerEnd = new Date("2025-10-23T14:00:00").getTime()
       const now = new Date().getTime()
 
       if (now < offerStart) {
